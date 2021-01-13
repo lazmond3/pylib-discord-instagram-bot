@@ -1,12 +1,16 @@
 import puppeteer from "puppeteer";
 import fs from "fs";
 
-const instagram_url = "https://www.instagram.com/";
+const instagram_url = "https://www.instagram.com/accounts/login/";
 
 export {};
 
 const main = async (browser: puppeteer.Browser) => {
   const page = await browser.newPage();
+  page.goto(instagram_url, {
+    waitUntil: "networkidle0",
+  });
+
   const wait = async (target: string) => {
     await page.waitFor(target);
   };
@@ -27,6 +31,16 @@ const main = async (browser: puppeteer.Browser) => {
   await input(loginSelector, process.env.USER!!);
   await input(passSelector, process.env.PASS!!);
   await page.click(buttonSelector);
+
+  await page.waitForNavigation({
+    waitUntil: "networkidle0",
+  });
+  console.log(`after page login click...`);
+
+  const cookies = await page.cookies();
+  console.log(`cookies: ${JSON.stringify(cookies, null, 2)}...`);
+
+  fs.writeFileSync("./cookies.json", JSON.stringify(cookies, null, 2));
 };
 
 (async () => {
