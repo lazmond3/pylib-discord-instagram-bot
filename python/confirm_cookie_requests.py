@@ -1,6 +1,9 @@
 import requests
 import json
 
+# cookie2.txt をこのように使うと、クッキーを使ったリクエストができるっぽい！
+# TODO: これを吐き出す関数を作る
+
 cookie = dict()
 with open("cookie2.txt") as f:
     alltext = []
