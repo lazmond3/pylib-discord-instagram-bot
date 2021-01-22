@@ -16,7 +16,7 @@ with open("cookie2.txt") as f:
         key,v = each.split("=")[0], "".join(each.split("=")[1:])
         cookie[key] = v
 
-# return dictionary
+# この関数: return dictionary
 def get_json_from_url(url):
     key_name = "json_"+url
     if DEBUG:
