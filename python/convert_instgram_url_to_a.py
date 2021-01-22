@@ -1,7 +1,7 @@
 # __a にアクセスする関数
 import re
 
-def make_a_url(url):
+def convert_instagram_url_to_a(url):
     # https://www.instagram.com/p/CJ8u5PCH-WG/?utm_source=ig_web_copy_link
     m = re.match(r"https://www.instagram.com/p/([^/])+", url)
     if m:
@@ -9,4 +9,4 @@ def make_a_url(url):
         return new_url
     return None
 if __name__ == "__main__":
-        print("make: ", make_a_url("https://www.instagram.com/p/CJ8u5PCH-WG/?utm_source=ig_web_copy_link"))
+        print("make: ", convert_instagram_url_to_a("https://www.instagram.com/p/CJ8u5PCH-WG/?utm_source=ig_web_copy_link"))
