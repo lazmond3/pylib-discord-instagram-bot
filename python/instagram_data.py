@@ -1,7 +1,7 @@
 class InstagramData:
     def __str__(self):
         n_caption = " ".join(self.caption[:100].split("\n"))
-        print(f"""
+        return(f"""
 ==================================================
     media: {self.media}
 ==================================================
@@ -39,12 +39,12 @@ def convert_to_instagram_data(oj):
     username = oj.graphql.shortcode_media.owner.username
     full_name = oj.graphql.shortcode_media.owner.full_name
     return InstagramData(
-        media,
-        is_video,
-        caption,
-        profile_url,
-        username,
-        full_name
+        media = media,
+        is_video = is_video,
+        caption = caption,
+        profile_url = profile_url,
+        username = username,
+        full_name = full_name
     )
 if __name__ == "__main__":
     from sample_insta_obj import sample_isnta_obj
