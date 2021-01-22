@@ -1,9 +1,7 @@
 import requests
 from redis_cli import store_data, get_data
-import os
 import json
-UPDATE=(os.getenv("UPDATE"))
-DEBUG=(os.getenv("DEBUG"))
+from debug import DEBUG, UPDATE
 # グローバルでクッキーを読み込む
 cookie = dict()
 with open("cookie2.txt") as f:
