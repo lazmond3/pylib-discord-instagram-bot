@@ -1,8 +1,9 @@
 import requests
 import json
 
+# クッキーの使い方がわかるファイル
+
 # cookie2.txt をこのように使うと、クッキーを使ったリクエストができるっぽい！
-# TODO: これを吐き出す関数を作る
 
 if __name__ == "__main__":
     cookie = dict()
