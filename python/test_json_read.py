@@ -14,7 +14,7 @@ def test_easy():
     assert(json.loads(js) == dict({"name": "test value"}))
 
 if __name__ == "__main__":
-    with open("out.json") as f:
+    with open("instagram_sample_img.json") as f:
         text = "".join([x for x in f.readlines()])
         if DEBUG:
             print(text[:1000])

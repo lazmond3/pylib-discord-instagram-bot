@@ -54,7 +54,7 @@ def test1():
     # print(obj[0])
 
 if __name__ == "__main__":
-    with open("out.json") as f:
+    with open("instagram_sample_img.json") as f:
         text = "".join([x for x in f.readlines()])
     js = json.loads(text)
     oj = Dict2Obj(js)
