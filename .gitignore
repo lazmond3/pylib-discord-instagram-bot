@@ -4,3 +4,5 @@ node_modules
 cookies.json
 .venv-discord
 .env
+.vscode
+lazmodn3_instagram_to_discord.egg-info
