@@ -14,7 +14,7 @@ class BasicTestSuite(unittest.TestCase):
         assert True
 
     def test_sophisticate(self):
-        cap_to = instagram_to_discord.discord_event_listener.sophisticate_string(
+        cap_to = instagram_to_discord.string_util.sophisticate_string(
             get_caption()
         )
         answer = """【美女navi ☻*】
