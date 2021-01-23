@@ -6,7 +6,7 @@ from instagram_type import instagran_parse_json_to_obj, InstagramData
 
 
 def sophisticate_string(st):
-    st_list = st.split("\n")
+    st_list = st.strip().split("\n")
     new_lst = []
     for ste in st_list:
         st = re.sub(r"^.[ \t\n]*$", "", ste)
