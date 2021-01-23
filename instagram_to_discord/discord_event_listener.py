@@ -10,8 +10,6 @@ class MyClient(discord.Client):
     def __init__(self, instaObj: InstagramData):
         super().__init__()
         self.instaObj = instaObj
-        # kzm_channel_num = 384715340934021120
-        # self.kzm_chan = self.get_channel(kzm_channel_num)
 
     async def on_ready(self):
         print('Logged on as {0}!'.format(self.user))
