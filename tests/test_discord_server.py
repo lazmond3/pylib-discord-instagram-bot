@@ -52,8 +52,6 @@ class BasicTestSuite(unittest.TestCase):
         if DEBUG:
             print(f"answer ({len(answer)}):", answer)
             print(f"capto ({len(cap_to)}):", cap_to)
-            with open("write_answer.txt", "w") as f:
-                f.write(cap_to)
         assert answer == cap_to
 
 
