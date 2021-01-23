@@ -6,7 +6,7 @@ from instagram_type import instagran_parse_json_to_obj, InstagramData
 from string_util import sophisticate_string
 
 
-class MyClient(discord.Client):
+class DiscordMessageListener(discord.Client):
     def __init__(self, instaObj: InstagramData):
         super().__init__()
         self.instaObj = instaObj
@@ -46,7 +46,7 @@ if __name__ == "__main__":
         js_str = "".join(f.readlines())
     insta_obj = instagran_parse_json_to_obj(js_str)
 
-    client = MyClient(insta_obj)
+    client = DiscordMessageListener(insta_obj)
 
     TOKEN = os.getenv("TOKEN")
     if DEBUG:
