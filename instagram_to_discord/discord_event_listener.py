@@ -7,9 +7,9 @@ from string_util import sophisticate_string
 
 
 class DiscordMessageListener(discord.Client):
-    def __init__(self, instaObj: InstagramData):
+    def __init__(self, insta_obj: InstagramData):
         super().__init__()
-        self.instaObj = instaObj
+        self.insta_obj = insta_obj
 
     async def on_ready(self):
         print('Logged on as {0}!'.format(self.user))
@@ -36,7 +36,7 @@ class DiscordMessageListener(discord.Client):
         print(f"\ttype channel: {type(message.channel)}")
         if "kazami" in message.author.display_name:
             # await message.channel.send("hi message detection")
-            embed = self.create_embed(self.instaObj)
+            embed = self.create_embed(self.insta_obj)
             await message.channel.send(embed=embed)
 
 
