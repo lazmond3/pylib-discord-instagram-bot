@@ -25,3 +25,50 @@ Message from kazami
         channel: kzm-random
         type channel: <class 'discord.channel.TextChannel'>
 Message from instagram-support#2085:
+
+#=========================
+
+class Embed:
+    """Represents a Discord embed.
+
+    .. container:: operations
+
+        .. describe:: len(x)
+
+            Returns the total size of the embed.
+            Useful for checking if it's within the 6000 character limit.
+
+    Certain properties return an ``EmbedProxy``, a type
+    that acts similar to a regular :class:`dict` except using dotted access,
+    e.g. ``embed.author.icon_url``. If the attribute
+    is invalid or empty, then a special sentinel value is returned,
+    :attr:`Embed.Empty`.
+
+    For ease of use, all parameters that expect a :class:`str` are implicitly
+    casted to :class:`str` for you.
+
+    Attributes
+    -----------
+    title: :class:`str`
+        The title of the embed.
+        This can be set during initialisation.
+    type: :class:`str`
+        The type of embed. Usually "rich".
+        This can be set during initialisation.
+    description: :class:`str`
+        The description of the embed.
+        This can be set during initialisation.
+    url: :class:`str`
+        The URL of the embed.
+        This can be set during initialisation.
+    timestamp: :class:`datetime.datetime`
+        The timestamp of the embed content. This could be a naive or aware datetime.
+    colour: Union[:class:`Colour`, :class:`int`]
+        The colour code of the embed. Aliased to ``color`` as well.
+        This can be set during initialisation.
+    Empty
+        A special sentinel value used by ``EmbedProxy`` and this class
+        to denote that the value or attribute is empty.
+    """
+
+アノテーションの例！
