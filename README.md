@@ -6,8 +6,8 @@
 - instagram parse が下手で、
   - [x] title
   - [x] url の取得 ( これは obj には入れないよね？ )
-  - author url (そんなに重要ではないのでなくてもいい)
-    というのを加えよう。
+  - [x] author url (そんなに重要ではないのでなくてもいい)
+        というのを加えよう。
 
 あと、kzm_random じゃなくて、 vc のみにする。
 
