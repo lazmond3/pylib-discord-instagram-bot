@@ -12,7 +12,8 @@ class BasicTestSuite(unittest.TestCase):
 
     def test_get_results(self):
         url = "https://www.instagram.com/p/CJ8u5PCH-WG/?src=hoge"
-        a_url = instagram_to_discord.converter_instagram_url(url)
+        a_url = instagram_to_discord.converter_instagram_url.convert_instagram_url_to_a(
+            url)
 
         text = instagram_to_discord.cookie_requests.requests_get_cookie(
             url=a_url, expire=100)
