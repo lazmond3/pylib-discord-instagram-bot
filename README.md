@@ -1,4 +1,4 @@
-# USage
+# Usage
 
 ```bash
 
@@ -12,7 +12,14 @@ pip3 -r requirements.txt
 REDIS_PASS=$REDIS_PASS \
   TOKEN=$DISCORD_BOT_TOKEN \
   DEBUG=1 \
+  COOKIE_PATH=cookie2.txt \
   python3 -m instagram_to_discord
+```
+
+## クッキーファイルの中身
+
+```txt
+mid=XX...; sessionid=6788562761...
 ```
 
 # 2021/01/24 日 02:25]
