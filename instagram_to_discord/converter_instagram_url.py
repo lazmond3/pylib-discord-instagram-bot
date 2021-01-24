@@ -32,7 +32,7 @@ def instagram_extract_from_content(content: str):
     for line in content.split("\n"):
         if DEBUG:
             print("[debug extract from..] line: {}".format(line))
-        base_url = instagram_make_base_url(line)
+        base_url = extract_url(line)
         if base_url:
             return base_url
     return None

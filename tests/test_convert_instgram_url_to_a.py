@@ -29,18 +29,18 @@ class BasicTestSuite(unittest.TestCase):
             input_usr)
         assert answer == result
 
-    # def test_extract_from_content(self):
-    #     input_content = """
-    #         こんにちは。データは https://www.instagram.com/p/CGEF-ewBxNm/?utm_source=ig_web_copy_link です。
-    #     """
-    #     answer = "https://www.instagram.com/p/CGEF-ewBxNm"
-    #     result = instagram_to_discord.converter_instagram_url.instagram_extract_from_content(
-    #         input_content)
-    #     if DEBUG:
-    #         print(f"result: {result}")
-    #         print(
-    #             f"[debug] result len: {len(result)}, answer len: {len(answer)}")
-    #     assert result == answer
+    def test_extract_from_content(self):
+        input_content = """
+            こんにちは。データは https://www.instagram.com/p/CGEF-ewBxNm/?utm_source=ig_web_copy_link です。
+        """
+        answer = "https://www.instagram.com/p/CGEF-ewBxNm"
+        result = instagram_to_discord.converter_instagram_url.instagram_extract_from_content(
+            input_content)
+        if DEBUG:
+            print(f"result: {result}")
+            print(
+                f"[debug] result len: {len(result)}, answer len: {len(answer)}")
+        assert result == answer
 
     def test_extract_url(self):
         input_content = """こんにちは。データは https://www.instagram.com/p/CGEF-ewBxNm/?utm_source=ig_web_copy_link です。"""
