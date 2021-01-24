@@ -4,6 +4,7 @@ import re
 from debug import DEBUG
 from instagram_type import instagran_parse_json_to_obj, InstagramData
 from string_util import sophisticate_string
+from converter_instagram_url import instagram_make_author_page, instagram_make_base_url
 
 
 class DiscordMessageListener(discord.Client):
@@ -24,7 +25,7 @@ class DiscordMessageListener(discord.Client):
         )
         embed.set_image(url=obj.media)
         embed.set_author(name=obj.full_name,
-                         url="https://www.instagram.com/p/CJ8u5PCH-WG/",
+                         url=instagram_make_author_page(obj.username),
                          icon_url=obj.profile_url
                          )
         return embed
