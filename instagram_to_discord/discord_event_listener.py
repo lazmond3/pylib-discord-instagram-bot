@@ -4,13 +4,14 @@ import re
 from debug import DEBUG
 from instagram_type import instagran_parse_json_to_obj, InstagramData
 from string_util import sophisticate_string
-from converter_instagram_url import instagram_make_author_page, instagram_make_base_url
+from converter_instagram_url import instagram_make_author_page, instagram_make_base_url, instagram_extract_from_content
+from converter_instagram_url import convert_instagram_url_to_a
+from cookie_requests import requests_get_cookie
 
 
 class DiscordMessageListener(discord.Client):
-    def __init__(self, insta_obj: InstagramData):
+    def __init__(self):
         super().__init__()
-        self.insta_obj = insta_obj
 
     async def on_ready(self):
         print('Logged on as {0}!'.format(self.user))
@@ -20,7 +21,7 @@ class DiscordMessageListener(discord.Client):
         embed = discord.Embed(
             title=obj.full_name,
             description=description,
-            url=base_url,  # "https://www.instagram.com/p/CJ8u5PCH-WG/",
+            url=base_url,
             color=discord.Color.red()
         )
         embed.set_image(url=obj.media)
@@ -36,19 +37,22 @@ class DiscordMessageListener(discord.Client):
         print(f"\tchannel: {message.channel}")
         print(f"\ttype channel: {type(message.channel)}")
         if not "instagram-support" in message.author.display_name and "https://www.instagram.com/p/" in message.content:
-            # await message.channel.send("hi message detection")
-            url = "https://www.instagram.com/p/CJ8u5PCH-WG/"
-            embed = self.create_embed(self.insta_obj, url)
+            print("[log] channel name: ", message.channel.name)
+            extracted_base_url = instagram_extract_from_content(
+                message.content)
+            if not extracted_base_url:
+                print("[error] failed to parse base_url for : ", message.content)
+                return
+            a_url = convert_instagram_url_to_a(extracted_base_url)
+            text = requests_get_cookie(url=a_url)
+            insta_obj = instagran_parse_json_to_obj(text)
+
+            embed = self.create_embed(insta_obj, extracted_base_url)
             await message.channel.send(embed=embed)
 
 
 if __name__ == "__main__":
-
-    with open("instagram_sample_img.json") as f:
-        js_str = "".join(f.readlines())
-    insta_obj = instagran_parse_json_to_obj(js_str)
-
-    client = DiscordMessageListener(insta_obj)
+    client = DiscordMessageListener()
 
     TOKEN = os.getenv("TOKEN")
     if DEBUG:
