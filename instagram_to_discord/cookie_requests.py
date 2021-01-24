@@ -1,5 +1,6 @@
 import requests
 import json
+from redis_cli import store_data, get_data
 
 # クッキーの使い方がわかるファイル
 
@@ -18,5 +19,11 @@ with open("cookie2.txt") as f:
 
 
 # redis 機能を加える
-def requests_get_cookie(url):
-    return requests.get(url, cookies=cookie)
+def requests_get_cookie(url, expire=100):
+    cache = get_data(url)
+    if cache:
+        return cache
+    else:
+        data = requests.get(url, cookies=cookie)
+        store_data(url, data.text, expire)
+        return data.text
