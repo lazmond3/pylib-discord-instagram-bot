@@ -35,7 +35,7 @@ class DiscordMessageListener(discord.Client):
         print(f"Message from {message.author.display_name}")
         print(f"\tchannel: {message.channel}")
         print(f"\ttype channel: {type(message.channel)}")
-        if "kazami" in message.author.display_name:
+        if not "instagram-support" in message.author.display_name and "https://www.instagram.com/p/" in message.content:
             # await message.channel.send("hi message detection")
             url = "https://www.instagram.com/p/CJ8u5PCH-WG/"
             embed = self.create_embed(self.insta_obj, url)

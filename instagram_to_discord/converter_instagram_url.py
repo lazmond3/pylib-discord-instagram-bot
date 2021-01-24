@@ -1,5 +1,6 @@
 # __a にアクセスする関数
 import re
+from debug import DEBUG
 
 
 def convert_instagram_url_to_a(url):
@@ -16,6 +17,24 @@ def instagram_make_base_url(url):
     if m:
         new_url = m.group(0)
         return new_url
+    return None
+
+
+def extract_url(line: str):
+    m = re.match(r"^.*(https://www.instagram.com/p/([^/])+).*$", line)
+    if m:
+        return m.group(1)
+    else:
+        return None
+
+
+def instagram_extract_from_content(content: str):
+    for line in content.split("\n"):
+        if DEBUG:
+            print("[debug extract from..] line: {}".format(line))
+        base_url = instagram_make_base_url(line)
+        if base_url:
+            return base_url
     return None
 
 
