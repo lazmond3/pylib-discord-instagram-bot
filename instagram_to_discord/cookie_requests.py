@@ -5,6 +5,7 @@ from redis_cli import store_data, get_data
 # クッキーの使い方がわかるファイル
 
 # cookie2.txt をこのように使うと、クッキーを使ったリクエストができるっぽい！
+# DANGER instagram の cookie が別サイトにも送信されてしまいうる。
 cookie = dict()
 with open("cookie2.txt") as f:
     alltext = []
