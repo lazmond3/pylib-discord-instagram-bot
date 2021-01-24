@@ -14,7 +14,7 @@ class BasicTestSuite(unittest.TestCase):
     def test_instagram_make_base_url(self):
         input_str = "https://www.instagram.com/p/CGEF-ewBxNm/?utm_source=ig_web_copy_link"
         answer = "https://www.instagram.com/p/CGEF-ewBxNm"
-        result = instagram_to_discord.convert_instgram_url_to_a.instagram_make_base_url(
+        result = instagram_to_discord.converter_instagram_url.instagram_make_base_url(
             input_str
         )
         if DEBUG:
@@ -25,7 +25,7 @@ class BasicTestSuite(unittest.TestCase):
     def test_instagram_make_author_page(username):
         input_usr = "winter_28270"
         answer = "https://www.instagram.com/winter_28270/"
-        result = instagram_to_discord.convert_instgram_url_to_a.instagram_make_author_page(
+        result = instagram_to_discord.converter_instagram_url.instagram_make_author_page(
             input_usr)
         assert answer == result
 

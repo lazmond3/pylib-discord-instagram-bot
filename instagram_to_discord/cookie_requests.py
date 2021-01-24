@@ -1,6 +1,6 @@
 import requests
 import json
-from redis_cli import store_data, get_data
+from .redis_cli import store_data, get_data
 
 # クッキーの使い方がわかるファイル
 
