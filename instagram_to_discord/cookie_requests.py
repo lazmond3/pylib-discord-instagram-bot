@@ -2,16 +2,18 @@ import requests
 import json
 from debug import DEBUG
 from .redis_cli import store_data, get_data
+import os
+COOKIE_PATH = os.getenv("COOKIE_PATH")
 
 # クッキーの使い方がわかるファイル
 
-# cookie2.txt をこのように使うと、クッキーを使ったリクエストができるっぽい！
 # DANGER instagram の cookie が別サイトにも送信されてしまいうる。
 cookie = dict()
 
 
 def make_cookie(path):
     global cookie
+    cookie2 = dict()
     with open(path) as f:
         alltext = []
         for line in f.readlines():
@@ -22,11 +24,18 @@ def make_cookie(path):
             if DEBUG:
                 print("split: ", each.split("="))
             key, v = each.split("=")[0], "".join(each.split("=")[1:])
-            cookie[key] = v
+            cookie2[key] = v
+    for k in cookie2.keys():
+        if k in [
+            "mid",
+            "sessionid"
+        ]:
+            cookie[k] = cookie2[k]
     return cookie
 
 
-make_cookie("cookie2.txt")
+if COOKIE_PATH:
+    make_cookie(COOKIE_PATH)
 
 # redis 機能を加える
 
