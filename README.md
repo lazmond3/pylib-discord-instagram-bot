@@ -1,9 +1,28 @@
+# USage
+
+```bash
+
+# install
+python3 setup.py install
+# or
+pip3 -r requirements.txt
+
+
+# execution
+REDIS_PASS=$REDIS_PASS \
+  TOKEN=$DISCORD_BOT_TOKEN \
+  DEBUG=1 \
+  python3 -m instagram_to_discord
+```
+
 # 2021/01/24 日 02:25]
 
 ## DOING
 
+- cookie を get env 経由で..
+
 - discord.py はだいぶ使えるようになった。
-- instagram parse が下手で、
+- [x] instagram parse が下手で、
   - [x] title
   - [x] url の取得 ( これは obj には入れないよね？ )
   - [x] author url (そんなに重要ではないのでなくてもいい)
