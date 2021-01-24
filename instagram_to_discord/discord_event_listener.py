@@ -17,7 +17,7 @@ class DiscordMessageListener(discord.Client):
     def create_embed(self, obj: InstagramData):
         description = sophisticate_string(obj.caption)
         embed = discord.Embed(
-            title="instagram",
+            title=obj.full_name,
             description=description,
             url="https://www.instagram.com/p/CJ8u5PCH-WG/",
             color=discord.Color.red()
