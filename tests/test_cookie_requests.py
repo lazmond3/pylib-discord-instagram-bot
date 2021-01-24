@@ -4,6 +4,7 @@
 import unittest
 from . import context
 from debug import DEBUG
+import requests
 instagram_to_discord = context.instagram_to_discord
 
 
@@ -19,6 +20,18 @@ class BasicTestSuite(unittest.TestCase):
         text = instagram_to_discord.cookie_requests.requests_get_cookie(
             url=a_url, expire=100)
         assert instagram_to_discord.redis_cli.get_data(a_url) != None
+
+    def test_cookie(self):
+        path = "cookie3.txt"
+        cookie = instagram_to_discord.cookie_requests.make_cookie(path)
+        text = requests.get(
+            "https://www.instagram.com/p/CJ8u5PCH-WG/?__a=1",
+            cookies=cookie).text
+        if DEBUG:
+            print("text: ", text[:300])
+            print("debug test_cookie: ",
+                  cookie)
+        assert "graphql" in text
 
 
 if __name__ == '__main__':
