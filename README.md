@@ -4,8 +4,8 @@
 
 - discord.py はだいぶ使えるようになった。
 - instagram parse が下手で、
-  - title
-  - url の取得 ( これは obj には入れないよね？ )
+  - [x] title
+  - [x] url の取得 ( これは obj には入れないよね？ )
   - author url (そんなに重要ではないのでなくてもいい)
     というのを加えよう。
 
