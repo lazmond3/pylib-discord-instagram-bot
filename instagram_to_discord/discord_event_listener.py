@@ -14,12 +14,12 @@ class DiscordMessageListener(discord.Client):
     async def on_ready(self):
         print('Logged on as {0}!'.format(self.user))
 
-    def create_embed(self, obj: InstagramData):
+    def create_embed(self, obj: InstagramData, base_url: str):
         description = sophisticate_string(obj.caption)
         embed = discord.Embed(
             title=obj.full_name,
             description=description,
-            url="https://www.instagram.com/p/CJ8u5PCH-WG/",
+            url=base_url,  # "https://www.instagram.com/p/CJ8u5PCH-WG/",
             color=discord.Color.red()
         )
         embed.set_image(url=obj.media)
@@ -36,7 +36,8 @@ class DiscordMessageListener(discord.Client):
         print(f"\ttype channel: {type(message.channel)}")
         if "kazami" in message.author.display_name:
             # await message.channel.send("hi message detection")
-            embed = self.create_embed(self.insta_obj)
+            url = "https://www.instagram.com/p/CJ8u5PCH-WG/"
+            embed = self.create_embed(self.insta_obj, url)
             await message.channel.send(embed=embed)
 
 
