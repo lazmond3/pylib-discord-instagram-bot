@@ -5,7 +5,7 @@ from debug import DEBUG
 
 def convert_instagram_url_to_a(url):
     # https://www.instagram.com/p/CJ8u5PCH-WG/?utm_source=ig_web_copy_link
-    m = re.match(r"https://www.instagram.com/p/([^/])+", url)
+    m = re.match(r"https://www.instagram.com/(p|reel)/([^/])+", url)
     if m:
         new_url = m.group(0) + "/?__a=1"
         return new_url
@@ -13,7 +13,7 @@ def convert_instagram_url_to_a(url):
 
 
 def instagram_make_base_url(url):
-    m = re.match(r"https://www.instagram.com/p/([^/])+", url)
+    m = re.match(r"https://www.instagram.com/(p|reel)/([^/])+", url)
     if m:
         new_url = m.group(0)
         return new_url
@@ -21,7 +21,7 @@ def instagram_make_base_url(url):
 
 
 def extract_url(line: str):
-    m = re.match(r"^.*(https://www.instagram.com/p/([^/])+).*$", line)
+    m = re.match(r"^.*(https://www.instagram.com/(p|reel)/([^/])+).*$", line)
     if m:
         return m.group(1)
     else:
@@ -45,3 +45,7 @@ def instagram_make_author_page(username):
 if __name__ == "__main__":
     print("make: ", convert_instagram_url_to_a(
         "https://www.instagram.com/p/CJ8u5PCH-WG/?utm_source=ig_web_copy_link"))
+    print("make: ", convert_instagram_url_to_a(
+        "https://www.instagram.com/reel/CJ8u5PCH-WG/?utm_source=ig_web_copy_link"))
+    print("extract: ", extract_url(
+        "https://www.instagram.com/reel/CJ8u5PCH-WG/?utm_source=ig_web_copy_link"))

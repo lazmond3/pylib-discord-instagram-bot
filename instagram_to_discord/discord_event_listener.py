@@ -36,7 +36,10 @@ class DiscordMessageListener(discord.Client):
         print(f"Message from {message.author.display_name}")
         print(f"\tchannel: {message.channel}")
         print(f"\ttype channel: {type(message.channel)}")
-        if not "instagram-support" in message.author.display_name and "https://www.instagram.com/p/" in message.content:
+        if not "instagram-support" in \
+            message.author.display_name and \
+                ("https://www.instagram.com/p/" in message.content or
+                 "https://www.instagram.com/reel/" in message.content):
             print("[log] channel name: ", message.channel.name)
             extracted_base_url = instagram_extract_from_content(
                 message.content)
