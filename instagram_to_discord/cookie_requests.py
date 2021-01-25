@@ -1,9 +1,16 @@
+import os
+from .redis_cli import REDIS_PASS
 import requests
 import json
 from debug import DEBUG
-from .redis_cli import store_data, get_data, REDIS_PASS
-import os
 COOKIE_PATH = os.getenv("COOKIE_PATH")
+if not COOKIE_PATH:
+    print("please give me COOKIE for instagram.com!")
+    print("USAGE COOKIE_PATH=<> TOKEN=<bot token> python3 -m instagram_to_discord")
+    exit(1)
+
+if REDIS_PASS:
+    from .redis_cli import store_data, get_data
 
 # クッキーの使い方がわかるファイル
 
@@ -40,6 +47,7 @@ if COOKIE_PATH:
 # redis 機能を加える
 
 if REDIS_PASS:
+    # 本当は導通確認でもいいかも。
     def requests_get_cookie(url, expire=1000):
         cache = get_data(url)
         if cache:
