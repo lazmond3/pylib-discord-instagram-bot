@@ -1,7 +1,7 @@
 import requests
 import json
 from debug import DEBUG
-from .redis_cli import store_data, get_data
+from .redis_cli import store_data, get_data, REDIS_PASS
 import os
 COOKIE_PATH = os.getenv("COOKIE_PATH")
 
@@ -39,12 +39,16 @@ if COOKIE_PATH:
 
 # redis 機能を加える
 
-
-def requests_get_cookie(url, expire=1000):
-    cache = get_data(url)
-    if cache:
-        return cache
-    else:
+if REDIS_PASS:
+    def requests_get_cookie(url, expire=1000):
+        cache = get_data(url)
+        if cache:
+            return cache
+        else:
+            data = requests.get(url, cookies=cookie)
+            store_data(url, data.text, expire)
+            return data.text
+else:
+    def requests_get_cookie(url, expire=1000):
         data = requests.get(url, cookies=cookie)
-        store_data(url, data.text, expire)
         return data.text
