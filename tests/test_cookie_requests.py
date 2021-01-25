@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # from .context import use_hello
+from instagram_to_discord.cookie_requests import REDIS_PASS
 import unittest
 from . import context
 from debug import DEBUG
@@ -17,9 +18,12 @@ class BasicTestSuite(unittest.TestCase):
         a_url = instagram_to_discord.converter_instagram_url.convert_instagram_url_to_a(
             url)
 
-        text = instagram_to_discord.cookie_requests.requests_get_cookie(
-            url=a_url, expire=100)
-        assert instagram_to_discord.redis_cli.get_data(a_url) != None
+        if REDIS_PASS:
+            text = instagram_to_discord.cookie_requests.requests_get_cookie(
+                url=a_url, expire=100)
+            assert instagram_to_discord.redis_cli.get_data(a_url) != None
+        else:
+            assert True
 
     def test_cookie(self):
         path = "cookie3.txt"
