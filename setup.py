@@ -26,7 +26,7 @@ def load_requires_from_file(filepath):
 
 
 setup(
-    name='lazmodn3-instagram-to-discord',
+    name='lazmond3-pylib-instagram-to-discord',
     version='0.1.0',
     description='convert to image post for discord',
     long_description=readme,
