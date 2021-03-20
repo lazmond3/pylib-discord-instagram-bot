@@ -51,6 +51,11 @@ class DiscordMessageListener(discord.Client):
 
             embed = self.create_embed(insta_obj, extracted_base_url)
             await message.channel.send(embed=embed)
+        elif not "instagram-support" in message.author.display_name and \
+            ("https://twitter.com/" in message.content and
+                 "/status/" in message.content):
+                 
+
 
 
 def main():
