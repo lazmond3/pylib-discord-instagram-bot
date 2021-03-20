@@ -41,8 +41,7 @@ class DiscordMessageListener(discord.Client):
                 ("https://www.instagram.com/p/" in message.content or
                  "https://www.instagram.com/reel/" in message.content):
             print("[log] channel name: ", message.channel.name)
-            extracted_base_url = instagram_extract_from_content(
-                message.content)
+            extracted_base_url = instagram_extract_from_content(message.content)
             if not extracted_base_url:
                 print("[error] failed to parse base_url for : ", message.content)
                 return
