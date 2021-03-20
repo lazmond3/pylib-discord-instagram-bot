@@ -17,7 +17,7 @@ def twitter_fetch_content(tweet_id: str) -> List[str]:
         print(f"tw: {tw}")
     return tw.image_urls
 
-def twitter_line_to_image_urls(list:str) -> List[str]:
+def twitter_line_to_image_urls(line:str) -> List[str]:
     tweet_id = twitter_extract_tweet_id(line)
     return twitter_fetch_content(tweet_id)
 
