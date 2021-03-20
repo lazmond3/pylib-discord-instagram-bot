@@ -54,7 +54,8 @@ class DiscordMessageListener(discord.Client):
         elif not "instagram-support" in message.author.display_name and \
             ("https://twitter.com/" in message.content and
                  "/status/" in message.content):
-                 
+            pass
+
 
 
 
