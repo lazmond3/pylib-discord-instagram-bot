@@ -36,6 +36,7 @@ setup(
     install_requires=[
         "lazmond3-pylib-debug",
         "lazmond3-pylib-instagram-type",
+        "lazmond3-pylib-twitter",
         "dict2obj",
         "redis-py-cluster",
         "discord.py"

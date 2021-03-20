@@ -4,3 +4,4 @@ discord.py
 requests
 -e git+https://github.com/lazmond3/pylib-debug.git@master#egg=lazmond3-pylib-debug # public package
 -e git+https://github.com/lazmond3/pylib-instagram-type.git@master#egg=lazmond3-pylib-instagram-type # public package
+-e git+https://github.com/lazmond3/pylib-twitter.git@master#egg=lazmond3-pylib-twitter # public package
