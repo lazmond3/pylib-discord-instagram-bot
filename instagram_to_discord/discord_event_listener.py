@@ -10,8 +10,6 @@ from .cookie_requests import requests_get_cookie
 from .twitter_multiple import twitter_line_to_image_urls, twitter_extract_tweet_url
 from .util import is_int
 from typing import Dict, List
-
-
 class DiscordMessageListener(discord.Client):
     last_url_twitter: Dict[str, str] = {}
 
@@ -110,3 +108,33 @@ def main():
     if DEBUG:
         print("TOKEN: ", TOKEN)
     client.run(TOKEN)
+
+    # backup history
+    # import discord
+    # from discord.ext import commands
+    # import asyncio
+
+    # bot = commands.Bot(command_prefix = "{")
+
+    # @bot.command(name="clear", pass_context = True)
+    # async def clear(ctx, number):
+    #     number = int(number) #Converting the amount of messages to delete to an integer
+    #     counter = 0
+    #     print("bot command")
+    #     async for x in bot.logs_from(ctx.message.channel, limit = number):
+    #         if counter < number:
+    #             # await Client.delete_message(x)
+    #             await print(f"x: {x}")
+    #             counter += 1
+    #             await asyncio.sleep(1.2) #1.2 second timer so the deleting process can be even
+
+
+    # @bot.command(name="copy")
+    # async def copy(ctx):
+    #     print(f"copy executed!: ctx: {ctx}")
+    #     with open("file.txt", "w") as f:
+    #         async for message in ctx.history(limit=1000):
+    #             f.write(message.content + "\n")
+
+    #     await ctx.send("Done!")
+    # bot.run(TOKEN)
