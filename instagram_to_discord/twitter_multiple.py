@@ -11,6 +11,14 @@ def twitter_extract_tweet_id(line: str) -> str:
     else:
         raise Exception(f"error failed to parse re line: {line}")
 
+def twitter_extract_tweet_url(line: str) -> str:
+    # sample: https://twitter.com/mmmlmmm2/status/1372519422380797955?s=09
+    m = re.match(r"^.*(https://twitter.com/([^/]+)/status/([0-9]+)).*$", line)
+    if m:
+        return m.group(1)
+    else:
+        raise Exception(f"error failed to parse re line: {line}")
+
 def twitter_fetch_content(tweet_id: str) -> List[str]:
     tw = get_one_tweet(tweet_id)
     if DEBUG:
