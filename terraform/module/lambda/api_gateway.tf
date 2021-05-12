@@ -17,8 +17,8 @@ resource "aws_api_gateway_method" "hello_world" {
   resource_id   = aws_api_gateway_resource.hello_world.id
   http_method   = "POST"
   authorization = "NONE"
-  # api_key_required = true
-  api_key_required = false
+  api_key_required = true
+  # api_key_required = false
 }
 
 resource "aws_api_gateway_method_response" "hello_world" {
