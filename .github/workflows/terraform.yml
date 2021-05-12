@@ -41,6 +41,16 @@ jobs:
         id: init
         run: terraform init
 
+      - name: build python(copyするだけ)
+        run: |
+          cd ../../../../
+          echo pwd:
+          pwd
+          echo ls:
+          ls
+          bash build-lambda.bash
+          cd terraform/run/env/dev
+
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
