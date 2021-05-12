@@ -16,7 +16,7 @@ provider "aws" {
   region = "ap-northeast-1"
 }
 
-module "lambda-sample" {
-  source   = "../../../module/lambda"
-  app_name = var.app_name
-}
+# module "lambda-sample" {
+#   source   = "../../../module/lambda"
+#   app_name = var.app_name
+# }
