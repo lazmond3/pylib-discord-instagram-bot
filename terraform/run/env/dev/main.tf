@@ -20,3 +20,7 @@ module "lambda-sample" {
   source   = "../../../module/lambda"
   app_name = var.app_name
 }
+
+output "base_url" {
+  value = module.lambda-sample.base_url
+}
