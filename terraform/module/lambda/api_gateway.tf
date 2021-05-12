@@ -55,16 +55,16 @@ resource "aws_api_gateway_deployment" "example" {
   }
 }
 
-resource "aws_api_gateway_method_settings" "example" {
-  rest_api_id = aws_api_gateway_rest_api.discord_endpoint.id
-  stage_name  = aws_api_gateway_deployment.example.stage_name
-  method_path = "*/*"
+# resource "aws_api_gateway_method_settings" "example" {
+#   rest_api_id = aws_api_gateway_rest_api.discord_endpoint.id
+#   stage_name  = aws_api_gateway_deployment.example.stage_name
+#   method_path = "*/*"
 
-  settings {
-    data_trace_enabled = true
-    logging_level      = "INFO"
-  }
-}
+#   settings {
+#     data_trace_enabled = true
+#     logging_level      = "INFO"
+#   }
+# }
 
 # 6. API GatewayにLambda関数へのアクセスを許可
 resource "aws_lambda_permission" "hello_world" {
