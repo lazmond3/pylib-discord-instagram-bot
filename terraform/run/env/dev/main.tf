@@ -28,7 +28,7 @@ module "vpc" {
 
 module "ecr" {
   source                         = "../../../module/ecr"
-  app_name                       = var.app_name
+  # app_name                       = var.app_name
   ecr-name                       = var.ecr-name
   vpc_id                         = module.vpc.vpc_id
   aws_route_table_ids_for_public = module.vpc.aws_route_table_ids_for_public

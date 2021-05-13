@@ -9,5 +9,9 @@ output "vpc_cidr" {
   value = var.vpc_cidr
 }
 output "aws_route_table_ids_for_public" {
-  value = aws_route_table.publics.*.id
+  value = [aws_route_table.public.id]
+}
+
+output "public_subnet_ids" {
+  value = ["${aws_subnet.publics.*.id}"]
 }
