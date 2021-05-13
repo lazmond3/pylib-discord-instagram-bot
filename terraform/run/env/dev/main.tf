@@ -20,3 +20,18 @@ provider "aws" {
 #   source   = "../../../module/lambda"
 #   app_name = var.app_name
 # }
+
+module "vpc" {
+  source   = "../../../module/vpc"
+  app_name = var.app_name
+}
+
+module "ecr" {
+  source                         = "../../../module/ecr"
+  app_name                       = var.app_name
+  ecr-name                       = var.ecr-name
+  vpc_id                         = module.vpc.vpc_id
+  aws_route_table_ids_for_public = module.vpc.aws_route_table_ids_for_public
+  vpc_cidr                       = module.vpc.vpc_cidr
+
+}

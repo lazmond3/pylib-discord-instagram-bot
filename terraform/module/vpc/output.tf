@@ -4,9 +4,6 @@ output "vpc_id" {
 output "aws_subnet_public_ids" {
   value = aws_subnet.publics.*.id
 }
-output "aws_route_table_ids_for_public" {
-  value = aws_subnet.privates.*.id
-}
 
 output "vpc_cidr" {
   value = var.vpc_cidr

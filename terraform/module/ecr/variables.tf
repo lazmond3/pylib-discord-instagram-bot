@@ -10,7 +10,3 @@ variable "aws_route_table_ids_for_public" {
 variable "vpc_cidr" {
   type = string
 }
-
-variable "aws_route_table_ids_for_public" {
-  type = list(string)
-}
