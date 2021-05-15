@@ -94,7 +94,7 @@ module "iam" {
   source                                         = "../../../module/iam"
   app_name                                       = var.app_name
   vpc_id                                         = module.vpc.vpc_id
-  aws_cloudwatch_log_group_main_arn              = module.cloudwatch.aws_cloudwatch_log_group_main_name
+  aws_cloudwatch_log_group_main_arn              = module.cloudwatch.aws_cloudwatch_log_group_main_arn
   aws_ssm_parameter_database_password_secret_arn = module.ssm.aws_ssm_parameter_database_password_secret_arn
   ecs_task_execution_role_id                     = module.iam.aws_iam_role_ecs_task_execution_role_id
 }
