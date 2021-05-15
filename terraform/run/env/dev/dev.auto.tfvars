@@ -24,6 +24,6 @@ task_mysql_database = "discord"
 task_mysql_user     = "user"
 task_db_port        = "3306"
 
-cert_arn = "arn:aws:acm:ap-northeast-1:554506578892:certificate/8c4660bc-e960-4e74-8de0-4beb26637621"
+cert_arn = "arn:aws:acm:ap-northeast-1:554506578892:certificate/de18d8c0-ab5d-43ae-b5e8-dd8143d96a4d"
 
 cert_route53_zone_main_id = "Z04052072YGY8CIREK2A2"
