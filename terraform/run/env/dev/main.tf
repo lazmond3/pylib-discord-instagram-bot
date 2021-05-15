@@ -54,13 +54,13 @@ module "ecr" {
 }
 
 # ここまで実装した
-module "vpc_endpoint" {
-  source                                  = "../../../module/vpc_endpoint"
-  vpc_id                                  = module.vpc.vpc_id
-  vpc_cidr                                = var.vpc_cidr
-  vpc_aws_subnet_private_ids              = module.vpc.vpc_aws_subnet_private_ids
-  vpc_aws_route_table_id_for_private_list = module.vpc.vpc_aws_route_table_id_for_private_list
-}
+# module "vpc_endpoint" {
+#   source                                  = "../../../module/vpc_endpoint"
+#   vpc_id                                  = module.vpc.vpc_id
+#   vpc_cidr                                = var.vpc_cidr
+#   vpc_aws_subnet_private_ids              = module.vpc.vpc_aws_subnet_private_ids
+#   vpc_aws_route_table_id_for_private_list = module.vpc.vpc_aws_route_table_id_for_private_list
+# }
 
 
 # ここまで実装した
@@ -74,7 +74,7 @@ module "ecs" {
   app_name                                       = var.app_name
   template_file_path                             = var.template_file_path
   ecs_load_balancer_target_arn                   = module.alb.alb_target_group_main_arn
-  ecs_subnets                                    = module.vpc.vpc_aws_subnet_private_ids
+  ecs_subnets                                    = module.vpc.vpc_aws_subnet_public_ids
   container_name                                 = var.container_name
   container_port                                 = var.container_port
   container_repository                           = var.container_repository
@@ -103,18 +103,3 @@ module "ssm" {
   source         = "../../../module/ssm"
   mysql_password = var.mysql_password
 }
-
-# rds をやってみる
-# module "rds" {
-#   app_name           = var.app_name
-#   source             = "../../../module/rds"
-#   vpc_id             = module.vpc.vpc_id
-#   aws_lb_public_ids  = module.vpc.vpc_aws_subnet_public_ids
-#   aws_lb_private_ids = module.vpc.vpc_aws_subnet_private_ids
-#   vpc_cidr           = var.vpc_cidr
-#   # debug_ec2_aws_route_table_id_0 = module.vpc.aws_route_table_ids_for_private[0]
-#   mysql_password             = var.mysql_password
-#   mysql_database             = var.task_mysql_database
-#   mysql_user                 = var.task_mysql_user
-#   ecs_task_execution_role_id = module.iam.aws_iam_role_ecs_task_execution_role_id
-# }
