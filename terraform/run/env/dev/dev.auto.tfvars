@@ -14,7 +14,7 @@ ecr_name = "discord-instagram-bot"
 template_file_path = "../../../module/ecs/nginx_template.json" # main.tf からの相対パス
 
 container_repository = "554506578892.dkr.ecr.ap-northeast-1.amazonaws.com/discord-instagram-bot"
-container_tag        = "1.0.0-c51121e"
+container_tag        = "1.0.0-160b84e"
 
 # container_name = "discord-instagram-bot" # でいいのか？
 container_name = "nginx" # でいいのか？
