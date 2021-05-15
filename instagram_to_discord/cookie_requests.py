@@ -3,11 +3,13 @@ from .redis_cli import REDIS_PASS
 import requests
 import json
 from debug import DEBUG
-COOKIE_PATH = os.getenv("COOKIE_PATH")
-if not COOKIE_PATH:
-    print("please give me COOKIE for instagram.com!")
-    print("USAGE COOKIE_PATH=<> TOKEN=<bot token> python3 -m instagram_to_discord")
-    exit(1)
+# COOKIE_PATH = os.getenv("COOKIE_PATH")
+# if not COOKIE_PATH:
+#     print("please give me COOKIE for instagram.com!")
+#     print("USAGE COOKIE_PATH=<> TOKEN=<bot token> python3 -m instagram_to_discord")
+#     exit(1)
+MID=os.getenv("MID")
+SESSIONID=os.getenv("MID")
 
 if REDIS_PASS:
     from .redis_cli import store_data, get_data
@@ -43,6 +45,9 @@ def make_cookie(path):
 
 if COOKIE_PATH:
     make_cookie(COOKIE_PATH)
+else:
+    cookie["mid"] = MID
+    cookie["sessionid"] = SESSIONID
 
 # redis 機能を加える
 
