@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.issue.pull_request != null && github.event.comment.body == '.build' }}
     steps:
-        - uses: actions/github-script@v3
+      - uses: actions/github-script@v3
         id: get-pr
         with:
           script: |
