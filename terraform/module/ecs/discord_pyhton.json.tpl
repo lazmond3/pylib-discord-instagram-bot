@@ -27,7 +27,11 @@
     "environment": [
       {
         "name": "CONTAINER_TAG",
-        "value":  "${container_tag}"
+        "value": "${container_tag}"
+      },
+      {
+        "name": "DEBUG",
+        "value": "1"
       }
     ],
     "logConfiguration": {
