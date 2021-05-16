@@ -18,7 +18,7 @@ class DiscordMessageListener(discord.Client):
     async def on_ready(self):
         print('Logged on as {0}!'.format(self.user))
 
-    async def send_twitter_images_for_specified_index(self, image_urls: List[str], nums: List[int]):
+    async def send_twitter_images_for_specified_index(self, image_urls: List[str], nums: List[int], message):
         for n in nums:
             idx = n-1
             assert(idx >= 0)
@@ -93,13 +93,13 @@ class DiscordMessageListener(discord.Client):
                 nums = list(nums)
             else: return
             image_urls = twitter_line_to_image_urls(content)
-            self.send_twitter_images_for_specified_index(twitter_line_to_image_urls, nums)
+            await self.send_twitter_images_for_specified_index(image_urls, nums, message)
         elif not "instagram-support" in message.author.display_name and \
             len(list(filter(lambda x: is_int(x), content.split(",")))) > 0 and \
                self.last_url_twitter[channel]: # last_url_twitter が存在する。
             nums = list(map(lambda x: int(x), filter(lambda x: is_int(x), content.split(","))))
             image_urls = twitter_line_to_image_urls(self.last_url_twitter[channel])
-            self.send_twitter_images_for_specified_index(twitter_line_to_image_urls, nums)
+            await self.send_twitter_images_for_specified_index(image_urls, nums, message)
 
 def main():
     client = DiscordMessageListener()
