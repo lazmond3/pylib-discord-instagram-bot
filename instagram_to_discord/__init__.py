@@ -17,6 +17,7 @@ def env_check():
         print("container tag: ", os.getenv("CONTAINER_TAG"))
     else:
         print("some of required variables are not set.")
+        exit(1)
 
 
 from .discord_event_listener import main

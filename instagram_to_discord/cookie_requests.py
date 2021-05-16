@@ -9,7 +9,13 @@ from debug import DEBUG
 #     print("USAGE COOKIE_PATH=<> TOKEN=<bot token> python3 -m instagram_to_discord")
 #     exit(1)
 MID=os.getenv("MID")
-SESSIONID=os.getenv("MID")
+if not MID:
+    print("ERROR! MID NOT SET")
+    exit(1)
+SESSIONID=os.getenv("SESSIONID")
+if not SESSIONID:
+    print("ERROR! SESSIONID NOT SET")
+    exit(1)
 
 if REDIS_PASS:
     from .redis_cli import store_data, get_data
@@ -43,11 +49,11 @@ def make_cookie(path):
     return cookie
 
 
-if COOKIE_PATH:
-    make_cookie(COOKIE_PATH)
-else:
-    cookie["mid"] = MID
-    cookie["sessionid"] = SESSIONID
+# if COOKIE_PATH:
+#     make_cookie(COOKIE_PATH)
+# else:
+cookie["mid"] = MID
+cookie["sessionid"] = SESSIONID
 
 # redis 機能を加える
 
