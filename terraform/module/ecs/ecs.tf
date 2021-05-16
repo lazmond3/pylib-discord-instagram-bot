@@ -65,6 +65,8 @@ resource "aws_ecs_service" "main" {
     subnets = var.ecs_subnets
     # タスクに紐付けるセキュリティグループ
     security_groups = [var.aws_security_group_ecs_id]
+
+    assign_public_ip = "true"
   }
 
   # ECSタスクの起動後に紐付けるELBターゲットグループ
