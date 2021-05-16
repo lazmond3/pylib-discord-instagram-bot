@@ -5,25 +5,25 @@
     "secrets": [
       {
         "name": "TOKEN",
-        "valueFrom": "${token}"
+        "valueFrom": "${token_arn}"
       },
       {
         "name": "CONSUMER_KEY",
-        "valueFrom": "${consumer_key}"
+        "valueFrom": "${consumer_key_arn}"
       },
       {
         "name": "CONSUMER_SECRET",
-        "valueFrom": "${consumer_secret}"
+        "valueFrom": "${consumer_secret_arn}"
       },
       {
         "name": "MID",
-        "valueFrom": "${mid}"
+        "valueFrom": "${mid_arn}"
       },
       {
         "name": "SESSIONID",
-        "valueFrom": "${mid}"
+        "valueFrom": "${sessionid_arn}"
       }
-    ]
+    ],
     "environment": [
       {
         "name": "CONTAINER_TAG",

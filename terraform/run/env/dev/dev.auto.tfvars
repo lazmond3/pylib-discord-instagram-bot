@@ -11,7 +11,7 @@ vpc_private_subnet_cidrs = ["10.0.10.0/24", "10.0.11.0/24", "10.0.12.0/24"]
 
 ecr_name = "discord-instagram-bot"
 
-template_file_path = "../../../module/ecs/nginx_template.json" # main.tf からの相対パス
+template_file_path = "../../../module/ecs/discord_pyhton.json.tpl" # main.tf からの相対パス
 
 container_repository = "554506578892.dkr.ecr.ap-northeast-1.amazonaws.com/discord-instagram-bot"
 container_tag        = "1.1.0-db261f0"
