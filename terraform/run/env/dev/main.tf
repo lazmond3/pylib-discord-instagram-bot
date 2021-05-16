@@ -92,11 +92,11 @@ module "ecs" {
   # mid = var.mid
   # sessionid = var.sessionid
 
-  aws_ecr_repository_name                        = module.ecr.aws_ecr_repository_name
-  aws_ssm_parameter_database_password_secret_arn = module.ssm.aws_ssm_parameter_database_password_secret_arn
-  aws_cloudwatch_log_group_main_name             = module.cloudwatch.aws_cloudwatch_log_group_main_name
-  task_mysql_database                            = var.task_mysql_database
-  task_mysql_user                                = var.task_mysql_user
+  aws_ecr_repository_name = module.ecr.aws_ecr_repository_name
+  # aws_ssm_parameter_database_password_secret_arn = module.ssm.aws_ssm_parameter_database_password_secret_arn
+  aws_cloudwatch_log_group_main_name = module.cloudwatch.aws_cloudwatch_log_group_main_name
+  task_mysql_database                = var.task_mysql_database
+  task_mysql_user                    = var.task_mysql_user
   # task_db_address                                = module.rds.db_address
   task_db_port                = var.task_db_port
   aws_security_group_ecs_id   = module.security.aws_security_group_ecs_id
@@ -104,12 +104,19 @@ module "ecs" {
 }
 
 module "iam" {
-  source                                         = "../../../module/iam"
-  app_name                                       = var.app_name
-  vpc_id                                         = module.vpc.vpc_id
-  aws_cloudwatch_log_group_main_arn              = module.cloudwatch.aws_cloudwatch_log_group_main_arn
-  aws_ssm_parameter_database_password_secret_arn = module.ssm.aws_ssm_parameter_database_password_secret_arn
-  ecs_task_execution_role_id                     = module.iam.aws_iam_role_ecs_task_execution_role_id
+  source                            = "../../../module/iam"
+  app_name                          = var.app_name
+  vpc_id                            = module.vpc.vpc_id
+  aws_cloudwatch_log_group_main_arn = module.cloudwatch.aws_cloudwatch_log_group_main_arn
+  # aws_ssm_parameter_database_password_secret_arn = module.ssm.aws_ssm_parameter_database_password_secret_arn
+  ecs_task_execution_role_id = module.iam.aws_iam_role_ecs_task_execution_role_id
+  secret_arns = [
+    module.ssm.aws_ssm_parameter_token_arn,
+    module.ssm.aws_ssm_parameter_consumer_key_arn,
+    module.ssm.aws_ssm_parameter_consumer_secret_arn,
+    module.ssm.aws_ssm_parameter_mid_arn,
+    module.ssm.aws_ssm_parameter_sessionid_arn
+  ]
 }
 
 module "ssm" {

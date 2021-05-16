@@ -13,11 +13,11 @@ data "template_file" "container_definitions" {
     # consumer_secret = var.consumer_secret
     # mid = var.mid
     # sessionid = var.sessionid
-    aws_ssm_parameter_token_arn           = module.ssm.aws_ssm_parameter_token_arn
-    aws_ssm_parameter_consumer_key_arn    = module.ssm.aws_ssm_parameter_consumer_key_arn
-    aws_ssm_parameter_consumer_secret_arn = module.ssm.aws_ssm_parameter_consumer_secret_arn
-    aws_ssm_parameter_mid_arn             = module.ssm.aws_ssm_parameter_mid_arn
-    aws_ssm_parameter_sessionid_arn       = module.ssm.aws_ssm_parameter_sessionid_arn
+    aws_ssm_parameter_token_arn           = var.aws_ssm_parameter_token_arn
+    aws_ssm_parameter_consumer_key_arn    = var.aws_ssm_parameter_consumer_key_arn
+    aws_ssm_parameter_consumer_secret_arn = var.aws_ssm_parameter_consumer_secret_arn
+    aws_ssm_parameter_mid_arn             = var.aws_ssm_parameter_mid_arn
+    aws_ssm_parameter_sessionid_arn       = var.aws_ssm_parameter_sessionid_arn
 
     log_group = var.aws_cloudwatch_log_group_main_name
   }

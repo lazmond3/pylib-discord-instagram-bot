@@ -1,5 +1,7 @@
-resource "aws_iam_role_policy" "mysql_db_password_policy_secretsmanager" {
-  name = "password-policy-mysql_db_password_policy_secretsmanager"
+resource "aws_iam_role_policy" "ecs_to_ssm" {
+  name  = "ecs_to_ssm"
+  count = length(var.secret_arns)
+
   role = var.ecs_task_execution_role_id
 
   policy = <<-EOF
@@ -12,7 +14,7 @@ resource "aws_iam_role_policy" "mysql_db_password_policy_secretsmanager" {
         ],
         "Effect": "Allow",
         "Resource": [
-          "${var.aws_ssm_parameter_database_password_secret_arn}"
+          "${var.secret_arns[count.index]}"
         ]
       }
     ]
