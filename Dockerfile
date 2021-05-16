@@ -5,7 +5,7 @@ COPY setup.py ./
 COPY README.md ./
 COPY LICENSE ./
 COPY tests ./
-COPY instagram_to_discord ./
+COPY instagram_to_discord ./instagram_to_discord/
 
 RUN apt-get update -y
 RUN apt-get install -y git
