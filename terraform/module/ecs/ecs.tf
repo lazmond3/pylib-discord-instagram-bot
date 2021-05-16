@@ -68,10 +68,10 @@ resource "aws_ecs_service" "main" {
   }
 
   # ECSタスクの起動後に紐付けるELBターゲットグループ
-  load_balancer {
-    target_group_arn = var.ecs_load_balancer_target_arn
-    container_name   = var.container_name # var.app_name にしたい
-    container_port   = var.container_port # 8080
-  }
+  # load_balancer {
+  #   target_group_arn = var.ecs_load_balancer_target_arn
+  #   container_name   = var.container_name # var.app_name にしたい
+  #   container_port   = var.container_port # 8080
+  # }
 
 }
