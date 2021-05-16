@@ -73,10 +73,27 @@ variable "task_db_port" {
 }
 
 # TF_VAR_mysql_password で渡す
-variable "mysql_password" {
+# variable "mysql_password" {
+#   type = string
+# }
+
+# ECS のパラメータ
+variable "token" {
   type = string
 }
-
+# discord の キー
+variable "consumer_key" {
+  type = string
+}
+variable "consumer_secret" {
+  type = string
+}
+variable "mid" {
+  type = string
+}
+variable "sessionid" {
+  type = string
+}
 
 # cert
 variable "cert_arn" {

@@ -70,15 +70,28 @@ module "cloudwatch" {
   app_name = var.app_name
 }
 module "ecs" {
-  source                                         = "../../../module/ecs"
-  app_name                                       = var.app_name
-  template_file_path                             = var.template_file_path
-  ecs_load_balancer_target_arn                   = module.alb.alb_target_group_main_arn
-  ecs_subnets                                    = module.vpc.vpc_aws_subnet_public_ids
-  container_name                                 = var.container_name
-  container_port                                 = var.container_port
-  container_repository                           = var.container_repository
-  container_tag                                  = var.container_tag
+  source                       = "../../../module/ecs"
+  app_name                     = var.app_name
+  template_file_path           = var.template_file_path
+  ecs_load_balancer_target_arn = module.alb.alb_target_group_main_arn
+  ecs_subnets                  = module.vpc.vpc_aws_subnet_public_ids
+  container_name               = var.container_name
+  container_port               = var.container_port
+  container_repository         = var.container_repository
+  container_tag                = var.container_tag
+
+  aws_ssm_parameter_token_arn           = module.ssm.aws_ssm_parameter_token_arn
+  aws_ssm_parameter_consumer_key_arn    = module.ssm.aws_ssm_parameter_consumer_key_arn
+  aws_ssm_parameter_consumer_secret_arn = module.ssm.aws_ssm_parameter_consumer_secret_arn
+  aws_ssm_parameter_mid_arn             = module.ssm.aws_ssm_parameter_mid_arn
+  aws_ssm_parameter_sessionid_arn       = module.ssm.aws_ssm_parameter_sessionid_arn
+
+  # token = var.token
+  # consumer_key = var.consumer_key
+  # consumer_secret = var.consumer_secret
+  # mid = var.mid
+  # sessionid = var.sessionid
+
   aws_ecr_repository_name                        = module.ecr.aws_ecr_repository_name
   aws_ssm_parameter_database_password_secret_arn = module.ssm.aws_ssm_parameter_database_password_secret_arn
   aws_cloudwatch_log_group_main_name             = module.cloudwatch.aws_cloudwatch_log_group_main_name
@@ -100,6 +113,10 @@ module "iam" {
 }
 
 module "ssm" {
-  source         = "../../../module/ssm"
-  mysql_password = var.mysql_password
+  source          = "../../../module/ssm"
+  token           = var.token
+  consumer_key    = var.consumer_key
+  consumer_secret = var.consumer_secret
+  mid             = var.mid
+  sessionid       = var.sessionid
 }

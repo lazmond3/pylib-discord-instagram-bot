@@ -37,12 +37,45 @@ variable "container_tag" {
   type = string
 }
 
+# ECS の秘密パラメータ
+variable "aws_ssm_parameter_token_arn" {
+  type = string
+}
+variable "aws_ssm_parameter_consumer_key_arn" {
+  type = string
+}
+variable "aws_ssm_parameter_consumer_secret_arn" {
+  type = string
+}
+variable "aws_ssm_parameter_mid_arn" {
+  type = string
+}
+variable "aws_ssm_parameter_sessionid_arn" {
+  type = string
+}
+# variable "token" {
+#   type = string
+# }
+# # discord の キー
+# variable "consumer_key" {
+#   type = string
+# }
+# variable "consumer_secret" {
+#   type = string
+# }
+# variable "mid" {
+#   type = string
+# }
+# variable "sessionid" {
+#   type = string
+# }
+
 variable "aws_ecr_repository_name" {
   type = string
 }
-variable "aws_ssm_parameter_database_password_secret_arn" {
-  type = string
-}
+# variable "aws_ssm_parameter_database_password_secret_arn" {
+#   type = string
+# }
 
 variable "aws_cloudwatch_log_group_main_name" {
   type = string
