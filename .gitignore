@@ -12,3 +12,5 @@ build
 .terraform*
 *.egg-info
 dist
+
+*.log
