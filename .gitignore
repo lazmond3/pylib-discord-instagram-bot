@@ -8,3 +8,9 @@ cookies.json
 lazmodn3_instagram_to_discord.egg-info
 .venv
 build
+
+.terraform*
+*.egg-info
+dist
+
+*.log

@@ -105,8 +105,8 @@ def main():
     client = DiscordMessageListener()
 
     TOKEN = os.getenv("TOKEN")
-    if DEBUG:
-        print("TOKEN: ", TOKEN)
+    if DEBUG and TOKEN:
+        print("TOKEN: ", TOKEN[0:4] + "....." + TOKEN[-3:])
     client.run(TOKEN)
 
     # backup history
