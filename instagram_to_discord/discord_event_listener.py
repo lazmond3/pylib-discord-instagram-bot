@@ -94,6 +94,7 @@ class DiscordMessageListener(discord.Client):
                 return
             a_url = convert_instagram_url_to_a(extracted_base_url)
             self.last_url_instagram[channel] = a_url
+            self.is_twitter_last = False
 
             text = requests_get_cookie(url=a_url)
             msg_list = content.split()
@@ -126,6 +127,7 @@ class DiscordMessageListener(discord.Client):
         elif ("https://twitter.com/" in content and "/status/" in content):
             # ここで最後のtwitter url を記録しておく。
             self.last_url_twitter[channel] = twitter_extract_tweet_url(content)
+            self.is_twitter_last = True
 
             msg_list = content.split()
             if len(msg_list) > 1:
@@ -136,11 +138,18 @@ class DiscordMessageListener(discord.Client):
             else: return
             image_urls = twitter_line_to_image_urls(content)
             await self.send_images_for_specified_index(image_urls, nums, message)
+
         elif len(list(filter(lambda x: is_int(x), content.split(",")))) > 0 and \
-               self.last_url_twitter[channel]: # last_url_twitter が存在する。
-            nums = list(map(lambda x: int(x), filter(lambda x: is_int(x), content.split(","))))
-            image_urls = twitter_line_to_image_urls(self.last_url_twitter[channel])
-            await self.send_images_for_specified_index(image_urls, nums, message)
+               ( channel in self.last_url_twitter or channel in self.last_url_instagram ): # last_url_twitter が存在する。
+            if self.is_twitter_last:
+                nums = list(map(lambda x: int(x), filter(lambda x: is_int(x), content.split(","))))
+                image_urls = twitter_line_to_image_urls(self.last_url_twitter[channel])
+                await self.send_images_for_specified_index(image_urls, nums, message)
+            else:
+                nums = list(map(lambda x: int(x), filter(lambda x: is_int(x), content.split(","))))
+                text = requests_get_cookie(url=self.last_url_instagram[channel])
+                image_urls = get_multiple_medias_from_str(text)
+                await self.send_instagram_images_for_specified_index(image_urls, nums, message)
 
 def main():
     client = DiscordMessageListener()
