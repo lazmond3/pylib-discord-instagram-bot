@@ -62,9 +62,9 @@ class DiscordMessageListener(discord.Client):
         content = message.content
         channel = message.channel
 
-        if not "instagram-support" in \
-            message.author.display_name and \
-                ("https://www.instagram.com/p/" in content or
+        if "instagram-support" in message.author.display_name: return
+
+        if ("https://www.instagram.com/p/" in content or
                  "https://www.instagram.com/reel/" in content):
             print("[log] channel name: ", message.channel.name)
             extracted_base_url = instagram_extract_from_content(content)
@@ -77,9 +77,7 @@ class DiscordMessageListener(discord.Client):
 
             embed = self.create_embed(insta_obj, extracted_base_url)
             await message.channel.send(embed=embed)
-        elif not "instagram-support" in message.author.display_name and \
-            ("https://twitter.com/" in content and
-                 "/status/" in content):
+        elif ("https://twitter.com/" in content and "/status/" in content):
             # ここで最後のtwitter url を記録しておく。
             if DEBUG:
                 print("記録する！")
@@ -94,8 +92,7 @@ class DiscordMessageListener(discord.Client):
             else: return
             image_urls = twitter_line_to_image_urls(content)
             await self.send_twitter_images_for_specified_index(image_urls, nums, message)
-        elif not "instagram-support" in message.author.display_name and \
-            len(list(filter(lambda x: is_int(x), content.split(",")))) > 0 and \
+        elif len(list(filter(lambda x: is_int(x), content.split(",")))) > 0 and \
                self.last_url_twitter[channel]: # last_url_twitter が存在する。
             nums = list(map(lambda x: int(x), filter(lambda x: is_int(x), content.split(","))))
             image_urls = twitter_line_to_image_urls(self.last_url_twitter[channel])
