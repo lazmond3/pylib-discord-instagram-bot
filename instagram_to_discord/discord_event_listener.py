@@ -2,7 +2,7 @@ import discord
 import os
 import re
 from debug import DEBUG
-from instagram_type import instagran_parse_json_to_obj, InstagramData
+from instagram_type import instagran_parse_json_to_obj, InstagramData, get_multiple_medias_from_str
 from .string_util import sophisticate_string
 from .converter_instagram_url import instagram_make_author_page, instagram_make_base_url, instagram_extract_from_content
 from .converter_instagram_url import convert_instagram_url_to_a
@@ -12,13 +12,15 @@ from .util import is_int
 from typing import Dict, List
 class DiscordMessageListener(discord.Client):
     last_url_twitter: Dict[str, str] = {}
+    last_url_instagram: Dict[str, str] = {}
+    is_twitter_last = True
 
     def __init__(self):
         super().__init__()
     async def on_ready(self):
         print('Logged on as {0}!'.format(self.user))
 
-    async def send_twitter_images_for_specified_index(self, image_urls: List[str], nums: List[int], message):
+    async def send_images_for_specified_index(self, image_urls: List[str], nums: List[int], message):
         for n in nums:
             idx = n-1
             assert(idx >= 0)
@@ -31,7 +33,20 @@ class DiscordMessageListener(discord.Client):
             embed = self.create_embed_twitter_image(image_urls[idx])
             await message.channel.send(embed=embed)
 
+    async def send_instagram_images_for_specified_index(self, image_urls: List[str], nums: List[int], message):
+        for n in nums:
+            idx = n-1
+            assert(idx >= 0)
+            assert(idx < 4)
+            if len(image_urls) < n:
+                continue
+            # if n == 1: continue
+            if DEBUG:
+                print(f"send_twitter_image: url: {image_urls[idx]}")
+            embed = self.create_embed_instagram_image(image_urls[idx])
+            await message.channel.send(embed=embed)
 
+ 
     def create_embed(self, obj: InstagramData, base_url: str):
         description = sophisticate_string(obj.caption)
         embed = discord.Embed(
@@ -50,6 +65,12 @@ class DiscordMessageListener(discord.Client):
     def create_embed_twitter_image(self, image_url: str):
         embed = discord.Embed(
             color=discord.Color.blue()
+        )
+        embed.set_image(url=image_url)
+        return embed
+    def create_embed_instagram_image(self, image_url: str):
+        embed = discord.Embed(
+            color=discord.Color.red()
         )
         embed.set_image(url=image_url)
         return embed
@@ -72,15 +93,38 @@ class DiscordMessageListener(discord.Client):
                 print("[error] failed to parse base_url for : ", content)
                 return
             a_url = convert_instagram_url_to_a(extracted_base_url)
-            text = requests_get_cookie(url=a_url)
-            insta_obj = instagran_parse_json_to_obj(text)
+            self.last_url_instagram[channel] = a_url
 
+            text = requests_get_cookie(url=a_url)
+            msg_list = content.split()
+            nums = []
+            if len(msg_list) > 1:
+                nums = msg_list[1].split(",")
+                nums = map(lambda x: int(x), nums)
+                nums = filter(lambda x: x != 1, nums)
+                nums = list(nums)
+            else: 
+                nums.append(1)
+
+            print("[DEBUG} nums!: ", nums)
+
+            images = get_multiple_medias_from_str(text)
+
+            print("[DEBUG] images: ", images)
+            insta_obj = instagran_parse_json_to_obj(text)
+            assert(nums[0] >= 1)
+            assert(nums[0] <= 4)
+            image_url = images[nums[0]-1]
+            insta_obj.media = image_url
             embed = self.create_embed(insta_obj, extracted_base_url)
             await message.channel.send(embed=embed)
+            
+            if len(nums) == 1: return
+
+            await self.send_instagram_images_for_specified_index(images, nums[1:], message)
+
         elif ("https://twitter.com/" in content and "/status/" in content):
             # ここで最後のtwitter url を記録しておく。
-            if DEBUG:
-                print("記録する！")
             self.last_url_twitter[channel] = twitter_extract_tweet_url(content)
 
             msg_list = content.split()
@@ -91,12 +135,12 @@ class DiscordMessageListener(discord.Client):
                 nums = list(nums)
             else: return
             image_urls = twitter_line_to_image_urls(content)
-            await self.send_twitter_images_for_specified_index(image_urls, nums, message)
+            await self.send_images_for_specified_index(image_urls, nums, message)
         elif len(list(filter(lambda x: is_int(x), content.split(",")))) > 0 and \
                self.last_url_twitter[channel]: # last_url_twitter が存在する。
             nums = list(map(lambda x: int(x), filter(lambda x: is_int(x), content.split(","))))
             image_urls = twitter_line_to_image_urls(self.last_url_twitter[channel])
-            await self.send_twitter_images_for_specified_index(image_urls, nums, message)
+            await self.send_images_for_specified_index(image_urls, nums, message)
 
 def main():
     client = DiscordMessageListener()

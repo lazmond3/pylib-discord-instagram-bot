@@ -1,6 +1,12 @@
 # ダンプ
 https://www.instagram.com/p/CQdnVrkHZOC/?utm_source=ig_web_copy_link&__a=1 こちらのファイルを, instagram_multi_img.json こちらに
 
+複数画像は、
+```
+edge_sidecar_to_children.edges[].node.display_url 
+```
+あたりにあるっぽい.
+
 # Usage
 
 ```bash
