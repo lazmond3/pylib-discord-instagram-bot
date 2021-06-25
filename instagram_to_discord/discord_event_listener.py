@@ -176,9 +176,10 @@ class DiscordMessageListener(discord.Client):
                 tw = get_twitter_object(tweet_id)
                 print(tw)
                 if tw.video_url:
-                    fname_video = make_filename(".", tweet_id, tw.video_url)
+                    video_url = tw.video_url.split("?")[0]
+                    fname_video = make_filename(".", tweet_id, video_url)
 
-                    video = download_image(tw.video_url)
+                    video = download_image(video_url)
                     # ファイルダウンロード
                     save_image(fname_video, video)
 
