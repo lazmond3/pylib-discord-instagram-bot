@@ -150,3 +150,26 @@ resource "aws_s3_bucket" "discord-python-video" {
     Environment = "Dev"
   }
 }
+
+resource "aws_s3_bucket_policy" "discord-python-video-policy" {
+  bucket = aws_s3_bucket.discord-python-video.id
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression's result to valid JSON syntax.
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Id      = "discord-python-video-bucket-policy"
+    Statement = [
+      {
+        Sid       = "PublicRead"
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = "s3:*"
+        Resource = [
+          aws_s3_bucket.discord-python-video.arn,
+          "${aws_s3_bucket.discord-python-video.arn}/*",
+        ]
+      },
+    ]
+  })
+}
