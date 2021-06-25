@@ -1,6 +1,5 @@
 import discord
 import os
-import re
 from debug import DEBUG
 from instagram_type import instagran_parse_json_to_obj, InstagramData, get_multiple_medias_from_str
 from .string_util import sophisticate_string
@@ -11,11 +10,7 @@ from .twitter_multiple import twitter_line_to_image_urls, twitter_extract_tweet_
 from .util import is_int
 from typing import Dict, List
 from .download import download_image, make_filename, save_image
-import requests
-
-
-
-
+from .boto3 import upload_file
 
 class DiscordMessageListener(discord.Client):
     last_url_twitter: Dict[str, str] = {}
@@ -69,12 +64,38 @@ class DiscordMessageListener(discord.Client):
                          )
         return embed
 
+    async def create_and_send_embed_twitter_video_thumbnail_with_message(self, 
+        message,
+        thumbnail_image_url:str, 
+        s3_video_url: str,
+        tweet_url: str,
+        author_name: str,
+        author_url: str,
+        author_profile_image_url: str,
+        caption: str
+    ):
+        description = sophisticate_string(caption)
+        embed = discord.Embed(
+            title=author_name,
+            description=description,
+            url=tweet_url,
+            color=discord.Color.blue()
+        )
+        embed.set_image(url=thumbnail_image_url)
+        embed.set_author(
+                         name=author_name,
+                         url=author_url,
+                         icon_url=author_profile_image_url
+        )
+        await message.channel.send(embed=embed)
+
     def create_embed_twitter_image(self, image_url: str):
         embed = discord.Embed(
             color=discord.Color.blue()
         )
         embed.set_image(url=image_url)
         return embed
+
     def create_embed_instagram_image(self, image_url: str):
         embed = discord.Embed(
             color=discord.Color.red()
@@ -152,7 +173,7 @@ class DiscordMessageListener(discord.Client):
                 print(tw)
                 if tw.video_url:
                     video_url = tw.video_url.split("?")[0]
-                    fname_video = make_filename(".", tweet_id, video_url)
+                    fname_video = make_filename("", tweet_id, video_url)
 
                     video = download_image(video_url)
                     # ファイルダウンロード
@@ -164,7 +185,19 @@ class DiscordMessageListener(discord.Client):
                     if fsize > (2**20 * 8):
                         print("inner fsize is larger!: than ", 2**20 * 8)
                         image_urls = tw.image_urls
-                        await self.send_twitter_images_for_specified_index(skip_one = False, image_urls = image_urls, nums = [1], message = message) # 動画のサムネイル送信
+
+                        video_s3_url = upload_file(fname_video)
+                        await self.create_and_send_embed_twitter_video_thumbnail_with_message(
+                            message=message,
+                            thumbnail_image_url=image_urls[0],
+                            tweet_url=twitter_extract_tweet_url(content),
+                            s3_video_url=video_s3_url,
+                            author_name=tw.user_display_name,
+                            author_url=tw.user_url,
+                            author_profile_image_url=tw.user_profile_image_url,
+                            caption= f"{video_s3_url}\n{tw.text}" 
+                        )
+                        # await self.send_twitter_images_for_specified_index(skip_one = False, image_urls = image_urls, nums = [1], message = message) # 動画のサムネイル送信
                         print("[fsize] image urls: ", image_urls)
                     else:
                         try:
