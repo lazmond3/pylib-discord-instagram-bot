@@ -127,3 +127,19 @@ module "ssm" {
   mid             = var.mid
   sessionid       = var.sessionid
 }
+
+
+# 動画用 s3
+resource "aws_s3_bucket" "discord-python-video" {
+  bucket = "discord-python-video"
+  acl    = "public"
+
+  versioning {
+    enabled = false
+  }
+
+  tags = {
+    Name        = "discord-python-video"
+    Environment = "Dev"
+  }
+}
