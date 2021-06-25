@@ -80,11 +80,13 @@ module "ecs" {
   container_repository         = var.container_repository
   container_tag                = var.container_tag
 
-  aws_ssm_parameter_token_arn           = module.ssm.aws_ssm_parameter_token_arn
-  aws_ssm_parameter_consumer_key_arn    = module.ssm.aws_ssm_parameter_consumer_key_arn
-  aws_ssm_parameter_consumer_secret_arn = module.ssm.aws_ssm_parameter_consumer_secret_arn
-  aws_ssm_parameter_mid_arn             = module.ssm.aws_ssm_parameter_mid_arn
-  aws_ssm_parameter_sessionid_arn       = module.ssm.aws_ssm_parameter_sessionid_arn
+  aws_ssm_parameter_token_arn             = module.ssm.aws_ssm_parameter_token_arn
+  aws_ssm_parameter_consumer_key_arn      = module.ssm.aws_ssm_parameter_consumer_key_arn
+  aws_ssm_parameter_consumer_secret_arn   = module.ssm.aws_ssm_parameter_consumer_secret_arn
+  aws_ssm_parameter_mid_arn               = module.ssm.aws_ssm_parameter_mid_arn
+  aws_ssm_parameter_sessionid_arn         = module.ssm.aws_ssm_parameter_sessionid_arn
+  aws_ssm_parameter_aws_access_key_id     = module.ssm.aws_ssm_parameter_aws_access_key_id
+  aws_ssm_parameter_aws_secret_access_key = module.ssm.aws_ssm_parameter_aws_secret_access_key
 
   # token = var.token
   # consumer_key = var.consumer_key

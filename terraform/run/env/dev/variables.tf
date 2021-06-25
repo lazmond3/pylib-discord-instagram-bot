@@ -103,3 +103,13 @@ variable "cert_arn" {
 variable "cert_route53_zone_main_id" {
   type = string
 }
+
+
+# boto3 用 の環境変数
+variable "aws_access_key_id" {
+  type = string
+}
+
+variable "aws_secret_access_key" {
+  type = string
+}

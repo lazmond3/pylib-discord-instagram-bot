@@ -25,3 +25,13 @@ resource "aws_ssm_parameter" "sessionid" {
   type  = "String"
   value = var.sessionid # TODO: FIX これTF_VAR_由来にしたい.
 }
+resource "aws_ssm_parameter" "aws_access_key_id" {
+  name  = "aws_access_key_id"
+  type  = "String"
+  value = var.aws_access_key_id # TODO: FIX これTF_VAR_由来にしたい.
+}
+resource "aws_ssm_parameter" "aws_secret_access_key" {
+  name  = "aws_secret_access_key"
+  type  = "String"
+  value = var.aws_secret_access_key # TODO: FIX これTF_VAR_由来にしたい.
+}
