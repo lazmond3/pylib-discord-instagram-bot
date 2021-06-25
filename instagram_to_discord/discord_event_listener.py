@@ -158,8 +158,19 @@ class DiscordMessageListener(discord.Client):
                     save_image(fname_video, video)
 
                     # ファイル送信
-                    await message.channel.send(file=discord.File(fname_video))
-                    
+                    fsize = os.path.getsize(fname_video)
+                    print("file size: ", fsize)
+                    if fsize > (2**20 * 8):
+                        image_urls = tw.image_urls
+                        await self.send_images_for_specified_index(image_urls, [1], message) # 動画のサムネイル送信
+                        print("image urls: ", image_urls)
+                    try:
+                        await message.channel.send(file=discord.File(fname_video))
+                    except Exception as e:
+                        print("file send error!  : ",  e)
+                        image_urls = tw.image_urls
+                        await self.send_images_for_specified_index(image_urls, [1], message) # 動画のサムネイル送信
+                        print("image urls: ", image_urls)
                     os.remove(fname_video)
                     # ファイル削除
                     # あとで
