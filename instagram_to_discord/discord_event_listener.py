@@ -27,14 +27,14 @@ class DiscordMessageListener(discord.Client):
     async def on_ready(self):
         print('Logged on as {0}!'.format(self.user))
 
-    async def send_images_for_specified_index(self, image_urls: List[str], nums: List[int], message):
+    async def send_twitter_images_for_specified_index(self, skip_one: bool, image_urls: List[str], nums: List[int], message):
         for n in nums:
             idx = n-1
             assert(idx >= 0)
             assert(idx < 4)
             if len(image_urls) < n:
                 continue
-            if n == 1: continue
+            if skip_one and n == 1: continue
             if DEBUG:
                 print(f"send_twitter_image: url: {image_urls[idx]}")
             embed = self.create_embed_twitter_image(image_urls[idx])
@@ -136,6 +136,8 @@ class DiscordMessageListener(discord.Client):
             self.last_url_twitter[channel] = twitter_extract_tweet_url(content)
             self.is_twitter_last = True
 
+            nums = [1]  
+
             msg_list = content.split()
             if len(msg_list) > 1:
                 nums = msg_list[1].split(",")
@@ -143,7 +145,6 @@ class DiscordMessageListener(discord.Client):
                 nums = filter(lambda x: x != 1, nums)
                 nums = list(nums)
             else:
-
                 # video かどうかを判定する
                 # video のサムネでもいい
                 tweet_id = twitter_extract_tweet_id(content)
@@ -161,36 +162,35 @@ class DiscordMessageListener(discord.Client):
                     fsize = os.path.getsize(fname_video)
                     print("file size: ", fsize)
                     if fsize > (2**20 * 8):
+                        print("inner fsize is larger!: than ", 2**20 * 8)
                         image_urls = tw.image_urls
-                        await self.send_images_for_specified_index(image_urls, [1], message) # 動画のサムネイル送信
-                        print("image urls: ", image_urls)
-                    try:
-                        await message.channel.send(file=discord.File(fname_video))
-                    except Exception as e:
-                        print("file send error!  : ",  e)
-                        image_urls = tw.image_urls
-                        await self.send_images_for_specified_index(image_urls, [1], message) # 動画のサムネイル送信
-                        print("image urls: ", image_urls)
+                        await self.send_twitter_images_for_specified_index(skip_one = False, image_urls = image_urls, nums = [1], message = message) # 動画のサムネイル送信
+                        print("[fsize] image urls: ", image_urls)
+                    else:
+                        try:
+                            await message.channel.send(file=discord.File(fname_video))
+                        except Exception as e:
+                            print("file send error!  : ",  e)
+                            image_urls = tw.image_urls
+                            await self.send_twitter_images_for_specified_index(skip_one = False, image_urls = image_urls, nums = [1], message = message) # 動画のサムネイル送信
+                            print("image urls: ", image_urls)
                     os.remove(fname_video)
-                    # ファイル削除
-                    # あとで
-                    return
 
             # 画像を取得する
             image_urls = tw.image_urls
-            await self.send_images_for_specified_index(image_urls, nums, message)
+            await self.send_twitter_images_for_specified_index(skip_one = True, image_urls = image_urls, nums = [1], message = message) # 動画のサムネイル送信
  
         elif len(list(filter(lambda x: is_int(x), content.split(",")))) > 0 and \
                ( channel in self.last_url_twitter or channel in self.last_url_instagram ): # last_url_twitter が存在する。
             if self.is_twitter_last:
                 nums = list(map(lambda x: int(x), filter(lambda x: is_int(x), content.split(","))))
                 image_urls = twitter_line_to_image_urls(self.last_url_twitter[channel])
-                await self.send_images_for_specified_index(image_urls, nums, message)
+                await self.send_twitter_images_for_specified_index(skip_one = True, image_urls = image_urls, nums = [1], message = message) # 動画のサムネイル送信
             else:
                 nums = list(map(lambda x: int(x), filter(lambda x: is_int(x), content.split(","))))
                 text = requests_get_cookie(url=self.last_url_instagram[channel])
                 image_urls = get_multiple_medias_from_str(text)
-                await self.send_instagram_images_for_specified_index(image_urls, nums, message)
+                await self.send_twitter_images_for_specified_index(skip_one = True, image_urls = image_urls, nums = [1], message = message) # 動画のサムネイル送信
 
 def main():
     client = DiscordMessageListener()
