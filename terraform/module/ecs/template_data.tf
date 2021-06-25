@@ -19,6 +19,9 @@ data "template_file" "container_definitions" {
     mid_arn             = var.aws_ssm_parameter_mid_arn
     sessionid_arn       = var.aws_ssm_parameter_sessionid_arn
 
+    aws_access_key_id_arn     = var.aws_ssm_parameter_aws_access_key_id_arn
+    aws_secret_access_key_arn = var.aws_ssm_parameter_aws_secret_access_key_arn
+
     log_group = var.aws_cloudwatch_log_group_main_name
   }
 }

@@ -53,10 +53,10 @@ variable "aws_ssm_parameter_mid_arn" {
 variable "aws_ssm_parameter_sessionid_arn" {
   type = string
 }
-variable "aws_ssm_parameter_aws_access_key_id" {
+variable "aws_ssm_parameter_aws_access_key_id_arn" {
   type = string
 }
-variable "aws_ssm_parameter_aws_secret_access_key" {
+variable "aws_ssm_parameter_aws_secret_access_key_arn" {
   type = string
 }
 
