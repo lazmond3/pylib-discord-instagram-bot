@@ -1,3 +1,6 @@
+import requests
+import os
+
 # あとで移動する
 # https://qiita.com/donksite/items/21852b2baa94c94ffcbe
 def download_image(url, timeout = 10):
