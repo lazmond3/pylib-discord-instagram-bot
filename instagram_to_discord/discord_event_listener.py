@@ -7,9 +7,42 @@ from .string_util import sophisticate_string
 from .converter_instagram_url import instagram_make_author_page, instagram_make_base_url, instagram_extract_from_content
 from .converter_instagram_url import convert_instagram_url_to_a
 from .cookie_requests import requests_get_cookie
-from .twitter_multiple import twitter_line_to_image_urls, twitter_extract_tweet_url
+from .twitter_multiple import twitter_line_to_image_urls, twitter_extract_tweet_url, get_twitter_object, twitter_extract_tweet_id
 from .util import is_int
 from typing import Dict, List
+import requests
+
+# あとで移動する
+# https://qiita.com/donksite/items/21852b2baa94c94ffcbe
+def download_image(url, timeout = 10):
+    response = requests.get(url, allow_redirects=False, timeout=timeout)
+    if response.status_code != 200:
+        e = Exception("HTTP status: " + response.status_code)
+        raise e
+
+    content_type = response.headers["content-type"]
+    # if 'image' not in content_type:
+    #     e = Exception("Content-Type: " + content_type)
+    #     raise e
+
+    return response.content
+
+# 画像のファイル名を決める
+def make_filename(base_dir, num, url):
+    ext = os.path.splitext(url)[1] # 拡張子を取得
+    filename =  str(num) + ext        # 番号に拡張子をつけてファイル名にする
+
+    fullpath = os.path.join(base_dir, filename)
+    return fullpath
+
+# 画像を保存する
+def save_image(filename, image):
+    with open(filename, "wb") as fout:
+        fout.write(image)
+
+
+
+
 class DiscordMessageListener(discord.Client):
     last_url_twitter: Dict[str, str] = {}
     last_url_instagram: Dict[str, str] = {}
@@ -135,10 +168,32 @@ class DiscordMessageListener(discord.Client):
                 nums = map(lambda x: int(x), nums)
                 nums = filter(lambda x: x != 1, nums)
                 nums = list(nums)
-            else: return
-            image_urls = twitter_line_to_image_urls(content)
-            await self.send_images_for_specified_index(image_urls, nums, message)
+            else:
 
+                # video かどうかを判定する
+                # video のサムネでもいい
+                tweet_id = twitter_extract_tweet_id(content)
+                tw = get_twitter_object(tweet_id)
+                print(tw)
+                if tw.video_url:
+                    fname_video = make_filename(".", tweet_id, tw.video_url)
+
+                    video = download_image(tw.video_url)
+                    # ファイルダウンロード
+                    save_image(fname_video, video)
+
+                    # ファイル送信
+                    await message.channel.send(file=discord.File(fname_video))
+                    
+                    os.remove(fname_video)
+                    # ファイル削除
+                    # あとで
+                    return
+
+            # 画像を取得する
+            image_urls = tw.image_urls
+            await self.send_images_for_specified_index(image_urls, nums, message)
+ 
         elif len(list(filter(lambda x: is_int(x), content.split(",")))) > 0 and \
                ( channel in self.last_url_twitter or channel in self.last_url_instagram ): # last_url_twitter が存在する。
             if self.is_twitter_last:
