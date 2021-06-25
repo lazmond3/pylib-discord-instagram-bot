@@ -90,8 +90,8 @@ jobs:
           TF_VAR_consumer_secret: ${{ secrets.TF_VAR_consumer_secret }}
           TF_VAR_mid: ${{ secrets.TF_VAR_mid }}
           TF_VAR_sessionid: ${{ secrets.TF_VAR_sessionid }}
-          TF_VAR_aws_access_key_id: ${{ secrets.TF_VAR_AWS_ACCESS_KEY_ID }}
-          TF_VAR_aws_secret_access_key: ${{ secrets.TF_VAR_AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          TF_VAR_aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         continue-on-error: true
 
       - name: Terraform Plan Status
@@ -107,8 +107,8 @@ jobs:
           TF_VAR_consumer_secret: ${{ secrets.TF_VAR_consumer_secret }}
           TF_VAR_mid: ${{ secrets.TF_VAR_mid }}
           TF_VAR_sessionid: ${{ secrets.TF_VAR_sessionid }}
-          TF_VAR_aws_access_key_id: ${{ secrets.TF_VAR_AWS_ACCESS_KEY_ID }}
-          TF_VAR_aws_secret_access_key: ${{ secrets.TF_VAR_AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          TF_VAR_aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         continue-on-error: true
 
       - uses: actions/github-script@0.9.0
