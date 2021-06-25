@@ -122,12 +122,14 @@ module "iam" {
 }
 
 module "ssm" {
-  source          = "../../../module/ssm"
-  token           = var.token
-  consumer_key    = var.consumer_key
-  consumer_secret = var.consumer_secret
-  mid             = var.mid
-  sessionid       = var.sessionid
+  source                = "../../../module/ssm"
+  token                 = var.token
+  consumer_key          = var.consumer_key
+  consumer_secret       = var.consumer_secret
+  mid                   = var.mid
+  sessionid             = var.sessionid
+  aws_access_key_id     = var.aws_access_key_id
+  aws_secret_access_key = var.aws_secret_access_key
 }
 
 
