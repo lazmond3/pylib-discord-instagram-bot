@@ -132,7 +132,7 @@ module "ssm" {
 # 動画用 s3
 resource "aws_s3_bucket" "discord-python-video" {
   bucket = "discord-python-video"
-  acl    = "public"
+  acl    = "public-read"
 
   versioning {
     enabled = false
