@@ -10,35 +10,9 @@ from .cookie_requests import requests_get_cookie
 from .twitter_multiple import twitter_line_to_image_urls, twitter_extract_tweet_url, get_twitter_object, twitter_extract_tweet_id
 from .util import is_int
 from typing import Dict, List
+from .download import download_image, make_filename, save_image
 import requests
 
-# あとで移動する
-# https://qiita.com/donksite/items/21852b2baa94c94ffcbe
-def download_image(url, timeout = 10):
-    response = requests.get(url, allow_redirects=False, timeout=timeout)
-    if response.status_code != 200:
-        e = Exception("HTTP status: " + response.status_code)
-        raise e
-
-    content_type = response.headers["content-type"]
-    # if 'image' not in content_type:
-    #     e = Exception("Content-Type: " + content_type)
-    #     raise e
-
-    return response.content
-
-# 画像のファイル名を決める
-def make_filename(base_dir, num, url):
-    ext = os.path.splitext(url)[1] # 拡張子を取得
-    filename =  str(num) + ext        # 番号に拡張子をつけてファイル名にする
-
-    fullpath = os.path.join(base_dir, filename)
-    return fullpath
-
-# 画像を保存する
-def save_image(filename, image):
-    with open(filename, "wb") as fout:
-        fout.write(image)
 
 
 
