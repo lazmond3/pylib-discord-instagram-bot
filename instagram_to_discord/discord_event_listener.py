@@ -159,6 +159,9 @@ class DiscordMessageListener(discord.Client):
 
             nums = [1]  
 
+            tweet_id = twitter_extract_tweet_id(content)
+            tw = get_twitter_object(tweet_id)
+            print(tw)
             msg_list = content.split()
             if len(msg_list) > 1:
                 nums = msg_list[1].split(",")
@@ -168,9 +171,7 @@ class DiscordMessageListener(discord.Client):
             else:
                 # video かどうかを判定する
                 # video のサムネでもいい
-                tweet_id = twitter_extract_tweet_id(content)
-                tw = get_twitter_object(tweet_id)
-                print(tw)
+
                 if tw.video_url:
                     video_url = tw.video_url.split("?")[0]
                     fname_video = make_filename("", tweet_id, video_url)
