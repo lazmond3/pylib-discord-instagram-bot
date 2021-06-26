@@ -80,11 +80,13 @@ module "ecs" {
   container_repository         = var.container_repository
   container_tag                = var.container_tag
 
-  aws_ssm_parameter_token_arn           = module.ssm.aws_ssm_parameter_token_arn
-  aws_ssm_parameter_consumer_key_arn    = module.ssm.aws_ssm_parameter_consumer_key_arn
-  aws_ssm_parameter_consumer_secret_arn = module.ssm.aws_ssm_parameter_consumer_secret_arn
-  aws_ssm_parameter_mid_arn             = module.ssm.aws_ssm_parameter_mid_arn
-  aws_ssm_parameter_sessionid_arn       = module.ssm.aws_ssm_parameter_sessionid_arn
+  aws_ssm_parameter_token_arn                 = module.ssm.aws_ssm_parameter_token_arn
+  aws_ssm_parameter_consumer_key_arn          = module.ssm.aws_ssm_parameter_consumer_key_arn
+  aws_ssm_parameter_consumer_secret_arn       = module.ssm.aws_ssm_parameter_consumer_secret_arn
+  aws_ssm_parameter_mid_arn                   = module.ssm.aws_ssm_parameter_mid_arn
+  aws_ssm_parameter_sessionid_arn             = module.ssm.aws_ssm_parameter_sessionid_arn
+  aws_ssm_parameter_aws_access_key_id_arn     = module.ssm.aws_ssm_parameter_aws_access_key_id_arn
+  aws_ssm_parameter_aws_secret_access_key_arn = module.ssm.aws_ssm_parameter_aws_secret_access_key_arn
 
   # token = var.token
   # consumer_key = var.consumer_key
@@ -115,15 +117,65 @@ module "iam" {
     module.ssm.aws_ssm_parameter_consumer_key_arn,
     module.ssm.aws_ssm_parameter_consumer_secret_arn,
     module.ssm.aws_ssm_parameter_mid_arn,
-    module.ssm.aws_ssm_parameter_sessionid_arn
+    module.ssm.aws_ssm_parameter_sessionid_arn,
+    module.ssm.aws_ssm_parameter_aws_access_key_id_arn,
+    module.ssm.aws_ssm_parameter_aws_secret_access_key_arn
   ]
 }
 
 module "ssm" {
-  source          = "../../../module/ssm"
-  token           = var.token
-  consumer_key    = var.consumer_key
-  consumer_secret = var.consumer_secret
-  mid             = var.mid
-  sessionid       = var.sessionid
+  source                = "../../../module/ssm"
+  token                 = var.token
+  consumer_key          = var.consumer_key
+  consumer_secret       = var.consumer_secret
+  mid                   = var.mid
+  sessionid             = var.sessionid
+  aws_access_key_id     = var.aws_access_key_id
+  aws_secret_access_key = var.aws_secret_access_key
+}
+
+
+# 動画用 s3
+resource "aws_s3_bucket" "discord-python-video" {
+  bucket = "discord-python-video"
+  acl    = "public-read"
+
+  versioning {
+    enabled = true
+  }
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT", "POST"]
+    allowed_origins = ["*"]
+    expose_headers  = ["ETag"]
+    # max_age_seconds = 3000
+  }
+
+  tags = {
+    Name        = "discord-python-video"
+    Environment = "Dev"
+  }
+}
+
+resource "aws_s3_bucket_policy" "discord-python-video-policy" {
+  bucket = aws_s3_bucket.discord-python-video.id
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression's result to valid JSON syntax.
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Id      = "discord-python-video-bucket-policy"
+    Statement = [
+      {
+        Sid       = "PublicRead"
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = "s3:*"
+        Resource = [
+          aws_s3_bucket.discord-python-video.arn,
+          "${aws_s3_bucket.discord-python-video.arn}/*",
+        ]
+      },
+    ]
+  })
 }

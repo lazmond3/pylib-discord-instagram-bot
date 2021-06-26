@@ -11,3 +11,4 @@ git+https://github.com/lazmond3/pylib-instagram-type.git@master#egg=lazmond3-pyl
 git+https://github.com/lazmond3/pylib-twitter.git@master#egg=lazmond3-pylib-twitter # public package
 
 aws-lambda-typing == 1.0.3
+boto3
