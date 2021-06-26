@@ -18,6 +18,13 @@ def env_check():
     else:
         print("some of required variables are not set.")
         exit(1)
+    if not os.getenv("MID"):
+        print("ERROR! MID NOT SET")
+        exit(1)
+    if not os.getenv("SESSIONID"):
+        print("ERROR! SESSIONID NOT SET")
+        exit(1)
+
 
 
 from .discord_event_listener import main

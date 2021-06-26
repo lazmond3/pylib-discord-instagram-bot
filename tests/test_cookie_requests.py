@@ -25,8 +25,10 @@ class BasicTestSuite(unittest.TestCase):
         else:
             assert True
 
+
+    @unittest.skip("外部ネットワークへのアクセス")
     def test_cookie(self):
-        path = "cookie3.txt"
+        path = "cookie2.txt"
         cookie = instagram_to_discord.cookie_requests.make_cookie(path)
         text = requests.get(
             "https://www.instagram.com/p/CJ8u5PCH-WG/?__a=1",
