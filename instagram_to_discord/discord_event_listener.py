@@ -212,19 +212,20 @@ class DiscordMessageListener(discord.Client):
 
             # 画像を取得する
             image_urls = tw.image_urls
-            await self.send_twitter_images_for_specified_index(skip_one = True, image_urls = image_urls, nums = [1], message = message) # 動画のサムネイル送信
+            print("image_urls: ", image_urls)
+            await self.send_twitter_images_for_specified_index(skip_one = True, image_urls = image_urls, nums = nums, message = message) # 動画のサムネイル送信
  
         elif len(list(filter(lambda x: is_int(x), content.split(",")))) > 0 and \
                ( channel in self.last_url_twitter or channel in self.last_url_instagram ): # last_url_twitter が存在する。
             if self.is_twitter_last:
                 nums = list(map(lambda x: int(x), filter(lambda x: is_int(x), content.split(","))))
                 image_urls = twitter_line_to_image_urls(self.last_url_twitter[channel])
-                await self.send_twitter_images_for_specified_index(skip_one = True, image_urls = image_urls, nums = [1], message = message) # 動画のサムネイル送信
+                await self.send_twitter_images_for_specified_index(skip_one = True, image_urls = image_urls, nums = nums, message = message) # 動画のサムネイル送信
             else:
                 nums = list(map(lambda x: int(x), filter(lambda x: is_int(x), content.split(","))))
                 text = requests_get_cookie(url=self.last_url_instagram[channel])
                 image_urls = get_multiple_medias_from_str(text)
-                await self.send_twitter_images_for_specified_index(skip_one = True, image_urls = image_urls, nums = [1], message = message) # 動画のサムネイル送信
+                await self.send_twitter_images_for_specified_index(skip_one = True, image_urls = image_urls, nums = nums, message = message) # 動画のサムネイル送信
 
 def main():
     client = DiscordMessageListener()
