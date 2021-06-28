@@ -3,7 +3,7 @@ import json
 import requests
 from .base64_util import base64_encode_str
 from .twitter_image import convert_twitter, TwitterImage
-from typing import cast
+from typing import cast, List, Dict, Any
 
 CONSUMER_KEY=os.getenv("CONSUMER_KEY")
 CONSUMER_SECRET=os.getenv("CONSUMER_SECRET")
@@ -20,12 +20,12 @@ if not all([
     TOKEN_SECRET ]):
     pass
 
-def make_basic(consumer_key: str, consumer_secret: str) -> str:
+def _make_basic(consumer_key: str, consumer_secret: str) -> str:
     concat = f"{consumer_key}:{consumer_secret}"
     converted = base64_encode_str(concat)
     return cast(str, converted)
 
-def get_auth(url: str, basic: str) -> None:
+def _get_auth(url: str, basic: str) -> None:
     headers = {"Authorization": f"Basic {basic}"}
     payload = {"grant_type": "client_credentials"}
     r = requests.post(url, headers=headers, params=payload)
@@ -43,9 +43,15 @@ def get_auth_wrapper() -> None:
         print("specify consumer key/secret")
         exit(1)
 
-    basic = cast(str, make_basic(CONSUMER_KEY, CONSUMER_SECRET))
+    basic = cast(str, _make_basic(CONSUMER_KEY, CONSUMER_SECRET))
     url = "https://api.twitter.com/oauth2/token"
-    get_auth(url, basic)
+    _get_auth(url, basic)
+
+
+# テスト
+def text_to_dict(str_: str) -> Dict[str, Any]:
+    js = json.loads(str_)
+    return js
 
 # この名前だが、画像ツイート情報を取得する。
 def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
@@ -69,8 +75,9 @@ def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
             get_one_tweet(tweet_id, True)
 
     tx = r.text
+    js = text_to_dict(tx)
+
     with open(f"dump_one_{tweet_id}.json", 'w', encoding="utf-8") as f:
-        js = json.loads(tx)
         json.dump(js, f, ensure_ascii=False)
 
     # キャッシュを利用する.
@@ -101,12 +108,14 @@ def get_sumatome(tweet_id: str, is_second: bool = False) -> None:
             get_one_tweet(tweet_id, True)
 
     tx = r.text
+    js = text_to_dict(tx)
+
+    # デバッグのためのダンプ
     with open(f"dump_one_{tweet_id}.json", 'w', encoding="utf-8") as f:
-        # tx = str(tx, encoding='utf-8')
-        js = json.loads(tx)
         json.dump(js, f, ensure_ascii=False)
-        if js["in_reply_to_status_id_str"] != None:
-            get_one_tweet(js["in_reply_to_status_id_str"])
+
+    if js["in_reply_to_status_id_str"] != None:
+        get_one_tweet(js["in_reply_to_status_id_str"])
 
     # キャッシュを利用する.
     # with open(f"dump_one_{tweet_id}.json", 'r') as f:

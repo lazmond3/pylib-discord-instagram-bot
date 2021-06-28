@@ -13,13 +13,14 @@ class TwitterImage:
     user_profile_image_url: str
     text: str
 
+# 入力は js_dict
 def convert_twitter(dic: Dict[str, Any]) -> TwitterImage:
-    if DEBUG:
-        print("[convert_twitter] dic: ", dic)
-        print("[convert_twitter] extended: ", dic["extended_entities"])
+    # if DEBUG:
+    #     print("[convert_twitter] dic: ", dic)
+    #     print("[convert_twitter] extended: ", dic["extended_entities"])
     images = dic["extended_entities"]["media"]
-    if DEBUG:
-        print(f"[convert_twitter] images: {images}")
+    # if DEBUG:
+    #     print(f"[convert_twitter] images: {images}")
     user_display_name = dic["user"]["name"]
     user_screen_name = dic["user"]["screen_name"]
     user_url = f"https://twitter.com/{user_screen_name}"
@@ -43,7 +44,7 @@ def convert_twitter(dic: Dict[str, Any]) -> TwitterImage:
         image_urls = [image_url_inner]
     else:
         image_urls = list(map(lambda x: x["media_url_https"], images))
-        print("[debug][image_urls]: ", image_urls)
+        # print("[debug][image_urls]: ", image_urls)
 
     return TwitterImage(
         id_str = dic["id_str"],
