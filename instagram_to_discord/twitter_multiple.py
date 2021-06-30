@@ -1,6 +1,8 @@
 import re
 from typing import List
-from twitter_cli import get_one_tweet, TwitterImage
+# from twitter_cli import get_one_tweet, TwitterImage
+from .twitter.cli import get_one_tweet
+from .twitter.twitter_image import TwitterImage
 from debug import DEBUG
 
 def twitter_extract_tweet_id(line: str) -> str:

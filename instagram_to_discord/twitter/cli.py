@@ -62,7 +62,7 @@ def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
         token = s["access_token"]
 
     url = "https://api.twitter.com/1.1/statuses/show.json"
-    params = {"id": tweet_id}
+    params = {"id": tweet_id, "tweet_mode": "extended"}
     headers = {"Authorization": f"Bearer {token}"}
 
     try:
@@ -127,7 +127,9 @@ if __name__ == '__main__':
     from sys import argv
 
     # get_one_tweet("1372519422380797955")
-    tw = get_one_tweet("1407925711277486082") # video
+    # https://twitter.com/Malong777888/status/1409827218948165632
+    # tw = get_one_tweet("1409827218948165632") # video
+    tw = get_one_tweet("1410084814410051585") # video
     print(tw)
     # get_one_tweet("1373208627356442626")
     # with open("dump_one.json") as f:
