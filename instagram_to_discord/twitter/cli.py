@@ -129,7 +129,7 @@ if __name__ == '__main__':
     # get_one_tweet("1372519422380797955")
     # https://twitter.com/Malong777888/status/1409827218948165632
     # tw = get_one_tweet("1409827218948165632") # video
-    tw = get_one_tweet("1410084814410051585") # video
+    tw = get_one_tweet("1407925711277486082") # video
     print(tw)
     # get_one_tweet("1373208627356442626")
     # with open("dump_one.json") as f:
