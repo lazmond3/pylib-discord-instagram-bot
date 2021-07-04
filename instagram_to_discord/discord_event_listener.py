@@ -49,7 +49,7 @@ class DiscordMessageListener(discord.Client):
             await message.channel.send(embed=embed)
 
  
-    def create_embed(self, obj: InstagramData, base_url: str):
+    def create_instagram_pic_embed(self, obj: InstagramData, base_url: str):
         description = sophisticate_string(obj.caption)
         embed = discord.Embed(
             title=obj.full_name,
@@ -113,8 +113,9 @@ class DiscordMessageListener(discord.Client):
 
         if "instagram-support" in message.author.display_name: return
 
-        if ("https://www.instagram.com/p/" in content or
-                 "https://www.instagram.com/reel/" in content):
+        if "https://www.instagram.com/reel/" in content:
+
+        elif "https://www.instagram.com/p/" in content:
             print("[log] channel name: ", message.channel.name)
             extracted_base_url = instagram_extract_from_content(content)
             if not extracted_base_url:
@@ -145,11 +146,9 @@ class DiscordMessageListener(discord.Client):
             assert(nums[0] <= 4)
             image_url = images[nums[0]-1]
             insta_obj.media = image_url
-            embed = self.create_embed(insta_obj, extracted_base_url)
+            embed = self.create_instagram_pic_embed(insta_obj, extracted_base_url)
             await message.channel.send(embed=embed)
-            
             if len(nums) == 1: return
-
             await self.send_instagram_images_for_specified_index(images, nums[1:], message)
 
         elif ("https://twitter.com/" in content and "/status/" in content):
