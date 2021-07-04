@@ -167,7 +167,7 @@ class DiscordMessageListener(discord.Client):
                     except Exception as e:
                         print("[instagram video upload] file send error!  : ",  e)
                 os.remove(fname_video)
-            
+
 
         elif "https://www.instagram.com/p/" in content:
             print("[log] channel name: ", message.channel.name)
