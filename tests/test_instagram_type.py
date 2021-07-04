@@ -45,6 +45,7 @@ class BasicTestSuite(unittest.TestCase):
         assert insta_obj.profile_url == get_profile_url()
         assert insta_obj.username == get_username()
         assert insta_obj.full_name == get_full_name()
+        assert insta_obj.video_url is None
 
     def test_converter_video(self):
         with open("tests/instagram/instagram_video.json") as f:
