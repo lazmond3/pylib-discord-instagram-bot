@@ -18,6 +18,17 @@ def make_twitter_mp4_filename(base_dir, num, url):
     fullpath = os.path.join(base_dir, filename)
     return fullpath
 
+# 画像のファイル名を決める
+def make_instagram_mp4_filename(base_dir, url):
+    if "?" in url:
+        url = url.split("?")[0]
+    ext = os.path.splitext(url)[1] # 拡張子を取得. ドット含めている
+    basename = os.path.basename(url).split(".")[0]
+    filename = basename + ext        # 番号に拡張子をつけてファイル名にする
+
+    fullpath = os.path.join(base_dir, filename)
+    return fullpath
+
 # 画像を保存する
 def save_image(filename, image):
     with open(filename, "wb") as fout:

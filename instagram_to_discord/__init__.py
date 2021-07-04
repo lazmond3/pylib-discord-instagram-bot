@@ -2,6 +2,7 @@ from . import redis_cli
 from . import string_util
 from . import converter_instagram_url
 from . import cookie_requests
+from . import download
 import os
 
 def env_check():
