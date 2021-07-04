@@ -3,7 +3,7 @@ import os
 
 # あとで移動する
 # https://qiita.com/donksite/items/21852b2baa94c94ffcbe
-def download_image(url, timeout = 10):
+def download_file(url, timeout = 10):
     response = requests.get(url, allow_redirects=False, timeout=timeout)
     if response.status_code != 200:
         e = Exception("HTTP status: " + response.status_code)

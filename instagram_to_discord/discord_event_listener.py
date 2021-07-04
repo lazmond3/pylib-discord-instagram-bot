@@ -9,8 +9,9 @@ from .cookie_requests import requests_get_cookie
 from .twitter_multiple import twitter_line_to_image_urls, twitter_extract_tweet_url, get_twitter_object, twitter_extract_tweet_id
 from .util import is_int
 from typing import Dict, List
-from .download import download_image, make_twitter_mp4_filename, save_image
+from .download import download_file, make_instagram_mp4_filename, make_twitter_mp4_filename, save_image
 from .boto3 import upload_file
+from instagram_to_discord import download
 
 class DiscordMessageListener(discord.Client):
     last_url_twitter: Dict[str, str] = {}
@@ -143,6 +144,9 @@ class DiscordMessageListener(discord.Client):
             if insta_obj.is_video:
                 video_url = insta_obj.video_url
 
+                fname_video = make_instagram_mp4_filename("", video_url)
+                video = download()
+
             embed = self.create_instagram_pic_embed(insta_obj, extracted_base_url)
             await message.channel.send(embed=embed)
 
@@ -206,7 +210,7 @@ class DiscordMessageListener(discord.Client):
                     video_url = tw.video_url.split("?")[0]
                     fname_video = make_twitter_mp4_filename("", tweet_id, video_url)
 
-                    video = download_image(video_url)
+                    video = download_file(video_url)
                     # ファイルダウンロード
                     save_image(fname_video, video)
 
