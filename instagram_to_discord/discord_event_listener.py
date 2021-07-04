@@ -11,7 +11,6 @@ from .util import is_int
 from typing import Dict, List
 from .download import download_file, make_instagram_mp4_filename, make_twitter_mp4_filename, save_image
 from .boto3 import upload_file
-from instagram_to_discord import download
 
 class DiscordMessageListener(discord.Client):
     last_url_twitter: Dict[str, str] = {}
@@ -145,10 +144,30 @@ class DiscordMessageListener(discord.Client):
                 video_url = insta_obj.video_url
 
                 fname_video = make_instagram_mp4_filename("", video_url)
-                video = download()
+                video_content = download_file(video_url)
+                save_image(fname_video, video_content)
+                fsize = os.path.getsize(fname_video)
+                print("file size: ", fsize)
+                if fsize > (2**20 * 8):
+                        print("[insta-video] inner fsize is larger!: than ", 2**20 * 8)
 
-            embed = self.create_instagram_pic_embed(insta_obj, extracted_base_url)
-            await message.channel.send(embed=embed)
+                        video_s3_url = upload_file(fname_video)
+                        # images = get_multiple_medias_from_str(text)   
+                        # insta_obj.media = images[0] # video のサムネを設定... するときは 1枚目にする？
+                        # もうなってるのでは
+                        insta_obj.caption = video_s3_url + "\n" + insta_obj.caption
+                        embed = self.create_instagram_pic_embed(insta_obj, extracted_base_url)
+                        await message.channel.send(embed=embed)
+                else:
+                    # サムネ 1枚 + ファイルアップロード
+                    try:
+                        embed = self.create_instagram_video_embed(insta_obj, extracted_base_url)
+                        await message.channel.send(embed=embed)
+                        await message.channel.send(file=discord.File(fname_video))
+                    except Exception as e:
+                        print("[instagram video upload] file send error!  : ",  e)
+                os.remove(fname_video)
+            
 
         elif "https://www.instagram.com/p/" in content:
             print("[log] channel name: ", message.channel.name)
