@@ -11,7 +11,7 @@ def download_image(url, timeout = 10):
     return response.content
 
 # 画像のファイル名を決める
-def make_filename(base_dir, num, url):
+def make_twitter_mp4_filename(base_dir, num, url):
     ext = os.path.splitext(url)[1] # 拡張子を取得
     filename =  str(num) + ext        # 番号に拡張子をつけてファイル名にする
 
