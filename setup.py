@@ -35,8 +35,7 @@ setup(
     url='https://github.com/lazmond3/pylib-instagram-to-discord.git',
     install_requires=[
         "lazmond3-pylib-debug",
-        "lazmond3-pylib-instagram-type",
-        "lazmond3-pylib-twitter",
+        # "lazmond3-pylib-twitter",
         "dict2obj",
         "redis-py-cluster",
         "discord.py"
