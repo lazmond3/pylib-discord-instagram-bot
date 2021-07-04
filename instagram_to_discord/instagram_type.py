@@ -33,6 +33,8 @@ class InstagramData:
 ==================================================
     full_name: {self.full_name}
 ==================================================
+    video_url: {self.video_url}
+==================================================
         """)
     def __init__(self, 
     media,
@@ -40,7 +42,8 @@ class InstagramData:
     caption,
     profile_url,
     username,
-    full_name
+    full_name,
+    video_url
     ):
         """init
         media: 写真投稿に対する メイン画像 url
@@ -56,6 +59,7 @@ class InstagramData:
         self.profile_url = profile_url # プロフィール画像のurl
         self.username = username # ユーザネーム(アルファベット)
         self.full_name = full_name # 表示名
+        self.video_url = video_url
 
 def convert_long_caption(caption: str) -> str:
     lst = caption.split("\n")
@@ -78,13 +82,18 @@ def convert_to_instagram_type(oj) -> InstagramData:
     profile_url = oj.graphql.shortcode_media.owner.profile_pic_url
     username = oj.graphql.shortcode_media.owner.username
     full_name = oj.graphql.shortcode_media.owner.full_name
+    if is_video:
+        video_url = oj.graphql.shortcode_media.video_url
+    else:
+        video_url = None
     return InstagramData(
         media = media,
         is_video = is_video,
         caption = caption,
         profile_url = profile_url,
         username = username,
-        full_name = full_name
+        full_name = full_name,
+        video_url = video_url
     )
 def get_multiple_medias(oj) -> List[str]:
     ans = []

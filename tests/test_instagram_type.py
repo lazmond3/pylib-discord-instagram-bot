@@ -45,7 +45,13 @@ class BasicTestSuite(unittest.TestCase):
         assert insta_obj.profile_url == get_profile_url()
         assert insta_obj.username == get_username()
         assert insta_obj.full_name == get_full_name()
+        assert insta_obj.video_url is None
 
+    def test_converter_video(self):
+        with open("tests/instagram/instagram_video.json") as f:
+            js_str = "".join(f.readlines())
+        insta_obj = instagran_parse_json_to_obj(js_str)
+        assert insta_obj.video_url == "https://scontent-sjc3-1.cdninstagram.com/v/t50.2886-16/205064059_2276556202474871_4228301026603728176_n.mp4?_nc_ht=scontent-sjc3-1.cdninstagram.com&_nc_cat=111&_nc_ohc=k8l8DhYtjCMAX9C8LNP&edm=APfKNqwBAAAA&ccb=7-4&oe=60E408DE&oh=3ff999247ea45edd802b746e6f0c6e83&_nc_sid=74f7ba"
 
 if __name__ == '__main__':
     unittest.main()
