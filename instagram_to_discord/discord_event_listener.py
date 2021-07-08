@@ -39,7 +39,6 @@ class DiscordMessageListener(discord.Client):
         for n in nums:
             idx = n-1
             assert(idx >= 0)
-            assert(idx < 4)
             if len(image_urls) < n:
                 continue
             # if n == 1: continue
@@ -196,7 +195,6 @@ class DiscordMessageListener(discord.Client):
             print("[DEBUG] images: ", images)
             insta_obj = instagran_parse_json_to_obj(text)
             assert(nums[0] >= 1)
-            assert(nums[0] <= 4)
             image_url = images[nums[0]-1]
             insta_obj.media = image_url
             embed = self.create_instagram_pic_embed(insta_obj, extracted_base_url)
