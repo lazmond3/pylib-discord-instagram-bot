@@ -185,7 +185,6 @@ class DiscordMessageListener(discord.Client):
             if len(msg_list) > 1:
                 nums = msg_list[1].split(",")
                 nums = map(lambda x: int(x), nums)
-                nums = filter(lambda x: x != 1, nums)
                 nums = list(nums)
             else: 
                 nums.append(1)
@@ -274,11 +273,11 @@ class DiscordMessageListener(discord.Client):
                 nums = list(map(lambda x: int(x), filter(lambda x: is_int(x), content.split(","))))
                 image_urls = twitter_line_to_image_urls(self.last_url_twitter[channel])
                 await self.send_twitter_images_for_specified_index(skip_one = True, image_urls = image_urls, nums = nums, message = message) # 動画のサムネイル送信
-            else:
+            else: # instagram
                 nums = list(map(lambda x: int(x), filter(lambda x: is_int(x), content.split(","))))
                 text = requests_get_cookie(url=self.last_url_instagram[channel])
                 image_urls = get_multiple_medias_from_str(text)
-                await self.send_twitter_images_for_specified_index(skip_one = True, image_urls = image_urls, nums = nums, message = message) # 動画のサムネイル送信
+                await self.send_twitter_images_for_specified_index(skip_one = False, image_urls = image_urls, nums = nums, message = message) # 動画のサムネイル送信
 
 def main():
     client = DiscordMessageListener()
