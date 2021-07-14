@@ -79,7 +79,6 @@ def create_tiktok_video_embed(info_dict: Dict[str, any], s3_url: Optional[str] =
 
 async def handle_tiktok_main(client: discord.Client, channel_id:int, content: str):
     await client.wait_until_ready()
-    print("[handle_youtube] content: " + content)
     extracted_url: str = extract_tiktok_url(content) # is like "https://www.youtube.com/watch?v=Yp6Hc8yN_rs"
     (fname, small_filesize_fname), over_8mb, info_dict = download_tiktok_video(extracted_url)
 

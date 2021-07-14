@@ -189,7 +189,8 @@ class DiscordMessageListener(discord.Client):
             else:
                 images = get_multiple_medias_from_str(text)
 
-                print("[DEBUG] images: ", images)
+                for image in images:
+                    print("[listener][twitter] image: " + image)
                 insta_obj = instagran_parse_json_to_obj(text)
 
                 msg_list = content.split()
@@ -218,7 +219,6 @@ class DiscordMessageListener(discord.Client):
 
             tweet_id = twitter_extract_tweet_id(content)
             tw = get_twitter_object(tweet_id)
-            print(tw)
             msg_list = content.split()
             if len(msg_list) > 1:
                 nums = msg_list[1].split(",")
@@ -226,9 +226,6 @@ class DiscordMessageListener(discord.Client):
                 nums = filter(lambda x: x != 1, nums)
                 nums = list(nums)
             else:
-                # video かどうかを判定する
-                # video のサムネでもいい
-
                 if tw.video_url:
                     video_url = tw.video_url.split("?")[0]
                     fname_video = make_twitter_mp4_filename("", tweet_id, video_url)
@@ -239,9 +236,8 @@ class DiscordMessageListener(discord.Client):
 
                     # ファイル送信
                     fsize = os.path.getsize(fname_video)
-                    print("file size: ", fsize)
                     if fsize > (FSIZE_TARGET):
-                        print("inner fsize is larger!: than ", FSIZE_TARGET)
+
                         image_urls = tw.image_urls
 
                         video_s3_url = upload_file(fname_video)
@@ -255,8 +251,7 @@ class DiscordMessageListener(discord.Client):
                             author_profile_image_url=tw.user_profile_image_url,
                             caption= f"{video_s3_url}\n{tw.text}" 
                         )
-                        # await self.send_twitter_images_for_specified_index(skip_one = False, image_urls = image_urls, nums = [1], message = message) # 動画のサムネイル送信
-                        print("[fsize] image urls: ", image_urls)
+                        # 8MB 以上なので削る
                         new_fname_small_video = trimming_video_to_8MB(fname_video)
                         await message.channel.send(file=discord.File(new_fname_small_video))
                     else:
@@ -266,12 +261,10 @@ class DiscordMessageListener(discord.Client):
                             print("file send error!  : ",  e)
                             image_urls = tw.image_urls
                             await self.send_twitter_images_for_specified_index(skip_one = False, image_urls = image_urls, nums = [1], message = message) # 動画のサムネイル送信
-                            print("image urls: ", image_urls)
                     os.remove(fname_video)
 
             # 画像を取得する
             image_urls = tw.image_urls
-            print("image_urls: ", image_urls)
             await self.send_twitter_images_for_specified_index(skip_one = True, image_urls = image_urls, nums = nums, message = message) # 動画のサムネイル送信
  
         elif len(list(filter(lambda x: is_int(x), content.split(",")))) > 0 and \

@@ -23,8 +23,6 @@ def twitter_extract_tweet_url(line: str) -> str:
 
 def twitter_fetch_content(tweet_id: str) -> List[str]:
     tw = get_one_tweet(tweet_id)
-    if DEBUG:
-        print(f"tw: {tw}")
     return tw.image_urls
 
 def get_twitter_object(tweet_id: str) -> TwitterImage:
