@@ -1,3 +1,5 @@
+FSIZE_TARGET = 7.8 * (10**6)
+
 from . import redis_cli
 from . import string_util
 from . import converter_instagram_url
@@ -6,7 +8,6 @@ from . import download
 from . import youtube
 import os
 
-FSIZE_TARGET = 7.999 * (10**6)
 
 def env_check():
     if all([
