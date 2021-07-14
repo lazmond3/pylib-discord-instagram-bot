@@ -127,7 +127,7 @@ class DiscordMessageListener(discord.Client):
         return embed
 
     async def on_message(self, message):
-        print('Message from {0.author} ({0.author.display_name}) in ({0.channel}): {0.content}'.format(message))
+        print('Message from {0.author.display_name} in ({0.channel}): {0.content}'.format(message))
         content = message.content
         channel = message.channel
 
