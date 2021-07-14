@@ -44,14 +44,13 @@ def trimming_video_to_8MB(fname: str) -> str:
         target_duration_f: float = float(FSIZE_TARGET) / fsize * current_duration
         target_duration:int = int(target_duration_f)
         new_file_name = target_name.split(".")[0] + "-trimmed" + ".mp4"
-        subprocess.run(["ffmpeg", "-i", target_name, "-t", str(target_duration), "-c", "copy", new_file_name])
+        subprocess.run(["ffmpeg", "-y", "-i", target_name, "-t", str(target_duration), "-c", "copy", new_file_name])
+        if "-trimmed" in target_name:
+            os.remove(target_name)
         target_name = new_file_name
-    return target_name
-
-if __name__ == "__main__":
-    import sys
-    print(trimming_video_to_8MB(sys.argv[1]))
-    exit(0)
+    one_trimmed = fname.split(".")[0] + "-trimmed" + ".mp4"
+    os.rename(new_file_name, one_trimmed)
+    return one_trimmed
 
 def download_youtube_video(url: str) -> Tuple[Tuple[str], bool, Dict[str, any]]:
     ydlmp4 = youtube_dl.YoutubeDL(
@@ -72,7 +71,6 @@ def download_youtube_video(url: str) -> Tuple[Tuple[str], bool, Dict[str, any]]:
         assert(os.path.exists(old_fname))
         os.rename(old_fname, fname)
     fsize = os.path.getsize(fname)
-    current_duration: int = info_dict["duration"]
 
     target_size = FSIZE_TARGET
     if fsize > target_size:
@@ -87,7 +85,6 @@ if __name__ == '__main__':
     head_fname = "__out__big__2__"
     print("hello world")
     # url = "https://www.youtube.com/watch?v=XCs7FacjHQY"
-    import sys
     urls = [
     "https://www.youtube.com/watch?v=XCs7FacjHQY",
     "https://www.youtube.com/watch?v=mHuiJGGAJoE",
