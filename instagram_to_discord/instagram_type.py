@@ -63,8 +63,6 @@ class InstagramData:
 
 def convert_long_caption(caption: str) -> str:
     lst = caption.split("\n")
-    if DEBUG:
-        print("lst: ", lst)
     lines = len(lst)
     if lines > 10:
         return "\n".join(lst[:10])

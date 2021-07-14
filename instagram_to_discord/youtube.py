@@ -38,12 +38,13 @@ def trimming_video_to_8MB(fname: str) -> str:
                             stdout=subprocess.PIPE,
                             stderr=subprocess.STDOUT)
         current_duration:int = int(float(result.stdout.decode("utf-8").strip()))
-        print("current: ", current_duration)
+        print("current duration: ", current_duration)
 
         target_duration_f: float = float(FSIZE_TARGET) / fsize * current_duration
         target_duration:int = int(target_duration_f)
         new_file_name = target_name.split(".")[0] + "-trimmed" + ".mp4"
-        subprocess.run(["ffmpeg", "-y", "-i", target_name, "-t", str(target_duration), "-c", "copy", new_file_name])
+        # [ffmpegで変換の際に大量に出る標準出力をログレベル指定ですっきりする - /var/www/yatta47.log](https://yatta47.hateblo.jp/entry/2015/03/03/231204)
+        subprocess.run(["ffmpeg", "-y", "-i", target_name, "-t", str(target_duration), "-loglevel", "24", "-c", "copy", new_file_name])
         if "-trimmed" in target_name:
             os.remove(target_name)
         target_name = new_file_name
@@ -56,7 +57,7 @@ def download_youtube_video(url: str) -> Tuple[Tuple[str], bool, Dict[str, any]]:
         {
             'outtmpl': "%(id)s" + '.mp4',
             'format':'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]',
-            'verbose': True,
+            'verbose': False,
             'format': "18",
         })
     info_dict = ydlmp4.extract_info(url, download=True)

@@ -15,12 +15,7 @@ class TwitterImage:
 
 # 入力は js_dict
 def convert_twitter(dic: Dict[str, Any]) -> TwitterImage:
-    # if DEBUG:
-    #     print("[convert_twitter] dic: ", dic)
-    #     print("[convert_twitter] extended: ", dic["extended_entities"])
     images = dic["extended_entities"]["media"]
-    # if DEBUG:
-    #     print(f"[convert_twitter] images: {images}")
     user_display_name = dic["user"]["name"]
     user_screen_name = dic["user"]["screen_name"]
     user_url = f"https://twitter.com/{user_screen_name}"

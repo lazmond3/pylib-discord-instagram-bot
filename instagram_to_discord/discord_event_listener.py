@@ -13,9 +13,10 @@ from .util import is_int
 from typing import Dict, List, Optional
 from .download import download_file, make_instagram_mp4_filename, make_twitter_mp4_filename, save_image
 from .boto3 import upload_file
-from .youtube import download_youtube_video, extract_youtube_url
+from .youtube import download_youtube_video, extract_youtube_url, trimming_video_to_8MB
 from . import FSIZE_TARGET
-from .sites.youtube_handler import handle_youtube
+from .sites.youtube_handler import handle_youtube_main
+from .sites.tiktok_handler import handle_tiktok_main
 from multiprocessing import Process
 
 class DiscordMessageListener(discord.Client):
@@ -126,10 +127,7 @@ class DiscordMessageListener(discord.Client):
         return embed
 
     async def on_message(self, message):
-        print('Message from {0.author}: {0.content}'.format(message))
-        print(f"Message from {message.author.display_name}")
-        print(f"\tchannel: {message.channel}")
-        print(f"\ttype channel: {type(message.channel)}")
+        print('Message from {0.author.display_name} in ({0.channel}): {0.content}'.format(message))
         content = message.content
         channel = message.channel
 
@@ -139,16 +137,18 @@ class DiscordMessageListener(discord.Client):
                 "https://youtu.be" in content or \
                 "https://youtube.com" in content:
             
-            print("mdmd: channel: ", channel.id)
+            print("[youtube] channel: ", channel.id)
 
-
-            # asyncio.get_event_loop().run_in_executor(None, handle_youtube_from_async, self, channel.id, content)
-            # asyncio.get_event_loop().create_task( handle_youtube_main( self, channel.id, content))
-            # asyncio.get_event_loop().create_task(None, handle_youtube_from_async, self, channel.id, content)
-
-            p = Process(target=handle_youtube, args=(channel.id, content))
-            p.start()
+            await handle_youtube_main(self, channel_id=channel.id, content=content)
+            # p = Process(target=handle_youtube, args=(channel.id, content))
+            # p.start()
             
+        elif "https://" in content and \
+            "tiktok.com" in content:
+            print("[tiktok] -> " + content, channel.id)
+            await handle_tiktok_main(self, channel_id=channel.id, content=content)
+            # p = Process(target=handle_tiktok, args=(channel.id, content))
+            # p.start()
 
         elif "https://www.instagram.com/" in content and \
             ("/p/" in content or "/reel/" in content):
@@ -170,17 +170,15 @@ class DiscordMessageListener(discord.Client):
                 video_content = download_file(video_url)
                 save_image(fname_video, video_content)
                 fsize = os.path.getsize(fname_video)
-                print("file size: ", fsize)
-                if fsize > ():
+                if fsize > FSIZE_TARGET:
                         print("[insta-video] inner fsize is larger!: than ", FSIZE_TARGET)
 
                         video_s3_url = upload_file(fname_video)
-                        # images = get_multiple_medias_from_str(text)   
-                        # insta_obj.media = images[0] # video のサムネを設定... するときは 1枚目にする？
-                        # もうなってるのでは
                         insta_obj.caption = video_s3_url + "\n" + insta_obj.caption
                         embed = self.create_instagram_pic_embed(insta_obj, extracted_base_url)
+                        new_fname_small_video = trimming_video_to_8MB(fname_video)
                         await message.channel.send(embed=embed)
+                        await message.channel.send(file=discord.File(new_fname_small_video))
                 else:
                     # サムネ 1枚 + ファイルアップロード
                     try:
@@ -193,7 +191,8 @@ class DiscordMessageListener(discord.Client):
             else:
                 images = get_multiple_medias_from_str(text)
 
-                print("[DEBUG] images: ", images)
+                for image in images:
+                    print("[listener][twitter] image: " + image)
                 insta_obj = instagran_parse_json_to_obj(text)
 
                 msg_list = content.split()
@@ -222,7 +221,6 @@ class DiscordMessageListener(discord.Client):
 
             tweet_id = twitter_extract_tweet_id(content)
             tw = get_twitter_object(tweet_id)
-            print(tw)
             msg_list = content.split()
             if len(msg_list) > 1:
                 nums = msg_list[1].split(",")
@@ -230,9 +228,6 @@ class DiscordMessageListener(discord.Client):
                 nums = filter(lambda x: x != 1, nums)
                 nums = list(nums)
             else:
-                # video かどうかを判定する
-                # video のサムネでもいい
-
                 if tw.video_url:
                     video_url = tw.video_url.split("?")[0]
                     fname_video = make_twitter_mp4_filename("", tweet_id, video_url)
@@ -243,9 +238,8 @@ class DiscordMessageListener(discord.Client):
 
                     # ファイル送信
                     fsize = os.path.getsize(fname_video)
-                    print("file size: ", fsize)
                     if fsize > (FSIZE_TARGET):
-                        print("inner fsize is larger!: than ", FSIZE_TARGET)
+
                         image_urls = tw.image_urls
 
                         video_s3_url = upload_file(fname_video)
@@ -259,8 +253,9 @@ class DiscordMessageListener(discord.Client):
                             author_profile_image_url=tw.user_profile_image_url,
                             caption= f"{video_s3_url}\n{tw.text}" 
                         )
-                        # await self.send_twitter_images_for_specified_index(skip_one = False, image_urls = image_urls, nums = [1], message = message) # 動画のサムネイル送信
-                        print("[fsize] image urls: ", image_urls)
+                        # 8MB 以上なので削る
+                        new_fname_small_video = trimming_video_to_8MB(fname_video)
+                        await message.channel.send(file=discord.File(new_fname_small_video))
                     else:
                         try:
                             await message.channel.send(file=discord.File(fname_video))
@@ -268,12 +263,10 @@ class DiscordMessageListener(discord.Client):
                             print("file send error!  : ",  e)
                             image_urls = tw.image_urls
                             await self.send_twitter_images_for_specified_index(skip_one = False, image_urls = image_urls, nums = [1], message = message) # 動画のサムネイル送信
-                            print("image urls: ", image_urls)
                     os.remove(fname_video)
 
             # 画像を取得する
             image_urls = tw.image_urls
-            print("image_urls: ", image_urls)
             await self.send_twitter_images_for_specified_index(skip_one = True, image_urls = image_urls, nums = nums, message = message) # 動画のサムネイル送信
  
         elif len(list(filter(lambda x: is_int(x), content.split(",")))) > 0 and \

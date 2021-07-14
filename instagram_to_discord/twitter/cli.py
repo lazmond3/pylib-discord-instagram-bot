@@ -4,6 +4,7 @@ import requests
 from .base64_util import base64_encode_str
 from .twitter_image import convert_twitter, TwitterImage
 from typing import cast, List, Dict, Any
+from debug import DEBUG
 
 CONSUMER_KEY=os.getenv("CONSUMER_KEY")
 CONSUMER_SECRET=os.getenv("CONSUMER_SECRET")
@@ -30,9 +31,10 @@ def _get_auth(url: str, basic: str) -> None:
     payload = {"grant_type": "client_credentials"}
     r = requests.post(url, headers=headers, params=payload)
 
-    print(r)
-    print("-------")
-    print(r.text)
+    if DEBUG:
+        print(r)
+        print("-------")
+        print(r.text)
     with open(TOKEN_FILENAME, "w") as f:
         f.write(r.text)
 
