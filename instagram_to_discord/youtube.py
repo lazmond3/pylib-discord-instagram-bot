@@ -21,7 +21,7 @@ def extract_youtube_url(text:str) -> str:
         url = m.group(1)
         return url
     elif "shorts" in text:
-        m = re.match(r".*(https://youtube.com/shorts/[^&]+)&?.*", text)
+        m = re.match(r".*(https://youtube.com/shorts/[^?]+)\??.*", text)
         url = m.group(1)
         return url
     raise Exception("[extract_youtube_url] failed for text: " + text)
