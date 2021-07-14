@@ -127,17 +127,17 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const commitHash = `${{ fromJSON(steps.get-pr.outputs.result).head.sha }}`;
+            const commitHash = `${{ fromJSON(steps.get-pr2nd.outputs.result).head.sha }}`;
             const substrCommitHash = commitHash.substr(0,7);
             const output = `#### start terraform apply.... ${substrCommitHash}
             CI URL: ${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}
-            `
+            `;
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: output
-            })
+            });
       - name: Configure AWS credentials from Test account
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -148,7 +148,6 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          # terraform_version: 0.13.0:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       - name: Terraform Format
@@ -207,7 +206,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const commitHash = `${{ fromJSON(steps.get-pr.outputs.result).head.sha }}`;
+            const commitHash = `${{ fromJSON(steps.get-pr2nd.outputs.result).head.sha }}`;
             const substrCommitHash = commitHash.substr(0,7);
             const output = `#### .deploy の結果を表示する。 ${substrCommitHash}
             #### Terraform apply 📖\`${{ steps.apply.outcome }}\`
