@@ -13,3 +13,5 @@ git+https://github.com/lazmond3/pylib-debug.git@master#egg=lazmond3-pylib-debug 
 
 aws-lambda-typing == 1.0.3
 boto3
+youtube_dl
+ffmpeg
