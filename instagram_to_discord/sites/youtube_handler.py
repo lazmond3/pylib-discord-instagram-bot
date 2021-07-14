@@ -67,7 +67,6 @@ def create_youtube_video_embed(base_url: str, info_dict: Dict[str, any], s3_url:
 
 async def handle_youtube_main(client: discord.Client, channel_id:int, content: str):
     await client.wait_until_ready()
-    print("[handle_youtube] content: " + content)
     extracted_url: str = extract_youtube_url(content) # is like "https://www.youtube.com/watch?v=Yp6Hc8yN_rs"
     (fname, small_filesize_fname), over_8mb, info_dict = download_youtube_video(extracted_url)
 
@@ -83,8 +82,7 @@ async def handle_youtube_main(client: discord.Client, channel_id:int, content: s
         await channel.send(embed=embed)
         await channel.send(file=discord.File(fname))
 
-    print("mdmd メッセージ送信終了したので、プロセスexitします: " + info_dict["title"])
-    await client.close()
+    print("[handle_youtube] メッセージ送信終了したので、プロセスexitします: " + info_dict["title"])
 
 
 def handle_youtube(channel_id: int,  content: str):

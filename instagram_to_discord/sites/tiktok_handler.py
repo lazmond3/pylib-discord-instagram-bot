@@ -94,7 +94,7 @@ async def handle_tiktok_main(client: discord.Client, channel_id:int, content: st
         await channel.send(embed=embed)
         await channel.send(file=discord.File(fname))
 
-    print("[tiktok] メッセージ送信終了したので、プロセスexitします: " + info_dict["title"])
+    print("[handle_tiktok_main] メッセージ送信終了したので、プロセスexitします: " + info_dict["title"])
     # await client.close()
 
 
