@@ -24,6 +24,12 @@ def play_count_to_text(count:int) -> str:
     ans += f"{res}回"
     return ans
 
+def uploaded_at_to_text(datest: str) -> str:
+    year = datest[:4]
+    month = datest[4:6]
+    day = datest[6:]
+    return f"{year}年{month}月{day}日"
+
 def create_youtube_video_embed(base_url: str, info_dict: Dict[str, any], s3_url: Optional[str] = None):
     seconds = info_dict["duration"]
     minutes = None
@@ -40,8 +46,9 @@ def create_youtube_video_embed(base_url: str, info_dict: Dict[str, any], s3_url:
     else:
         description = ""
     play_count_text = play_count_to_text(info_dict["view_count"])
+    uploaded_at_text = uploaded_at_to_text(info_dict["upload_date"])
     description +=  info_dict["description"][:5] # キャプション作りたい
-    description += "\n" + f'投稿日: {info_dict["upload_date"]}'
+    description += "\n" + f'投稿日: {uploaded_at_text}'
     description += "\n" + f'再生🔁: {play_count_text}'
     description += "\n" + f'時間▶️: {minutes_text}'
     description += "\n" + f'👍: {info_dict["like_count"]} 👎: {info_dict["dislike_count"]}'
