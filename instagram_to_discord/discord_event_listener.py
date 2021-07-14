@@ -15,8 +15,8 @@ from .download import download_file, make_instagram_mp4_filename, make_twitter_m
 from .boto3 import upload_file
 from .youtube import download_youtube_video, extract_youtube_url, trimming_video_to_8MB
 from . import FSIZE_TARGET
-from .sites.youtube_handler import handle_youtube
-from .sites.tiktok_handler import handle_tiktok
+from .sites.youtube_handler import handle_youtube_main
+from .sites.tiktok_handler import handle_tiktok_main
 from multiprocessing import Process
 
 class DiscordMessageListener(discord.Client):
@@ -139,14 +139,16 @@ class DiscordMessageListener(discord.Client):
             
             print("[youtube] channel: ", channel.id)
 
-            p = Process(target=handle_youtube, args=(channel.id, content))
-            p.start()
+            await handle_youtube_main(self, channel_id=channel.id, content=content)
+            # p = Process(target=handle_youtube, args=(channel.id, content))
+            # p.start()
             
         elif "https://" in content and \
             "tiktok.com" in content:
             print("[tiktok] -> " + content, channel.id)
-            p = Process(target=handle_tiktok, args=(channel.id, content))
-            p.start()
+            await handle_tiktok_main(self, channel_id=channel.id, content=content)
+            # p = Process(target=handle_tiktok, args=(channel.id, content))
+            # p.start()
 
         elif "https://www.instagram.com/" in content and \
             ("/p/" in content or "/reel/" in content):
