@@ -1,5 +1,4 @@
 import youtube_dl
-import moviepy.editor as mp
 import os
 import json
 import re
@@ -8,11 +7,6 @@ import subprocess
 from typing import Tuple, Dict
 from . import FSIZE_TARGET
 
-# 欲しい関数について
-# - download_youtube_video => fname / fpath
-# TODO: youtube の 画面情報, description, author を指定, プロフィール画像、サムネ
-# サムネはないけど、
-# description, uplaod_date, duration, view_count, averate_rating, like_count, dislike_count
 
 # TODO: shorts の場合に対応
 def extract_youtube_url(text:str) -> str:
@@ -23,7 +17,6 @@ def extract_youtube_url(text:str) -> str:
     raise Exception("[extract_youtube_url] failed for text: " + text)
 
 
-# 2つ目の値は、 fsize が 8MBを超えているか ( (fname, full fname), over 8MB, info_dict)
 def download_youtube_video(url: str) -> Tuple[Tuple[str], bool, Dict[str, any]]:
     ydlmp4 = youtube_dl.YoutubeDL(
         {
@@ -36,12 +29,8 @@ def download_youtube_video(url: str) -> Tuple[Tuple[str], bool, Dict[str, any]]:
     with open("dump_" + info_dict["id"] + ".json", "w") as f:
         import json
         json.dump(info_dict, f, ensure_ascii=False)
-    withspace_fname = info_dict["title"].replace("\"", "'") + "-" + info_dict["id"] + ".mp4"
     old_fname = info_dict["id"] + ".mp4"
-    pid = os.getpid()
     replaced_title = info_dict["title"].replace(" ", "_").replace("　", "__").replace("\"", "'")
-    # fname = info_dict["title"].replace(" ", "_").replace("　", "__").replace("\"", "'") + "-" + "pid-" + str(pid) + "-" + info_dict["id"] + ".mp4"
-    # fname = old_fname
     fname = info_dict["id"] + "-" + replaced_title + ".mp4"
     if os.path.exists(old_fname):
         assert(os.path.exists(old_fname))
