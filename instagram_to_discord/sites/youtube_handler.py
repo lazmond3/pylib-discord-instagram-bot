@@ -4,6 +4,26 @@ from ..youtube import download_youtube_video, extract_youtube_url
 from ..boto3 import upload_file
 from typing import Dict, Optional
 
+def play_count_to_text(count:int) -> str:
+    oku = 0
+    man = 0
+    res = 0
+    if count > 10**8: # 1億を超えてる
+        oku = count // 10**8
+        count = count % 10**8
+    if count > 10 ** 4: # 1万を超えてる
+        man = count // 10 ** 4
+        count = count % 10 ** 4
+    res = count
+
+    ans = ""
+    if oku > 0:
+        ans += f"{oku}億"
+    if man > 0:
+        ans += f"{man}万"
+    ans += f"{res}回"
+    return ans
+
 def create_youtube_video_embed(base_url: str, info_dict: Dict[str, any], s3_url: Optional[str] = None):
     seconds = info_dict["duration"]
     minutes = None
@@ -19,9 +39,10 @@ def create_youtube_video_embed(base_url: str, info_dict: Dict[str, any], s3_url:
         description = s3_url  + "\n"
     else:
         description = ""
+    play_count_text = play_count_to_text(info_dict["view_count"])
     description +=  info_dict["description"][:5] # キャプション作りたい
     description += "\n" + f'投稿日: {info_dict["upload_date"]}'
-    description += "\n" + f'再生🔁: {info_dict["view_count"]}回'
+    description += "\n" + f'再生🔁: {play_count_text}'
     description += "\n" + f'時間▶️: {minutes_text}'
     description += "\n" + f'👍: {info_dict["like_count"]} 👎: {info_dict["dislike_count"]}'
     embed = discord.Embed(
