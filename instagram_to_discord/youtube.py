@@ -12,7 +12,7 @@ from . import FSIZE_TARGET
 # TODO: https://youtu.be/bEb4xT8lnYU
 # https://youtube.com/shorts/8uiToDOGZIQ?feature=share
 def extract_youtube_url(text:str) -> str:
-    m = re.match(r".*(https://www.youtube.com/watch\?v=[^&]+)&?.*", text)
+    m = re.match(r".*(https://(www.)?youtube.com/watch\?v=[^&]+)&?.*", text)
     if m:
         url = m.group(1)
         return url
@@ -25,7 +25,6 @@ def extract_youtube_url(text:str) -> str:
         url = m.group(1)
         return url
     raise Exception("[extract_youtube_url] failed for text: " + text)
-
 
 # 新しい fpath を返す
 def trimming_video_to_8MB(fname: str) -> str:

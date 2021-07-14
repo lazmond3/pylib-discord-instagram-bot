@@ -136,7 +136,8 @@ class DiscordMessageListener(discord.Client):
         if "instagram-support" in message.author.display_name: return
 
         if "https://www.youtube.com" in content or \
-                "https://youtu.be" in content:
+                "https://youtu.be" in content or \
+                "https://youtube.com":
             # video_path = "/Users/jp26446/github/terraform/pylib-discord-instagram-bot/outside/30-youtubeに対応する/down/output_2_trimmed.mp4"
             # local_obj = threading.local()
             # local_obj.message = message
