@@ -8,9 +8,11 @@ from .converter_instagram_url import convert_instagram_url_to_a
 from .cookie_requests import requests_get_cookie
 from .twitter_multiple import twitter_line_to_image_urls, twitter_extract_tweet_url, get_twitter_object, twitter_extract_tweet_id
 from .util import is_int
-from typing import Dict, List
+from typing import Dict, List, Optional
 from .download import download_file, make_instagram_mp4_filename, make_twitter_mp4_filename, save_image
 from .boto3 import upload_file
+from .youtube import download_youtube_video, extract_youtube_url
+from . import FSIZE_TARGET
 
 class DiscordMessageListener(discord.Client):
     last_url_twitter: Dict[str, str] = {}
@@ -78,6 +80,45 @@ class DiscordMessageListener(discord.Client):
                          )
         return embed
 
+    def create_youtube_video_embed(self, base_url: str, info_dict: Dict[str, any], s3_url: Optional[str] = None):
+        seconds = info_dict["duration"]
+        minutes = None
+        if seconds > 60:
+            minutes = seconds // 60
+            seconds = seconds % 60
+        minutes_text = ""
+        if minutes:
+            minutes_text += f"{minutes:}分"
+        minutes_text += f"{seconds:02}秒"
+
+        if s3_url:
+            description = s3_url  + "\n"
+        else:
+            description = ""
+        description +=  info_dict["description"][:5] # キャプション作りたい
+        description += "\n" + f'投稿日: {info_dict["upload_date"]}'
+        description += "\n" + f'再生回数: {info_dict["view_count"]}'
+        description += "\n" + f'再生時間: {minutes_text}'
+        description += "\n" + f'👍: {info_dict["like_count"]} 👎: {info_dict["dislike_count"]}'
+        embed = discord.Embed(
+            title=info_dict["title"],
+            description=description,
+            url=base_url,
+            color=discord.Color.red()
+        )
+        # embed.set_image(url=obj.media)
+        # どうやって 取ろうか
+        # thumbnails_1 = info_dict["thumbnails"]
+        # thumbnails_sorted = sorted(thumbnails_1, key=lambda x: -x["height"])
+        # if len(thumbnails_sorted) > 0:
+            # embed.set_image(url=thumbnails_sorted[0])
+        embed.set_image(url=info_dict["thumbnail"])
+        embed.set_author(name=info_dict["channel"],
+                        url=info_dict["channel_url"],
+                        #  icon_url=obj.profile_url
+                         )
+        return embed
+
     async def create_and_send_embed_twitter_video_thumbnail_with_message(self, 
         message,
         thumbnail_image_url:str, 
@@ -127,7 +168,30 @@ class DiscordMessageListener(discord.Client):
 
         if "instagram-support" in message.author.display_name: return
 
-        if "https://www.instagram.com/" in content and \
+        if "https://www.youtube.com" in content:
+            # video_path = "/Users/jp26446/github/terraform/pylib-discord-instagram-bot/outside/30-youtubeに対応する/down/output_2_trimmed.mp4"
+            extracted_url: str = extract_youtube_url(content) # is like "https://www.youtube.com/watch?v=Yp6Hc8yN_rs"
+            (fname, small_filesize_fname), over_8mb, info_dict = download_youtube_video(extracted_url)
+
+            try:
+                if over_8mb:
+                    video_s3_url = upload_file(fname)
+                    embed = self.create_youtube_video_embed(extracted_url, info_dict, video_s3_url)
+                    await message.channel.send(embed=embed)
+                    await message.channel.send(file=discord.File(small_filesize_fname))
+                    os.remove(small_filesize_fname)
+
+                else:
+                    embed = self.create_youtube_video_embed(extracted_url, info_dict, None)
+                    await message.channel.send(embed=embed)
+                    await message.channel.send(file=discord.File(fname))
+                os.remove(fname)
+
+
+            except Exception as e:
+                print("[youtube video upload] file send error!  : ",  e)
+
+        elif "https://www.instagram.com/" in content and \
             ("/p/" in content or "/reel/" in content):
             print("[log] channel name: ", message.channel.name)
             extracted_base_url = instagram_extract_from_content(content)
@@ -148,8 +212,8 @@ class DiscordMessageListener(discord.Client):
                 save_image(fname_video, video_content)
                 fsize = os.path.getsize(fname_video)
                 print("file size: ", fsize)
-                if fsize > (2**20 * 8):
-                        print("[insta-video] inner fsize is larger!: than ", 2**20 * 8)
+                if fsize > ():
+                        print("[insta-video] inner fsize is larger!: than ", FSIZE_TARGET)
 
                         video_s3_url = upload_file(fname_video)
                         # images = get_multiple_medias_from_str(text)   
@@ -221,8 +285,8 @@ class DiscordMessageListener(discord.Client):
                     # ファイル送信
                     fsize = os.path.getsize(fname_video)
                     print("file size: ", fsize)
-                    if fsize > (2**20 * 8):
-                        print("inner fsize is larger!: than ", 2**20 * 8)
+                    if fsize > (FSIZE_TARGET):
+                        print("inner fsize is larger!: than ", FSIZE_TARGET)
                         image_urls = tw.image_urls
 
                         video_s3_url = upload_file(fname_video)
