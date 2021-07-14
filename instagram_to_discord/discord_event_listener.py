@@ -140,11 +140,14 @@ class DiscordMessageListener(discord.Client):
                 "https://youtube.com" in content:
             
             print("mdmd: channel: ", channel.id)
-            # th = threading.Thread(target=handle_youtube, args=(channel.id, content, loop))
-            # th.start()
+
+
+            # asyncio.get_event_loop().run_in_executor(None, handle_youtube_from_async, self, channel.id, content)
+            # asyncio.get_event_loop().create_task( handle_youtube_main( self, channel.id, content))
+            # asyncio.get_event_loop().create_task(None, handle_youtube_from_async, self, channel.id, content)
+
             p = Process(target=handle_youtube, args=(channel.id, content))
             p.start()
-            # th = threading.Thread(target=handle_youtube, args=(self, local_obj.message, content))
             
 
         elif "https://www.instagram.com/" in content and \
