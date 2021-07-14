@@ -56,7 +56,7 @@ def download_youtube_video(url: str) -> Tuple[Tuple[str], bool, Dict[str, any]]:
         {
             'outtmpl': "%(id)s" + '.mp4',
             'format':'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]',
-            'verbose': True,
+            'verbose': False,
             'format': "18",
         })
     info_dict = ydlmp4.extract_info(url, download=True)
