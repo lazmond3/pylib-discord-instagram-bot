@@ -1,3 +1,4 @@
+from instagram_to_discord.sites.tiktok_handler import handle_tiktok
 import discord
 import asyncio
 import os
@@ -126,10 +127,7 @@ class DiscordMessageListener(discord.Client):
         return embed
 
     async def on_message(self, message):
-        print('Message from {0.author}: {0.content}'.format(message))
-        print(f"Message from {message.author.display_name}")
-        print(f"\tchannel: {message.channel}")
-        print(f"\ttype channel: {type(message.channel)}")
+        print('Message from {0.author} ({0.author.display_name}) in ({0.channel}): {0.content}'.format(message))
         content = message.content
         channel = message.channel
 
@@ -139,16 +137,16 @@ class DiscordMessageListener(discord.Client):
                 "https://youtu.be" in content or \
                 "https://youtube.com" in content:
             
-            print("mdmd: channel: ", channel.id)
-
-
-            # asyncio.get_event_loop().run_in_executor(None, handle_youtube_from_async, self, channel.id, content)
-            # asyncio.get_event_loop().create_task( handle_youtube_main( self, channel.id, content))
-            # asyncio.get_event_loop().create_task(None, handle_youtube_from_async, self, channel.id, content)
+            print("[youtube] channel: ", channel.id)
 
             p = Process(target=handle_youtube, args=(channel.id, content))
             p.start()
             
+        elif "https://" in content and \
+            "tiktok.com" in content:
+            print("[tiktok] -> " + content, channel.id)
+            p = Process(target=handle_tiktok, args=(channel.id, content))
+            p.start()
 
         elif "https://www.instagram.com/" in content and \
             ("/p/" in content or "/reel/" in content):

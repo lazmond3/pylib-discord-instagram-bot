@@ -8,6 +8,7 @@ from . import converter_instagram_url
 from . import cookie_requests
 from . import download
 from . import youtube
+from . import tiktok
 import os
 
 
