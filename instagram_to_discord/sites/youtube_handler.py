@@ -51,7 +51,8 @@ def create_youtube_video_embed(base_url: str, info_dict: Dict[str, any], s3_url:
     description += "\n" + f'投稿日: {uploaded_at_text}'
     description += "\n" + f'再生🔁: {play_count_text}'
     description += "\n" + f'時間▶️: {minutes_text}'
-    description += "\n" + f'👍: {info_dict["like_count"]} 👎: {info_dict["dislike_count"]}'
+    if "like_count" in info_dict:
+        description += "\n" + f'👍: {info_dict["like_count"]} 👎: {info_dict["dislike_count"]}'
     embed = discord.Embed(
         title=info_dict["title"],
         description=description,
@@ -83,7 +84,8 @@ async def handle_youtube_main(client: discord.Client, channel_id:int, content: s
         await channel.send(file=discord.File(fname))
 
     print("mdmd メッセージ送信終了したので、プロセスexitします: " + info_dict["title"])
-    exit(0)
+    # exit(0)
+    client.loop.stop()
 
 
 def handle_youtube(channel_id: int,  content: str):
