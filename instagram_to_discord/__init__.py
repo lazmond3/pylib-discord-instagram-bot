@@ -1,9 +1,15 @@
+import nest_asyncio
+nest_asyncio.apply()
+FSIZE_TARGET = 2**23 - 100
+
 from . import redis_cli
 from . import string_util
 from . import converter_instagram_url
 from . import cookie_requests
 from . import download
+from . import youtube
 import os
+
 
 def env_check():
     if all([

@@ -1,5 +1,7 @@
 import discord
+import asyncio
 import os
+import threading
 from debug import DEBUG
 from .instagram_type import instagran_parse_json_to_obj, InstagramData, get_multiple_medias_from_str
 from .string_util import sophisticate_string
@@ -8,9 +10,13 @@ from .converter_instagram_url import convert_instagram_url_to_a
 from .cookie_requests import requests_get_cookie
 from .twitter_multiple import twitter_line_to_image_urls, twitter_extract_tweet_url, get_twitter_object, twitter_extract_tweet_id
 from .util import is_int
-from typing import Dict, List
+from typing import Dict, List, Optional
 from .download import download_file, make_instagram_mp4_filename, make_twitter_mp4_filename, save_image
 from .boto3 import upload_file
+from .youtube import download_youtube_video, extract_youtube_url
+from . import FSIZE_TARGET
+from .sites.youtube_handler import handle_youtube
+from multiprocessing import Process
 
 class DiscordMessageListener(discord.Client):
     last_url_twitter: Dict[str, str] = {}
@@ -78,6 +84,8 @@ class DiscordMessageListener(discord.Client):
                          )
         return embed
 
+ 
+
     async def create_and_send_embed_twitter_video_thumbnail_with_message(self, 
         message,
         thumbnail_image_url:str, 
@@ -127,7 +135,22 @@ class DiscordMessageListener(discord.Client):
 
         if "instagram-support" in message.author.display_name: return
 
-        if "https://www.instagram.com/" in content and \
+        if "https://www.youtube.com" in content or \
+                "https://youtu.be" in content or \
+                "https://youtube.com" in content:
+            
+            print("mdmd: channel: ", channel.id)
+
+
+            # asyncio.get_event_loop().run_in_executor(None, handle_youtube_from_async, self, channel.id, content)
+            # asyncio.get_event_loop().create_task( handle_youtube_main( self, channel.id, content))
+            # asyncio.get_event_loop().create_task(None, handle_youtube_from_async, self, channel.id, content)
+
+            p = Process(target=handle_youtube, args=(channel.id, content))
+            p.start()
+            
+
+        elif "https://www.instagram.com/" in content and \
             ("/p/" in content or "/reel/" in content):
             print("[log] channel name: ", message.channel.name)
             extracted_base_url = instagram_extract_from_content(content)
@@ -148,8 +171,8 @@ class DiscordMessageListener(discord.Client):
                 save_image(fname_video, video_content)
                 fsize = os.path.getsize(fname_video)
                 print("file size: ", fsize)
-                if fsize > (2**20 * 8):
-                        print("[insta-video] inner fsize is larger!: than ", 2**20 * 8)
+                if fsize > ():
+                        print("[insta-video] inner fsize is larger!: than ", FSIZE_TARGET)
 
                         video_s3_url = upload_file(fname_video)
                         # images = get_multiple_medias_from_str(text)   
@@ -221,8 +244,8 @@ class DiscordMessageListener(discord.Client):
                     # ファイル送信
                     fsize = os.path.getsize(fname_video)
                     print("file size: ", fsize)
-                    if fsize > (2**20 * 8):
-                        print("inner fsize is larger!: than ", 2**20 * 8)
+                    if fsize > (FSIZE_TARGET):
+                        print("inner fsize is larger!: than ", FSIZE_TARGET)
                         image_urls = tw.image_urls
 
                         video_s3_url = upload_file(fname_video)
