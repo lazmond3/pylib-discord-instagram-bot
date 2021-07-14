@@ -2,8 +2,52 @@ import youtube_dl
 import moviepy.editor as mp
 import os
 import json
+import re
 # import ffmpeg
 import subprocess
+from typing import Tuple, Dict
+
+# 欲しい関数について
+# - download_youtube_video => fname / fpath
+# TODO: youtube の 画面情報, description, author を指定, プロフィール画像、サムネ
+# サムネはないけど、
+# description, uplaod_date, duration, view_count, averate_rating, like_count, dislike_count
+
+def extract_youtube_url(text:str) -> str:
+    m = re.match(r".*(https://www.youtube.com/watch\?v=[^&]+)&?.*", text)
+    if m:
+        url = m.group(1)
+        return url
+    raise Exception("[extract_youtube_url] failed for text: " + text)
+
+
+# 2つ目の値は、 fsize が 8MBを超えているか ( (fname, full fname), over 8MB, info_dict)
+def download_youtube_video(url: str) -> Tuple[Tuple[str], bool, Dict[str, any]]:
+    ydlmp4 = youtube_dl.YoutubeDL(
+        {
+            # 'outtmpl': head_fname + '.mp4',
+            'format':'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]',
+            'verbose': True,
+            'format': "18"
+        })
+    info_dict = ydlmp4.extract_info(url, download=True)
+    withspace_fname = info_dict["title"] + "-" + info_dict["id"] + ".mp4"
+    fname = info_dict["title"].replace(" ", "_").replace("　", "__") + "-" + info_dict["id"] + ".mp4"
+    os.rename(withspace_fname, fname)
+    fsize = os.path.getsize(fname)
+    current_duration: int = info_dict["duration"]
+
+    target_size = 7.999 * (10**6)
+    if fsize > target_size:
+        target_duration_f: float = float(target_size) / fsize * current_duration
+        target_duration:int = int(target_duration_f)
+        new_file_name = fname.split(".")[0] + "-trimmed" + ".mp4"
+        subprocess.run(["ffmpeg", "-i", fname, "-t", str(target_duration), "-c", "copy", new_file_name])
+        return ((fname, new_file_name), True, info_dict)
+    return ((fname, None), False, info_dict)
+
+
+
 
 if __name__ == '__main__':
     head_fname = "__out__big__2__"
