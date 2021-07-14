@@ -84,8 +84,10 @@ async def handle_youtube_main(client: discord.Client, channel_id:int, content: s
         await channel.send(file=discord.File(fname))
 
     print("mdmd メッセージ送信終了したので、プロセスexitします: " + info_dict["title"])
-    # exit(0)
-    client.stop()
+    # client.stop()
+    # await client.logout()
+    await client.close()
+    # raise KeyboardInterrupt()
 
 
 def handle_youtube(channel_id: int,  content: str):
