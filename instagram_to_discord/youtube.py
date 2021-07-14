@@ -30,7 +30,7 @@ def download_youtube_video(url: str) -> Tuple[Tuple[str], bool, Dict[str, any]]:
         import json
         json.dump(info_dict, f, ensure_ascii=False)
     old_fname = info_dict["id"] + ".mp4"
-    replaced_title = info_dict["title"].replace(" ", "_").replace("　", "__").replace("\"", "'")
+    replaced_title = info_dict["title"].replace(" ", "_").replace("　", "__").replace("\"", "'").replace("/", "__")
     fname = info_dict["id"] + "-" + replaced_title + ".mp4"
     if os.path.exists(old_fname):
         assert(os.path.exists(old_fname))
