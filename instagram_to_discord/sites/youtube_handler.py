@@ -85,7 +85,7 @@ async def handle_youtube_main(client: discord.Client, channel_id:int, content: s
 
     print("mdmd メッセージ送信終了したので、プロセスexitします: " + info_dict["title"])
     # exit(0)
-    client.loop.stop()
+    client.stop()
 
 
 def handle_youtube(channel_id: int,  content: str):
