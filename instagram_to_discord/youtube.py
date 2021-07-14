@@ -9,9 +9,19 @@ from . import FSIZE_TARGET
 
 
 # TODO: shorts の場合に対応
+# TODO: https://youtu.be/bEb4xT8lnYU
+# https://youtube.com/shorts/8uiToDOGZIQ?feature=share
 def extract_youtube_url(text:str) -> str:
     m = re.match(r".*(https://www.youtube.com/watch\?v=[^&]+)&?.*", text)
     if m:
+        url = m.group(1)
+        return url
+    elif "youtu.be" in text:
+        m = re.match(r".*(https://youtu.be/[^&]+)&?.*", text)
+        url = m.group(1)
+        return url
+    elif "shorts" in text:
+        m = re.match(r".*(https://youtube.com/shorts/[^&]+)&?.*", text)
         url = m.group(1)
         return url
     raise Exception("[extract_youtube_url] failed for text: " + text)
