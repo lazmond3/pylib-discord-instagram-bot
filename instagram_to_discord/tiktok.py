@@ -6,7 +6,7 @@ import re
 import subprocess
 from typing import Tuple, Dict
 from . import FSIZE_TARGET
-from .youtube import trimming_video_to_8MB
+from .video import trimming_video_to_8MB
 
 # https://vt.tiktok.com/ZSJgGCR9S/
 # https://www.tiktok.com/@kaneko_miyu/video/6971365250369064194?_d=secCgYIASAHKAESMgowAnrkilibsXu8OHJHI0tnKpfT4pH582RdUcNXmvEpD3JsVw%2Bsbb1JFy9hU7%2BFnhceGgA%3D&language=ja&mid=6934737096636730113&preview_pb=0&region=JP&share_app_id=1180&share_item_id=6971365250369064194&share_link_id=1943A867-43D2-42BE-A423-D2B4681A65B3&source=h5_t&timestamp=1626256671&tt_from=copy&u_code=0&utm_campaign=client_share&utm_medium=ios&utm_source=copy&_r=1&is_copy_url=1&is_from_webapp=v1

@@ -13,7 +13,8 @@ from .util import is_int
 from typing import Dict, List, Optional
 from .download import download_file, make_instagram_mp4_filename, make_twitter_mp4_filename, save_image
 from .boto3 import upload_file
-from .youtube import download_youtube_video, extract_youtube_url, trimming_video_to_8MB
+from .youtube import download_youtube_video, extract_youtube_url
+from .video import trimming_video_to_8MB
 from . import FSIZE_TARGET
 from .sites.youtube_handler import handle_youtube_main
 from .sites.tiktok_handler import handle_tiktok_main
