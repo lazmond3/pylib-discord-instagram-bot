@@ -1,4 +1,5 @@
-FSIZE_TARGET = 7.8 * (10**6)
+# FSIZE_TARGET = 7.99 * (10**6)
+FSIZE_TARGET = 2**23 - 100
 
 from . import redis_cli
 from . import string_util
