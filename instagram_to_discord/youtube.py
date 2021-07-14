@@ -27,6 +27,32 @@ def extract_youtube_url(text:str) -> str:
     raise Exception("[extract_youtube_url] failed for text: " + text)
 
 
+# 新しい fpath を返す
+def trimming_video_to_8MB(fname: str) -> str:
+    target_name = fname
+
+    while os.path.getsize(target_name) > FSIZE_TARGET:
+        fsize = os.path.getsize(target_name)
+        result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
+                             "format=duration", "-of",
+                             "default=noprint_wrappers=1:nokey=1", target_name],
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT)
+        current_duration:int = int(float(result.stdout.decode("utf-8").strip()))
+        print("current: ", current_duration)
+
+        target_duration_f: float = float(FSIZE_TARGET) / fsize * current_duration
+        target_duration:int = int(target_duration_f)
+        new_file_name = target_name.split(".")[0] + "-trimmed" + ".mp4"
+        subprocess.run(["ffmpeg", "-i", target_name, "-t", str(target_duration), "-c", "copy", new_file_name])
+        target_name = new_file_name
+    return target_name
+
+if __name__ == "__main__":
+    import sys
+    print(trimming_video_to_8MB(sys.argv[1]))
+    exit(0)
+
 def download_youtube_video(url: str) -> Tuple[Tuple[str], bool, Dict[str, any]]:
     ydlmp4 = youtube_dl.YoutubeDL(
         {
@@ -50,10 +76,7 @@ def download_youtube_video(url: str) -> Tuple[Tuple[str], bool, Dict[str, any]]:
 
     target_size = FSIZE_TARGET
     if fsize > target_size:
-        target_duration_f: float = float(target_size) / fsize * current_duration
-        target_duration:int = int(target_duration_f)
-        new_file_name = fname.split(".")[0] + "-trimmed" + ".mp4"
-        subprocess.run(["ffmpeg", "-i", fname, "-t", str(target_duration), "-c", "copy", new_file_name])
+        new_file_name = trimming_video_to_8MB(fname)
         return ((fname, new_file_name), True, info_dict)
     return ((fname, None), False, info_dict)
 
