@@ -40,6 +40,7 @@ setup(
         "redis-py-cluster",
         "youtube_dl",
         "ffmpeg",
+        "nest_asyncio",
         "discord.py"
     ],
     license=license,

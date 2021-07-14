@@ -1,4 +1,5 @@
-# FSIZE_TARGET = 7.99 * (10**6)
+import nest_asyncio
+nest_asyncio.apply()
 FSIZE_TARGET = 2**23 - 100
 
 from . import redis_cli
