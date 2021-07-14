@@ -1,4 +1,3 @@
-from instagram_to_discord.sites.tiktok_handler import handle_tiktok
 import discord
 import asyncio
 import os
@@ -14,9 +13,10 @@ from .util import is_int
 from typing import Dict, List, Optional
 from .download import download_file, make_instagram_mp4_filename, make_twitter_mp4_filename, save_image
 from .boto3 import upload_file
-from .youtube import download_youtube_video, extract_youtube_url
+from .youtube import download_youtube_video, extract_youtube_url, trimming_video_to_8MB
 from . import FSIZE_TARGET
 from .sites.youtube_handler import handle_youtube
+from .sites.tiktok_handler import handle_tiktok
 from multiprocessing import Process
 
 class DiscordMessageListener(discord.Client):
@@ -168,17 +168,15 @@ class DiscordMessageListener(discord.Client):
                 video_content = download_file(video_url)
                 save_image(fname_video, video_content)
                 fsize = os.path.getsize(fname_video)
-                print("file size: ", fsize)
-                if fsize > ():
+                if fsize > FSIZE_TARGET:
                         print("[insta-video] inner fsize is larger!: than ", FSIZE_TARGET)
 
                         video_s3_url = upload_file(fname_video)
-                        # images = get_multiple_medias_from_str(text)   
-                        # insta_obj.media = images[0] # video のサムネを設定... するときは 1枚目にする？
-                        # もうなってるのでは
                         insta_obj.caption = video_s3_url + "\n" + insta_obj.caption
                         embed = self.create_instagram_pic_embed(insta_obj, extracted_base_url)
+                        new_fname_small_video = trimming_video_to_8MB(fname_video)
                         await message.channel.send(embed=embed)
+                        await message.channel.send(file=discord.File(new_fname_small_video))
                 else:
                     # サムネ 1枚 + ファイルアップロード
                     try:
@@ -259,6 +257,8 @@ class DiscordMessageListener(discord.Client):
                         )
                         # await self.send_twitter_images_for_specified_index(skip_one = False, image_urls = image_urls, nums = [1], message = message) # 動画のサムネイル送信
                         print("[fsize] image urls: ", image_urls)
+                        new_fname_small_video = trimming_video_to_8MB(fname_video)
+                        await message.channel.send(file=discord.File(new_fname_small_video))
                     else:
                         try:
                             await message.channel.send(file=discord.File(fname_video))
