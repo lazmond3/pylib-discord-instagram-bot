@@ -122,9 +122,7 @@ jobs:
         with:
           repository: ${{ fromJSON(steps.get-pr2nd.outputs.result).head.repo.full_name }}
           ref: ${{ fromJSON(steps.get-pr2nd.outputs.result).head.sha }} # or .head.ref for branch name
-# ここまで
-
-# ここから、 terraform
+      # -----------------------------
       - uses: actions/github-script@0.9.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
