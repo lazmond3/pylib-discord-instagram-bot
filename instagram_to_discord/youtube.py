@@ -6,6 +6,7 @@ import re
 # import ffmpeg
 import subprocess
 from typing import Tuple, Dict
+from . import FSIZE_TARGET
 
 # 欲しい関数について
 # - download_youtube_video => fname / fpath
@@ -37,7 +38,7 @@ def download_youtube_video(url: str) -> Tuple[Tuple[str], bool, Dict[str, any]]:
     fsize = os.path.getsize(fname)
     current_duration: int = info_dict["duration"]
 
-    target_size = 7.999 * (10**6)
+    target_size = FSIZE_TARGET
     if fsize > target_size:
         target_duration_f: float = float(target_size) / fsize * current_duration
         target_duration:int = int(target_duration_f)

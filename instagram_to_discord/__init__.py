@@ -6,6 +6,8 @@ from . import download
 from . import youtube
 import os
 
+FSIZE_TARGET = 7.999 * (10**6)
+
 def env_check():
     if all([
         os.getenv("TOKEN"),
