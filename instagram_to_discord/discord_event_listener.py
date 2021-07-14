@@ -1,5 +1,7 @@
 import discord
+import asyncio
 import os
+import threading
 from debug import DEBUG
 from .instagram_type import instagran_parse_json_to_obj, InstagramData, get_multiple_medias_from_str
 from .string_util import sophisticate_string
@@ -13,6 +15,8 @@ from .download import download_file, make_instagram_mp4_filename, make_twitter_m
 from .boto3 import upload_file
 from .youtube import download_youtube_video, extract_youtube_url
 from . import FSIZE_TARGET
+from .sites.youtube_handler import handle_youtube
+from multiprocessing import Process
 
 class DiscordMessageListener(discord.Client):
     last_url_twitter: Dict[str, str] = {}
@@ -80,44 +84,7 @@ class DiscordMessageListener(discord.Client):
                          )
         return embed
 
-    def create_youtube_video_embed(self, base_url: str, info_dict: Dict[str, any], s3_url: Optional[str] = None):
-        seconds = info_dict["duration"]
-        minutes = None
-        if seconds > 60:
-            minutes = seconds // 60
-            seconds = seconds % 60
-        minutes_text = ""
-        if minutes:
-            minutes_text += f"{minutes:}分"
-        minutes_text += f"{seconds:02}秒"
-
-        if s3_url:
-            description = s3_url  + "\n"
-        else:
-            description = ""
-        description +=  info_dict["description"][:5] # キャプション作りたい
-        description += "\n" + f'投稿日: {info_dict["upload_date"]}'
-        description += "\n" + f'再生回数: {info_dict["view_count"]}'
-        description += "\n" + f'再生時間: {minutes_text}'
-        description += "\n" + f'👍: {info_dict["like_count"]} 👎: {info_dict["dislike_count"]}'
-        embed = discord.Embed(
-            title=info_dict["title"],
-            description=description,
-            url=base_url,
-            color=discord.Color.red()
-        )
-        # embed.set_image(url=obj.media)
-        # どうやって 取ろうか
-        # thumbnails_1 = info_dict["thumbnails"]
-        # thumbnails_sorted = sorted(thumbnails_1, key=lambda x: -x["height"])
-        # if len(thumbnails_sorted) > 0:
-            # embed.set_image(url=thumbnails_sorted[0])
-        embed.set_image(url=info_dict["thumbnail"])
-        embed.set_author(name=info_dict["channel"],
-                        url=info_dict["channel_url"],
-                        #  icon_url=obj.profile_url
-                         )
-        return embed
+ 
 
     async def create_and_send_embed_twitter_video_thumbnail_with_message(self, 
         message,
@@ -170,26 +137,17 @@ class DiscordMessageListener(discord.Client):
 
         if "https://www.youtube.com" in content:
             # video_path = "/Users/jp26446/github/terraform/pylib-discord-instagram-bot/outside/30-youtubeに対応する/down/output_2_trimmed.mp4"
-            extracted_url: str = extract_youtube_url(content) # is like "https://www.youtube.com/watch?v=Yp6Hc8yN_rs"
-            (fname, small_filesize_fname), over_8mb, info_dict = download_youtube_video(extracted_url)
-
-            try:
-                if over_8mb:
-                    video_s3_url = upload_file(fname)
-                    embed = self.create_youtube_video_embed(extracted_url, info_dict, video_s3_url)
-                    await message.channel.send(embed=embed)
-                    await message.channel.send(file=discord.File(small_filesize_fname))
-                    os.remove(small_filesize_fname)
-
-                else:
-                    embed = self.create_youtube_video_embed(extracted_url, info_dict, None)
-                    await message.channel.send(embed=embed)
-                    await message.channel.send(file=discord.File(fname))
-                os.remove(fname)
-
-
-            except Exception as e:
-                print("[youtube video upload] file send error!  : ",  e)
+            # local_obj = threading.local()
+            # local_obj.message = message
+            loop = asyncio.new_event_loop()
+            
+            print("mdmd: channel: ", channel.id)
+            # th = threading.Thread(target=handle_youtube, args=(channel.id, content, loop))
+            # th.start()
+            p = Process(target=handle_youtube, args=(channel.id, content))
+            p.start()
+            # th = threading.Thread(target=handle_youtube, args=(self, local_obj.message, content))
+            
 
         elif "https://www.instagram.com/" in content and \
             ("/p/" in content or "/reel/" in content):
