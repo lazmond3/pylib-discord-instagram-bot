@@ -59,12 +59,14 @@ if __name__ == '__main__':
     head_fname = "__out__big__2__"
     print("hello world")
     # url = "https://www.youtube.com/watch?v=XCs7FacjHQY"
-    urls = [
-    "https://www.youtube.com/watch?v=XCs7FacjHQY",
-    "https://www.youtube.com/watch?v=mHuiJGGAJoE",
-    "https://www.youtube.com/watch?v=2Ly4yDzN4xM",
-    "https://www.youtube.com/watch?v=G4uD4NcJsM8"
-    ]
+    # urls = [
+    # "https://www.youtube.com/watch?v=XCs7FacjHQY",
+    # "https://www.youtube.com/watch?v=mHuiJGGAJoE",
+    # "https://www.youtube.com/watch?v=2Ly4yDzN4xM",
+    # "https://www.youtube.com/watch?v=G4uD4NcJsM8"
+    # ]
+    import sys
+    urls = [sys.argv[1]]
     ydlmp4 = youtube_dl.YoutubeDL(
         {
             # 'outtmpl': head_fname + '.mp4',
@@ -97,8 +99,10 @@ if __name__ == '__main__':
         #     if fmt["acodec"] != "none" and not "audio only" in fmt["format"]:
         #         print(fmt["format"], fmt["acodec"])
         # print("file size: ", str(fsize / (10**6)) + "MB")
-        fname = info_dict["title"] + "-" + info_dict["id"] + ".mp4"
-        fsize = os.path.getsize("down/" + fname)
+        # fname = info_dict["title"] + "-" + info_dict["id"] + ".mp4"
+        # fsize = os.path.getsize("down/" + fname)
+        (fname, new_fname_small), over8, info_dict = download_youtube_video(url)
+        new_fname = trimming_video_to_8MB(fname)
         # current_duration: int = info_dict["duration"]
 
         # target_size = 7.999 * (10 ** 6)
