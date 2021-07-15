@@ -35,12 +35,20 @@ def download_youtube_video(url: str) -> Tuple[Tuple[str], bool, Dict[str, any]]:
             'format': "18",
         })
     info_dict = ydlmp4.extract_info(url, download=True)
-    with open("dump_" + info_dict["id"] + ".json", "w") as f:
+
+    # # id の先頭にあるハイフンをアンダーバーにする。
+    # id_name:str = info_dict["id"]
+    # if id_name[0] == "-":
+    #     id_name = "_" + id_name[1:]
+    id_name = info_dict["id"]
+
+    with open("dump_" + id_name + ".json", "w") as f:
         import json
         json.dump(info_dict, f, ensure_ascii=False)
-    old_fname = info_dict["id"] + ".mp4"
+
+    old_fname = id_name + ".mp4"
     replaced_title = info_dict["title"].replace(" ", "_").replace("　", "__").replace("\"", "'").replace("/", "__")
-    fname = info_dict["id"] + "-" + replaced_title + ".mp4"
+    fname = id_name + "-" + replaced_title + ".mp4"
     if os.path.exists(old_fname):
         assert(os.path.exists(old_fname))
         os.rename(old_fname, fname)
