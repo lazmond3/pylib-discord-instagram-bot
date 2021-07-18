@@ -244,19 +244,26 @@ class DiscordMessageListener(discord.Client):
                         image_urls = tw.image_urls
 
                         video_s3_url = upload_file(fname_video)
-                        await self.create_and_send_embed_twitter_video_thumbnail_with_message(
-                            message=message,
-                            thumbnail_image_url=image_urls[0],
-                            tweet_url=twitter_extract_tweet_url(content),
-                            s3_video_url=video_s3_url,
-                            author_name=tw.user_display_name,
-                            author_url=tw.user_url,
-                            author_profile_image_url=tw.user_profile_image_url,
-                            caption= f"{video_s3_url}\n{tw.text}" 
-                        )
+                        await message.channel.send(video_s3_url)
+
+                        # twitter は、そもそも OGPがあるので、 動画の時のembed は不要
+                        # mp4のURL貼るとそれがサムネに表示される。ので、トリミングした動画投稿も不要
+
+
+                        # await self.create_and_send_embed_twitter_video_thumbnail_with_message(
+                        #     message=message,
+                        #     thumbnail_image_url=image_urls[0],
+                        #     tweet_url=twitter_extract_tweet_url(content),
+                        #     s3_video_url=video_s3_url,
+                        #     author_name=tw.user_display_name,
+                        #     author_url=tw.user_url,
+                        #     author_profile_image_url=tw.user_profile_image_url,
+                        #     caption= f"{video_s3_url}\n{tw.text}"
+                        # )
+
                         # 8MB 以上なので削る
-                        new_fname_small_video = trimming_video_to_8MB(fname_video)
-                        await message.channel.send(file=discord.File(new_fname_small_video))
+                        # new_fname_small_video = trimming_video_to_8MB(fname_video)
+                        # await message.channel.send(file=discord.File(new_fname_small_video))
                     else:
                         try:
                             await message.channel.send(file=discord.File(fname_video))
