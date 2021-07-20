@@ -1,27 +1,34 @@
-import nest_asyncio
-nest_asyncio.apply()
-FSIZE_TARGET = 2**23 - 100
-
-from . import redis_cli
-from . import string_util
-from . import converter_instagram_url
-from . import cookie_requests
-from . import download
-from . import youtube
-from . import tiktok
-from . import video
 import os
+import nest_asyncio
+
+from . import (  # noqa: F401
+    converter_instagram_url,
+    cookie_requests,
+    download,
+    redis_cli,
+    string_util,
+    tiktok,
+    video,
+    youtube,
+)
+from .discord_event_listener import main
+
+
+nest_asyncio.apply()
+FSIZE_TARGET = 2 ** 23 - 100
 
 
 def env_check():
-    if all([
-        os.getenv("TOKEN"),
-        os.getenv("CONSUMER_KEY"),
-        os.getenv("CONSUMER_SECRET"),
-        os.getenv("MID"),
-        os.getenv("SESSIONID"),
-        os.getenv("CONTAINER_TAG")
-    ]):
+    if all(
+        [
+            os.getenv("TOKEN"),
+            os.getenv("CONSUMER_KEY"),
+            os.getenv("CONSUMER_SECRET"),
+            os.getenv("MID"),
+            os.getenv("SESSIONID"),
+            os.getenv("CONTAINER_TAG"),
+        ]
+    ):
         print("all environment variables are set.")
         print("container tag: ", os.getenv("CONTAINER_TAG"))
     else:
@@ -34,9 +41,6 @@ def env_check():
         print("ERROR! SESSIONID NOT SET")
         exit(1)
 
-
-
-from .discord_event_listener import main
 
 if __name__ == "__main__":
     env_check()

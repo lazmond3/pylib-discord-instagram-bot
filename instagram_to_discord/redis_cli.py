@@ -1,14 +1,15 @@
 # import redis
-from rediscluster import RedisCluster
-from debug import DEBUG
 import os
+
+from debug import DEBUG
+from rediscluster import RedisCluster
 
 REDIS_PASS = os.getenv("REDIS_PASS")
 if REDIS_PASS:
-    startup_nodes = [{"host": "localhost",
-                      "port": "7000", "password": REDIS_PASS}]
-    rcli = RedisCluster(startup_nodes=startup_nodes,
-                        decode_responses=True, password=REDIS_PASS)
+    startup_nodes = [{"host": "localhost", "port": "7000", "password": REDIS_PASS}]
+    rcli = RedisCluster(
+        startup_nodes=startup_nodes, decode_responses=True, password=REDIS_PASS
+    )
 
     # redis でできること
     # https://weblabo.oscasierra.net/python/python-redis-py-1.html
@@ -20,14 +21,21 @@ if REDIS_PASS:
         return rcli.get(key)
 
     if __name__ == "__main__":
-        store_data("test", """
+        store_data(
+            "test",
+            """
         こんにちは！
         WOW
-        """, 100)
+        """,
+            100,
+        )
         if DEBUG:
             print(get_data("test"))
-        assert(get_data("test") == """
+        assert (
+            get_data("test")
+            == """
         こんにちは！
         WOW
-        """)
-        assert(get_data("test2") == None)
+        """
+        )
+        assert get_data("test2") == None

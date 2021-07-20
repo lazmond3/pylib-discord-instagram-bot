@@ -1,5 +1,6 @@
-from debug import DEBUG
 import re
+
+from debug import DEBUG
 
 
 def sophisticate_string(st):

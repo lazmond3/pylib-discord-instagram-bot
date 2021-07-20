@@ -1,30 +1,30 @@
-import os
 import json
+import os
+from typing import Any, Dict, Optional, cast
+
 import requests
-from .base64_util import base64_encode_str
-from .twitter_image import convert_twitter, TwitterImage
-from typing import cast, List, Dict, Any
 from debug import DEBUG
 
-CONSUMER_KEY=os.getenv("CONSUMER_KEY")
-CONSUMER_SECRET=os.getenv("CONSUMER_SECRET")
-TOKEN=os.getenv("TOKEN")
-TOKEN_SECRET=os.getenv("TOKEN_SECRET")
+from .base64_util import base64_encode_str
+from .twitter_image import TwitterImage, convert_twitter
+
+CONSUMER_KEY: Optional[str] = os.getenv("CONSUMER_KEY")
+CONSUMER_SECRET: Optional[str] = os.getenv("CONSUMER_SECRET")
+TOKEN: Optional[str] = os.getenv("TOKEN")
+TOKEN_SECRET: Optional[str] = os.getenv("TOKEN_SECRET")
 
 # const
-TOKEN_FILENAME="dump.json"
+TOKEN_FILENAME: str = "dump.json"
 
-if not all([
-    CONSUMER_KEY,
-    CONSUMER_SECRET,
-    TOKEN,
-    TOKEN_SECRET ]):
+if not all([CONSUMER_KEY, CONSUMER_SECRET, TOKEN, TOKEN_SECRET]):
     pass
+
 
 def _make_basic(consumer_key: str, consumer_secret: str) -> str:
     concat = f"{consumer_key}:{consumer_secret}"
     converted = base64_encode_str(concat)
     return cast(str, converted)
+
 
 def _get_auth(url: str, basic: str) -> None:
     headers = {"Authorization": f"Basic {basic}"}
@@ -38,12 +38,13 @@ def _get_auth(url: str, basic: str) -> None:
     with open(TOKEN_FILENAME, "w") as f:
         f.write(r.text)
 
+
 def get_auth_wrapper() -> None:
-    if not all([
-        CONSUMER_KEY, CONSUMER_SECRET
-    ]):
+    if not all([CONSUMER_KEY, CONSUMER_SECRET]):
         print("specify consumer key/secret")
         exit(1)
+    assert CONSUMER_KEY
+    assert CONSUMER_SECRET
 
     basic = cast(str, _make_basic(CONSUMER_KEY, CONSUMER_SECRET))
     url = "https://api.twitter.com/oauth2/token"
@@ -53,7 +54,8 @@ def get_auth_wrapper() -> None:
 # テスト
 def text_to_dict(str_: str) -> Dict[str, Any]:
     js = json.loads(str_)
-    return js
+    return cast(Dict[str, Any], js)
+
 
 # この名前だが、画像ツイート情報を取得する。
 def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
@@ -79,15 +81,16 @@ def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
     tx = r.text
     js = text_to_dict(tx)
 
-    with open(f"dump_one_{tweet_id}.json", 'w', encoding="utf-8") as f:
+    with open(f"dump_one_{tweet_id}.json", "w", encoding="utf-8") as f:
         json.dump(js, f, ensure_ascii=False)
 
     # キャッシュを利用する.
     # with open(f"dump_one_{tweet_id}.json", 'r') as f:
-        # js = json.load(f)
+    # js = json.load(f)
 
     tw = convert_twitter(js)
-    return tw    
+    return tw
+
 
 def get_sumatome(tweet_id: str, is_second: bool = False) -> None:
     if not os.path.exists(TOKEN_FILENAME):
@@ -113,7 +116,7 @@ def get_sumatome(tweet_id: str, is_second: bool = False) -> None:
     js = text_to_dict(tx)
 
     # デバッグのためのダンプ
-    with open(f"dump_one_{tweet_id}.json", 'w', encoding="utf-8") as f:
+    with open(f"dump_one_{tweet_id}.json", "w", encoding="utf-8") as f:
         json.dump(js, f, ensure_ascii=False)
 
     if js["in_reply_to_status_id_str"] != None:
@@ -123,7 +126,8 @@ def get_sumatome(tweet_id: str, is_second: bool = False) -> None:
     # with open(f"dump_one_{tweet_id}.json", 'r') as f:
     #     js = json.load(f)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     # get_oauth1()
     # get_auth_wrapper()
     from sys import argv
@@ -131,7 +135,7 @@ if __name__ == '__main__':
     # get_one_tweet("1372519422380797955")
     # https://twitter.com/Malong777888/status/1409827218948165632
     # tw = get_one_tweet("1409827218948165632") # video
-    tw = get_one_tweet("1407925711277486082") # video
+    tw = get_one_tweet("1407925711277486082")  # video
     print(tw)
     # get_one_tweet("1373208627356442626")
     # with open("dump_one.json") as f:

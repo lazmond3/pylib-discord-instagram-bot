@@ -1,9 +1,10 @@
-from dict2obj import Dict2Obj
-from debug import DEBUG
 import json
 from typing import List
 
 import dict2obj
+from debug import DEBUG
+from dict2obj import Dict2Obj
+
 
 class InstagramData:
     """[summary]
@@ -17,9 +18,10 @@ class InstagramData:
     caption: :class:`str`
         The description by the author.
     """
+
     def __str__(self):
         n_caption = " ".join(self.caption[:100].split("\n"))
-        return(f"""
+        return f"""
 ==================================================
     media: {self.media}
 ==================================================
@@ -35,15 +37,10 @@ class InstagramData:
 ==================================================
     video_url: {self.video_url}
 ==================================================
-        """)
-    def __init__(self, 
-    media,
-    is_video,
-    caption,
-    profile_url,
-    username,
-    full_name,
-    video_url
+        """
+
+    def __init__(
+        self, media, is_video, caption, profile_url, username, full_name, video_url
     ):
         """init
         media: 写真投稿に対する メイン画像 url
@@ -53,20 +50,23 @@ class InstagramData:
         self.username = username # ユーザネーム(アルファベット)
         self.full_name = full_name # 表示名
         """
-        self.media = media       # 写真投稿に対する メイン画像 url
-        self.is_video = is_video # ビデオかどうか
-        self.caption = caption # キャプション(投稿時のメッセージ)
-        self.profile_url = profile_url # プロフィール画像のurl
-        self.username = username # ユーザネーム(アルファベット)
-        self.full_name = full_name # 表示名
+        self.media = media  # 写真投稿に対する メイン画像 url
+        self.is_video = is_video  # ビデオかどうか
+        self.caption = caption  # キャプション(投稿時のメッセージ)
+        self.profile_url = profile_url  # プロフィール画像のurl
+        self.username = username  # ユーザネーム(アルファベット)
+        self.full_name = full_name  # 表示名
         self.video_url = video_url
+
 
 def convert_long_caption(caption: str) -> str:
     lst = caption.split("\n")
     lines = len(lst)
     if lines > 10:
         return "\n".join(lst[:10])
-    else: return caption
+    else:
+        return caption
+
 
 def convert_to_instagram_type(oj) -> InstagramData:
     media = oj.graphql.shortcode_media.display_url
@@ -85,14 +85,16 @@ def convert_to_instagram_type(oj) -> InstagramData:
     else:
         video_url = None
     return InstagramData(
-        media = media,
-        is_video = is_video,
-        caption = caption,
-        profile_url = profile_url,
-        username = username,
-        full_name = full_name,
-        video_url = video_url
+        media=media,
+        is_video=is_video,
+        caption=caption,
+        profile_url=profile_url,
+        username=username,
+        full_name=full_name,
+        video_url=video_url,
     )
+
+
 def get_multiple_medias(oj) -> List[str]:
     ans = []
     if hasattr(oj.graphql.shortcode_media, "edge_sidecar_to_children"):
@@ -103,14 +105,18 @@ def get_multiple_medias(oj) -> List[str]:
     else:
         media = oj.graphql.shortcode_media.display_url
         return [media]
+
+
 def get_multiple_medias_from_str(str_arg) -> List[str]:
     dic_ = json.loads(str_arg)
     oj = Dict2Obj(dic_)
     return get_multiple_medias(oj)
 
+
 def convert_json_str_to_obj(str_):
     dic_ = json.loads(str_)
     return Dict2Obj(dic_)
+
 
 def instagran_parse_json_to_obj(str):
     """
@@ -120,16 +126,16 @@ def instagran_parse_json_to_obj(str):
     oj = Dict2Obj(dic_)
     return convert_to_instagram_type(oj)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     import json
+
     with open("yoshioka.json") as f:
         dic_ = json.load(f)
     with open("instagram_multi_img.json") as f:
         str_ = f.read()
     oj = Dict2Obj(dic_)
 
-    
-    
     for i in get_multiple_medias(oj):
         print(i)
     # for i in get_multiple_medias_from_str(str_):
