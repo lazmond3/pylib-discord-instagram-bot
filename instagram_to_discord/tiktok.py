@@ -21,7 +21,6 @@ def download_tiktok_video(url: str) -> Tuple[str, bool, Dict[str, Any]]:
     ydlmp4 = youtube_dl.YoutubeDL(
         {
             "outtmpl": "%(id)s" + ".mp4",
-            "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]",
             "format": "0",
         }
     )
@@ -58,10 +57,8 @@ if __name__ == "__main__":
     urls = ["https://vt.tiktok.com/ZSJgGCR9S/", "https://vt.tiktok.com/ZSJgGvR7c/"]
     ydlmp4 = youtube_dl.YoutubeDL(
         {
-            # 'outtmpl': head_fname + '.mp4',
-            "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]",
-            "verbose": True,
             "format": "0",
+            "verbose": True,
             "outtmpl": "%(id)s.%(ext)s",
         }
     )

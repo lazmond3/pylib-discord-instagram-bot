@@ -1,10 +1,6 @@
-import asyncio
 import os
-import threading
-from multiprocessing import Process
-from typing import Dict, List, Optional
-
 import discord
+from typing import Dict, List
 from debug import DEBUG
 
 from . import FSIZE_TARGET

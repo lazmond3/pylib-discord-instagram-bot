@@ -38,4 +38,4 @@ if REDIS_PASS:
         WOW
         """
         )
-        assert get_data("test2") == None
+        assert not get_data("test2")

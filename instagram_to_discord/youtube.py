@@ -1,11 +1,8 @@
 import json
 import os
 import re
-from typing import Any, Dict, Tuple
-
 import youtube_dl
-
-from . import FSIZE_TARGET
+from typing import Any, Dict, Tuple
 from .video import trimming_video_to_8MB
 
 
@@ -34,17 +31,12 @@ def download_youtube_video(url: str) -> Tuple[str, bool, Dict[str, Any]]:
     ydlmp4 = youtube_dl.YoutubeDL(
         {
             "outtmpl": "%(id)s" + ".mp4",
-            "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]",
-            "verbose": False,
             "format": "18",
+            "verbose": False,
         }
     )
     info_dict = ydlmp4.extract_info(url, download=True)
 
-    # # id の先頭にあるハイフンをアンダーバーにする。
-    # id_name:str = info_dict["id"]
-    # if id_name[0] == "-":
-    #     id_name = "_" + id_name[1:]
     id_name = info_dict["id"]
 
     with open("dump_" + id_name + ".json", "w") as f:
@@ -64,11 +56,7 @@ def download_youtube_video(url: str) -> Tuple[str, bool, Dict[str, Any]]:
     if os.path.exists(old_fname):
         assert os.path.exists(old_fname)
         os.rename(old_fname, fname)
-    # fsize = os.path.getsize(fname)
-    # target_size = FSIZE_TARGET
-    # if fsize > target_size:
-    #     new_file_name = trimming_video_to_8MB(fname)
-    #     return ((fname, new_file_name), True, info_dict)
+
     return (fname, False, info_dict)
 
 
@@ -88,60 +76,21 @@ if __name__ == "__main__":
     ydlmp4 = youtube_dl.YoutubeDL(
         {
             # 'outtmpl': head_fname + '.mp4',
-            "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]",
-            "verbose": True,
             "format": "18",
+            "verbose": True,
             "outtmpl": "down/%(id)s.%(ext)s",
         }
     )
     num = 0
-    # import glob
-    # with open("dump_G4uD4NcJsM8.json") as f:
-    #     infod = json.load(f)
 
-    # kn = infod["title"].replace(" ", "_").replace("　", "__").replace("\"", "'")
-    # print(kn)
-    # # for kname  in glob.glob("down/*.mp4"):
-    # for kname  in glob.glob("down/" + kn + "*"):
-    # # kname = os.listdir("down")[-1]
-    #     print(kname)
-    #     fsize = os.path.getsize(kname)
-    #     print("fsize: ", fsize)
-    # exit(0)
     for url in urls:
         info_dict = ydlmp4.extract_info(url, download=True)
         with open("out" + str(num) + ".json", "w") as f:
             json.dump(info_dict, f, ensure_ascii=False)
         num += 1
-        # just for debug
-        # for fmt in info_dict["formats"]:
-        #     if fmt["acodec"] != "none" and not "audio only" in fmt["format"]:
-        #         print(fmt["format"], fmt["acodec"])
-        # print("file size: ", str(fsize / (10**6)) + "MB")
-        # fname = info_dict["title"] + "-" + info_dict["id"] + ".mp4"
-        # fsize = os.path.getsize("down/" + fname)
+
         fname, over8, info_dict = download_youtube_video(url)
         new_fname = trimming_video_to_8MB(fname)
-        # current_duration: int = info_dict["duration"]
-
-        # target_size = 7.999 * (10 ** 6)
-        # if fsize > target_size:
-        #     target_duration_f: float = float(target_size) / fsize * current_duration
-        #     target_duration:int = int(target_duration_f)
-        #     new_file_name = fname.split(".")[0] + "-trimmed" + ".mp4"
-        #     result = subprocess.run(["ffmpeg", "-i", fname, "-t", str(target_duration), "-c", "copy", new_file_name])
-        #     print("result: ", result)
-
-    # ydl_opts = {
-    #     'format': 'bestaudio/best',
-    #     'outtmpl':  head_fname + '.%(ext)s',
-    #     'postprocessors': [
-    #         {'key': 'FFmpegExtractAudio',
-    #         'preferredcodec': 'mp3',
-    #         'preferredquality': '192'},
-    #         {'key': 'FFmpegMetadata'},
-    #     ],
-    # }
 
     # ydlmp3 = youtube_dl.YoutubeDL(ydl_opts)
     # info_dict = ydlmp3.extract_info(url, download=False)
@@ -157,6 +106,7 @@ if __name__ == "__main__":
     # clip.write_videofile(head_fname + "_new_" + '.mp4', audio= head_fname + '.mp3')
 
 
+# flake8:noqa: E501
 """
 $ youtube-dl -F https://www.youtube.com/watch?v=XCs7FacjHQY
 [youtube] XCs7FacjHQY: Downloading webpage

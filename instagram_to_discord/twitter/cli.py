@@ -1,10 +1,9 @@
 import json
 import os
+import requests
 from typing import Any, Dict, Optional, cast
 
-import requests
 from debug import DEBUG
-
 from .base64_util import base64_encode_str
 from .twitter_image import TwitterImage, convert_twitter
 
@@ -119,7 +118,7 @@ def get_sumatome(tweet_id: str, is_second: bool = False) -> None:
     with open(f"dump_one_{tweet_id}.json", "w", encoding="utf-8") as f:
         json.dump(js, f, ensure_ascii=False)
 
-    if js["in_reply_to_status_id_str"] != None:
+    if not js["in_reply_to_status_id_str"]:
         get_one_tweet(js["in_reply_to_status_id_str"])
 
     # キャッシュを利用する.
@@ -130,7 +129,6 @@ def get_sumatome(tweet_id: str, is_second: bool = False) -> None:
 if __name__ == "__main__":
     # get_oauth1()
     # get_auth_wrapper()
-    from sys import argv
 
     # get_one_tweet("1372519422380797955")
     # https://twitter.com/Malong777888/status/1409827218948165632

@@ -31,7 +31,8 @@ def trimming_video_to_8MB(fname: str) -> str:
         target_duration_f: float = float(FSIZE_TARGET) / fsize * current_duration
         target_duration: int = int(target_duration_f)
         new_file_name = target_name.split(".")[0] + "-trimmed" + ".mp4"
-        # [ffmpegで変換の際に大量に出る標準出力をログレベル指定ですっきりする - /var/www/yatta47.log](https://yatta47.hateblo.jp/entry/2015/03/03/231204)
+
+        # [ffmpegで変換の際に大量に出る標準出力をログレベル指定ですっきりする - /var/www/yatta47.log](https://yatta47.hateblo.jp/entry/2015/03/03/231204) # noqa: E501
         subprocess.run(
             [
                 "ffmpeg",

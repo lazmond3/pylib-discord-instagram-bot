@@ -1,16 +1,10 @@
-import json
 import os
-
 import requests
 from debug import DEBUG
 
 from .redis_cli import REDIS_PASS
 
-# COOKIE_PATH = os.getenv("COOKIE_PATH")
-# if not COOKIE_PATH:
-#     print("please give me COOKIE for instagram.com!")
-#     print("USAGE COOKIE_PATH=<> TOKEN=<bot token> python3 -m instagram_to_discord")
-#     exit(1)
+
 MID = os.getenv("MID")
 SESSIONID = os.getenv("SESSIONID")
 
@@ -18,7 +12,6 @@ if REDIS_PASS:
     from .redis_cli import get_data, store_data
 
 # クッキーの使い方がわかるファイル
-
 # DANGER instagram の cookie が別サイトにも送信されてしまいうる。
 cookie = dict()
 
