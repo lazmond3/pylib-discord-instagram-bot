@@ -3,7 +3,7 @@ import discord
 from typing import Dict, List
 from debug import DEBUG
 
-from . import FSIZE_TARGET
+from .const_value import FSIZE_TARGET
 from .boto3 import upload_file
 from .converter_instagram_url import (
     convert_instagram_url_to_a,

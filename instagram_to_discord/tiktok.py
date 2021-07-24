@@ -3,7 +3,7 @@ import os
 import re
 import youtube_dl
 from typing import Any, Dict, Tuple
-from . import FSIZE_TARGET
+from .const_value import FSIZE_TARGET
 
 
 # https://vt.tiktok.com/ZSJgGCR9S/

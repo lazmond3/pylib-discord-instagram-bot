@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-from . import FSIZE_TARGET
+from .const_value import FSIZE_TARGET
 
 
 # 新しい fpath を返す
