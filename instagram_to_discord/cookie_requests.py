@@ -1,9 +1,9 @@
 import os
+
 import requests
 from debug import DEBUG
 
 from .redis_cli import REDIS_PASS
-
 
 MID = os.getenv("MID")
 SESSIONID = os.getenv("SESSIONID")

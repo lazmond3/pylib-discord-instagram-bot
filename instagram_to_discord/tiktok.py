@@ -1,8 +1,10 @@
 import json
 import os
 import re
-import youtube_dl
 from typing import Any, Dict, Tuple
+
+import youtube_dl
+
 from .const_value import FSIZE_TARGET
 
 

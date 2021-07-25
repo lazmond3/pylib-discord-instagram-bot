@@ -1,9 +1,10 @@
 import json
 import os
-import requests
 from typing import Any, Dict, Optional, cast
 
+import requests
 from debug import DEBUG
+
 from .base64_util import base64_encode_str
 from .twitter_image import TwitterImage, convert_twitter
 

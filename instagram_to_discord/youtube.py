@@ -1,8 +1,10 @@
 import json
 import os
 import re
-import youtube_dl
 from typing import Any, Dict, Tuple
+
+import youtube_dl
+
 from .video import trimming_video_to_8MB
 
 
