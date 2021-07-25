@@ -16,7 +16,8 @@ class TwitterImage:
 
 # 入力は js_dict
 def convert_twitter(dic: Dict[str, Any]) -> TwitterImage:
-    images: Dict[str, str] = dic["extended_entities"]["media"]
+    images: List[Dict[str, str]] = dic["extended_entities"]["media"]
+    print(f"images: {images}")
     user_display_name = dic["user"]["name"]
     user_screen_name = dic["user"]["screen_name"]
     user_url = f"https://twitter.com/{user_screen_name}"
@@ -41,8 +42,7 @@ def convert_twitter(dic: Dict[str, Any]) -> TwitterImage:
         image_url_inner = dic["extended_entities"]["media"][0]["media_url_https"]
         image_urls = [image_url_inner]
     else:
-        image_urls = list(map(lambda x: images["media_url_https"], images.keys()))
-        # print("[debug][image_urls]: ", image_urls)
+        image_urls = list(map(lambda x: x["media_url_https"], images))
 
     return TwitterImage(
         id_str=dic["id_str"],
