@@ -24,7 +24,7 @@ def convert_twitter(dic: Dict[str, Any]) -> TwitterImage:
     user_profile_image_url = dic["user"]["profile_image_url_https"]
     text = dic["full_text"]
 
-    video_url_inner: str = ""
+    video_url_inner: str = None
     image_url_inner: str = ""
     image_urls: List[str] = []
     if "video_info" in dic["extended_entities"]["media"][0]:
