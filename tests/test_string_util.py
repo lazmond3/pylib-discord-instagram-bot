@@ -2,8 +2,11 @@
 
 # from .context import use_hello
 import unittest
-from . import context
+
 from debug import DEBUG
+
+from . import context
+
 instagram_to_discord = context.instagram_to_discord
 
 
@@ -14,9 +17,7 @@ class BasicTestSuite(unittest.TestCase):
         assert True
 
     def test_sophisticate(self):
-        cap_to = instagram_to_discord.string_util.sophisticate_string(
-            get_caption()
-        )
+        cap_to = instagram_to_discord.string_util.sophisticate_string(get_caption())
         answer = """【美女navi ☻*】
 今回ご紹介させていただく方は❤︎
 まぁみ(小田愛実) さん ▶︎▷ @maaaami79
@@ -51,5 +52,5 @@ def get_caption():
     return "*\n*\n【美女navi ☻*】\n*\n*\n今回ご紹介させていただく方は❤︎\nまぁみ(小田愛実) さん ▶︎▷ @maaaami79\n * \n * \n# Repost\n.\n.\n#gyda \n.\n.\n.\n.\nまぁみ(小田愛実) さんのアカウントには\n他にも素敵な投稿が(*´﹀`)\nぜひ覗いてみてくださいね🧡\n*\n*\n*\n掲載希望の方は⇒\n@bijo_navi ❤︎と\n# ビジョナビ タグ付けお願いします☺︎!!\n*\n*\n次回もお楽しみに...😍\n*\n*\n#美肌 #カラコン #金髪 #ロングヘア\n#スタイル抜群 #巻き髪　\n#ギャルメイク #笑顔 #振り向き美人\n#アイメイク #マツエク #美意識\n#赤リップ #コスメ #naturalbeauty\n#セルフィー #美容 #リップ #howto\n#ヘアスタイル #おしゃれ女子\n#大人メイク #メイク #オトナ女子\n#美意識向上 #大人可愛い\n#セルフィー女子 #女子力アップ"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

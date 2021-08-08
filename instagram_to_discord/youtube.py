@@ -1,167 +1,114 @@
-import youtube_dl
-import os
 import json
+import os
 import re
-# import ffmpeg
-import subprocess
-from typing import Tuple, Dict
-from . import FSIZE_TARGET
+from typing import Any, Dict, Tuple
+
+import youtube_dl
+
+from .video import trimming_video_to_8MB
 
 
 # TODO: shorts の場合に対応
 # TODO: https://youtu.be/bEb4xT8lnYU
 # https://youtube.com/shorts/8uiToDOGZIQ?feature=share
-def extract_youtube_url(text:str) -> str:
+def extract_youtube_url(text: str) -> str:
     m = re.match(r".*(https://(www.)?youtube.com/watch\?v=[^&]+)&?.*", text)
     if m:
         url = m.group(1)
         return url
     elif "youtu.be" in text:
         m = re.match(r".*(https://youtu.be/[^&]+)&?.*", text)
+        assert m
         url = m.group(1)
         return url
     elif "shorts" in text:
         m = re.match(r".*(https://youtube.com/shorts/[^?]+)\??.*", text)
+        assert m
         url = m.group(1)
         return url
     raise Exception("[extract_youtube_url] failed for text: " + text)
 
-# 新しい fpath を返す
-def trimming_video_to_8MB(fname: str) -> str:
-    target_name = fname
 
-    while os.path.getsize(target_name) > FSIZE_TARGET:
-        fsize = os.path.getsize(target_name)
-        result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
-                             "format=duration", "-of",
-                             "default=noprint_wrappers=1:nokey=1", target_name],
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.STDOUT)
-        current_duration:int = int(float(result.stdout.decode("utf-8").strip()))
-        print("current duration: ", current_duration)
-
-        target_duration_f: float = float(FSIZE_TARGET) / fsize * current_duration
-        target_duration:int = int(target_duration_f)
-        new_file_name = target_name.split(".")[0] + "-trimmed" + ".mp4"
-        # [ffmpegで変換の際に大量に出る標準出力をログレベル指定ですっきりする - /var/www/yatta47.log](https://yatta47.hateblo.jp/entry/2015/03/03/231204)
-        subprocess.run(["ffmpeg", "-y", "-i", target_name, "-t", str(target_duration), "-loglevel", "24", "-c", "copy", new_file_name])
-        if "-trimmed" in target_name:
-            os.remove(target_name)
-        target_name = new_file_name
-    one_trimmed = fname.split(".")[0] + "-trimmed" + ".mp4"
-    os.rename(new_file_name, one_trimmed)
-    return one_trimmed
-
-def download_youtube_video(url: str) -> Tuple[Tuple[str], bool, Dict[str, any]]:
+def download_youtube_video(url: str) -> Tuple[str, bool, Dict[str, Any]]:
     ydlmp4 = youtube_dl.YoutubeDL(
         {
-            'outtmpl': "%(id)s" + '.mp4',
-            'format':'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]',
-            'verbose': False,
-            'format': "18",
-        })
+            "outtmpl": "%(id)s" + ".mp4",
+            "format": "18",
+            "verbose": False,
+        }
+    )
     info_dict = ydlmp4.extract_info(url, download=True)
-    with open("dump_" + info_dict["id"] + ".json", "w") as f:
+
+    id_name = info_dict["id"]
+
+    with open("dump_" + id_name + ".json", "w") as f:
         import json
+
         json.dump(info_dict, f, ensure_ascii=False)
-    old_fname = info_dict["id"] + ".mp4"
-    replaced_title = info_dict["title"].replace(" ", "_").replace("　", "__").replace("\"", "'").replace("/", "__")
-    fname = info_dict["id"] + "-" + replaced_title + ".mp4"
+
+    old_fname = id_name + ".mp4"
+    replaced_title = (
+        info_dict["title"]
+        .replace(" ", "_")
+        .replace("　", "__")
+        .replace('"', "'")
+        .replace("/", "__")
+    )
+    fname = id_name + "-" + replaced_title + ".mp4"
     if os.path.exists(old_fname):
-        assert(os.path.exists(old_fname))
+        assert os.path.exists(old_fname)
         os.rename(old_fname, fname)
-    fsize = os.path.getsize(fname)
 
-    target_size = FSIZE_TARGET
-    if fsize > target_size:
-        new_file_name = trimming_video_to_8MB(fname)
-        return ((fname, new_file_name), True, info_dict)
-    return ((fname, None), False, info_dict)
+    return (fname, False, info_dict)
 
 
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     head_fname = "__out__big__2__"
     print("hello world")
     # url = "https://www.youtube.com/watch?v=XCs7FacjHQY"
-    urls = [
-    "https://www.youtube.com/watch?v=XCs7FacjHQY",
-    "https://www.youtube.com/watch?v=mHuiJGGAJoE",
-    "https://www.youtube.com/watch?v=2Ly4yDzN4xM",
-    "https://www.youtube.com/watch?v=G4uD4NcJsM8"
-    ]
+    # urls = [
+    # "https://www.youtube.com/watch?v=XCs7FacjHQY",
+    # "https://www.youtube.com/watch?v=mHuiJGGAJoE",
+    # "https://www.youtube.com/watch?v=2Ly4yDzN4xM",
+    # "https://www.youtube.com/watch?v=G4uD4NcJsM8"
+    # ]
+    import sys
+
+    urls = [sys.argv[1]]
     ydlmp4 = youtube_dl.YoutubeDL(
         {
             # 'outtmpl': head_fname + '.mp4',
-            'format':'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]',
-            'verbose': True,
-            'format': "18",
-            'outtmpl': "down/%(id)s.%(ext)s"
-        })
+            "format": "18",
+            "verbose": True,
+            "outtmpl": "down/%(id)s.%(ext)s",
+        }
+    )
     num = 0
-    # import glob
-    # with open("dump_G4uD4NcJsM8.json") as f:
-    #     infod = json.load(f)
-    
-    # kn = infod["title"].replace(" ", "_").replace("　", "__").replace("\"", "'")
-    # print(kn)
-    # # for kname  in glob.glob("down/*.mp4"):    
-    # for kname  in glob.glob("down/" + kn + "*"):
-    # # kname = os.listdir("down")[-1]
-    #     print(kname)
-    #     fsize = os.path.getsize(kname)
-    #     print("fsize: ", fsize)
-    # exit(0)
+
     for url in urls:
         info_dict = ydlmp4.extract_info(url, download=True)
-        with open("out" + str(num) + ".json", 'w') as f:
+        with open("out" + str(num) + ".json", "w") as f:
             json.dump(info_dict, f, ensure_ascii=False)
         num += 1
-        # just for debug
-        # for fmt in info_dict["formats"]:
-        #     if fmt["acodec"] != "none" and not "audio only" in fmt["format"]:
-        #         print(fmt["format"], fmt["acodec"])
-        # print("file size: ", str(fsize / (10**6)) + "MB")
-        fname = info_dict["title"] + "-" + info_dict["id"] + ".mp4"
-        fsize = os.path.getsize("down/" + fname)
-        # current_duration: int = info_dict["duration"]
 
-        # target_size = 7.999 * (10 ** 6)
-        # if fsize > target_size:
-        #     target_duration_f: float = float(target_size) / fsize * current_duration
-        #     target_duration:int = int(target_duration_f)
-        #     new_file_name = fname.split(".")[0] + "-trimmed" + ".mp4"
-        #     result = subprocess.run(["ffmpeg", "-i", fname, "-t", str(target_duration), "-c", "copy", new_file_name])
-        #     print("result: ", result)
-
-    # ydl_opts = {
-    #     'format': 'bestaudio/best',
-    #     'outtmpl':  head_fname + '.%(ext)s',
-    #     'postprocessors': [
-    #         {'key': 'FFmpegExtractAudio',
-    #         'preferredcodec': 'mp3',
-    #         'preferredquality': '192'},
-    #         {'key': 'FFmpegMetadata'},
-    #     ],
-    # }
+        fname, over8, info_dict = download_youtube_video(url)
+        new_fname = trimming_video_to_8MB(fname)
 
     # ydlmp3 = youtube_dl.YoutubeDL(ydl_opts)
     # info_dict = ydlmp3.extract_info(url, download=False)
     # print(info_dict)
     # with open("out.json", 'r') as f:
-        # info_dict = json.load(f)
-    
-    
-    #mp4として出力されてものに.mp4を付ける
+    # info_dict = json.load(f)
+
+    # mp4として出力されてものに.mp4を付ける
     # os.rename('out', head_fname + ".mp4")
 
-    #映像と音声を合わせる
+    # 映像と音声を合わせる
     # clip = mp.VideoFileClip( head_fname + '.mp4').subclip()
     # clip.write_videofile(head_fname + "_new_" + '.mp4', audio= head_fname + '.mp3')
 
 
-
+# flake8:noqa: E501
 """
 $ youtube-dl -F https://www.youtube.com/watch?v=XCs7FacjHQY
 [youtube] XCs7FacjHQY: Downloading webpage

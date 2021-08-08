@@ -1,21 +1,17 @@
 import os
-from .redis_cli import REDIS_PASS
+
 import requests
-import json
 from debug import DEBUG
-# COOKIE_PATH = os.getenv("COOKIE_PATH")
-# if not COOKIE_PATH:
-#     print("please give me COOKIE for instagram.com!")
-#     print("USAGE COOKIE_PATH=<> TOKEN=<bot token> python3 -m instagram_to_discord")
-#     exit(1)
-MID=os.getenv("MID")
-SESSIONID=os.getenv("SESSIONID")
+
+from .redis_cli import REDIS_PASS
+
+MID = os.getenv("MID")
+SESSIONID = os.getenv("SESSIONID")
 
 if REDIS_PASS:
-    from .redis_cli import store_data, get_data
+    from .redis_cli import get_data, store_data
 
 # クッキーの使い方がわかるファイル
-
 # DANGER instagram の cookie が別サイトにも送信されてしまいうる。
 cookie = dict()
 
@@ -35,10 +31,7 @@ def make_cookie(path):
             key, v = each.split("=")[0], "".join(each.split("=")[1:])
             cookie2[key] = v
     for k in cookie2.keys():
-        if k in [
-            "mid",
-            "sessionid"
-        ]:
+        if k in ["mid", "sessionid"]:
             cookie[k] = cookie2[k]
     return cookie
 
@@ -61,7 +54,10 @@ if REDIS_PASS:
             data = requests.get(url, cookies=cookie)
             store_data(url, data.text, expire)
             return data.text
+
+
 else:
+
     def requests_get_cookie(url, expire=1000):
         data = requests.get(url, cookies=cookie)
         return data.text

@@ -1,5 +1,6 @@
 # __a にアクセスする関数
 import re
+
 from debug import DEBUG
 
 
@@ -43,9 +44,21 @@ def instagram_make_author_page(username):
 
 
 if __name__ == "__main__":
-    print("make: ", convert_instagram_url_to_a(
-        "https://www.instagram.com/p/CJ8u5PCH-WG/?utm_source=ig_web_copy_link"))
-    print("make: ", convert_instagram_url_to_a(
-        "https://www.instagram.com/reel/CJ8u5PCH-WG/?utm_source=ig_web_copy_link"))
-    print("extract: ", extract_url(
-        "https://www.instagram.com/reel/CJ8u5PCH-WG/?utm_source=ig_web_copy_link"))
+    print(
+        "make: ",
+        convert_instagram_url_to_a(
+            "https://www.instagram.com/p/CJ8u5PCH-WG/?utm_source=ig_web_copy_link"
+        ),
+    )
+    print(
+        "make: ",
+        convert_instagram_url_to_a(
+            "https://www.instagram.com/reel/CJ8u5PCH-WG/?utm_source=ig_web_copy_link"
+        ),
+    )
+    print(
+        "extract: ",
+        extract_url(
+            "https://www.instagram.com/reel/CJ8u5PCH-WG/?utm_source=ig_web_copy_link"
+        ),
+    )
