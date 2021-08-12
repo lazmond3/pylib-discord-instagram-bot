@@ -25,14 +25,14 @@ module "vpc" {
   vpc_private_subnet_cidrs = var.vpc_private_subnet_cidrs
 }
 
-module "alb" {
-  source            = "../../../module/alb"
-  aws_lb_public_ids = module.vpc.vpc_aws_subnet_public_ids
-  app_name          = var.app_name
-  vpc_id            = module.vpc.vpc_id
-  cert_arn          = var.cert_arn
-  sg_alb_id         = module.security.sg_alb_id
-}
+# module "alb" {
+#   source            = "../../../module/alb"
+#   aws_lb_public_ids = module.vpc.vpc_aws_subnet_public_ids
+#   app_name          = var.app_name
+#   vpc_id            = module.vpc.vpc_id
+#   cert_arn          = var.cert_arn
+#   sg_alb_id         = module.security.sg_alb_id
+# }
 
 module "security" {
   source   = "../../../module/security"
