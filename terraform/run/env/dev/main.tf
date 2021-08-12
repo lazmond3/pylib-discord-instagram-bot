@@ -70,14 +70,14 @@ module "cloudwatch" {
   app_name = var.app_name
 }
 module "ecs" {
-  source                       = "../../../module/ecs"
-  app_name                     = var.app_name
-  template_file_path           = var.template_file_path
-  ecs_subnets                  = module.vpc.vpc_aws_subnet_public_ids
-  container_name               = var.container_name
-  container_port               = var.container_port
-  container_repository         = var.container_repository
-  container_tag                = var.container_tag
+  source               = "../../../module/ecs"
+  app_name             = var.app_name
+  template_file_path   = var.template_file_path
+  ecs_subnets          = module.vpc.vpc_aws_subnet_public_ids
+  container_name       = var.container_name
+  container_port       = var.container_port
+  container_repository = var.container_repository
+  container_tag        = var.container_tag
 
   aws_ssm_parameter_token_arn                 = module.ssm.aws_ssm_parameter_token_arn
   aws_ssm_parameter_consumer_key_arn          = module.ssm.aws_ssm_parameter_consumer_key_arn
