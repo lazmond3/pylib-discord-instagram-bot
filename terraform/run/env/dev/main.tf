@@ -25,14 +25,14 @@ module "vpc" {
   vpc_private_subnet_cidrs = var.vpc_private_subnet_cidrs
 }
 
-module "alb" {
-  source            = "../../../module/alb"
-  aws_lb_public_ids = module.vpc.vpc_aws_subnet_public_ids
-  app_name          = var.app_name
-  vpc_id            = module.vpc.vpc_id
-  cert_arn          = var.cert_arn
-  sg_alb_id         = module.security.sg_alb_id
-}
+# module "alb" {
+#   source            = "../../../module/alb"
+#   aws_lb_public_ids = module.vpc.vpc_aws_subnet_public_ids
+#   app_name          = var.app_name
+#   vpc_id            = module.vpc.vpc_id
+#   cert_arn          = var.cert_arn
+#   sg_alb_id         = module.security.sg_alb_id
+# }
 
 module "security" {
   source   = "../../../module/security"
@@ -40,13 +40,13 @@ module "security" {
   app_name = var.app_name
 }
 
-module "route53" {
-  source                    = "../../../module/route53"
-  app_domain                = var.app_domain
-  cert_route53_zone_main_id = var.cert_route53_zone_main_id
-  alb_dns_name              = module.alb.alb_dns_name
-  alb_zone_id               = module.alb.alb_zone_id
-}
+# module "route53" {
+#   source                    = "../../../module/route53"
+#   app_domain                = var.app_domain
+#   cert_route53_zone_main_id = var.cert_route53_zone_main_id
+#   alb_dns_name              = module.alb.alb_dns_name
+#   alb_zone_id               = module.alb.alb_zone_id
+# }
 
 module "ecr" {
   source   = "../../../module/ecr"
@@ -70,15 +70,14 @@ module "cloudwatch" {
   app_name = var.app_name
 }
 module "ecs" {
-  source                       = "../../../module/ecs"
-  app_name                     = var.app_name
-  template_file_path           = var.template_file_path
-  ecs_load_balancer_target_arn = module.alb.alb_target_group_main_arn
-  ecs_subnets                  = module.vpc.vpc_aws_subnet_public_ids
-  container_name               = var.container_name
-  container_port               = var.container_port
-  container_repository         = var.container_repository
-  container_tag                = var.container_tag
+  source               = "../../../module/ecs"
+  app_name             = var.app_name
+  template_file_path   = var.template_file_path
+  ecs_subnets          = module.vpc.vpc_aws_subnet_public_ids
+  container_name       = var.container_name
+  container_port       = var.container_port
+  container_repository = var.container_repository
+  container_tag        = var.container_tag
 
   aws_ssm_parameter_token_arn                 = module.ssm.aws_ssm_parameter_token_arn
   aws_ssm_parameter_consumer_key_arn          = module.ssm.aws_ssm_parameter_consumer_key_arn
