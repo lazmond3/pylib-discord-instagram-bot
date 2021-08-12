@@ -40,13 +40,13 @@ module "security" {
   app_name = var.app_name
 }
 
-module "route53" {
-  source                    = "../../../module/route53"
-  app_domain                = var.app_domain
-  cert_route53_zone_main_id = var.cert_route53_zone_main_id
-  alb_dns_name              = module.alb.alb_dns_name
-  alb_zone_id               = module.alb.alb_zone_id
-}
+# module "route53" {
+#   source                    = "../../../module/route53"
+#   app_domain                = var.app_domain
+#   cert_route53_zone_main_id = var.cert_route53_zone_main_id
+#   alb_dns_name              = module.alb.alb_dns_name
+#   alb_zone_id               = module.alb.alb_zone_id
+# }
 
 module "ecr" {
   source   = "../../../module/ecr"
@@ -73,7 +73,6 @@ module "ecs" {
   source                       = "../../../module/ecs"
   app_name                     = var.app_name
   template_file_path           = var.template_file_path
-  ecs_load_balancer_target_arn = module.alb.alb_target_group_main_arn
   ecs_subnets                  = module.vpc.vpc_aws_subnet_public_ids
   container_name               = var.container_name
   container_port               = var.container_port

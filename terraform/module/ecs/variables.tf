@@ -9,10 +9,7 @@ variable "template_file_path" {
 variable "ecs_desired_count" {
   default = "1"
 }
-variable "ecs_load_balancer_target_arn" {
-  type = string
-  # aws_lb_target_group.main.arn
-}
+
 
 # ecs cluster
 # vpc からもらう
