@@ -17,10 +17,10 @@ youtube_dl
 ffmpeg
 nest_asyncio
 
-black
-flake8
-autopep8
-isort
-pycln
+# black
+# flake8
+# autopep8
+# isort
+# pycln
 Flask
 mypy
