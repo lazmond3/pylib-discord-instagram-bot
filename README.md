@@ -62,3 +62,6 @@ mid=XX...; sessionid=6788562761...
 ## DOING
 
 - dict2obj の解決
+
+# メモ
+- sessionid の更新(instagram)
