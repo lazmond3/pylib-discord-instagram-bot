@@ -19,6 +19,7 @@ boto3_s3 = boto3.client("s3", config=my_config)
 
 s3 = boto3.resource("s3")
 bucket = s3.Bucket("discord-python-video")
+bucket_image = s3.Bucket("discord-python-image")
 
 
 # returns file URL
