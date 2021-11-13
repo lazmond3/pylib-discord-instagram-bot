@@ -4,13 +4,13 @@ from typing import Dict, List
 import discord
 from debug import DEBUG
 
-from .boto3 import upload_file
+from .boto3 import upload_file, upload_image_file
 from .const_value import FSIZE_TARGET
 from .converter_instagram_url import (convert_instagram_url_to_a,
                                       instagram_extract_from_content,
                                       instagram_make_author_page)
 from .cookie_requests import requests_get_cookie
-from .download import (download_file, make_instagram_mp4_filename,
+from .download import (download_file, make_instagram_mp4_filename, make_twitter_image_filename,
                        make_twitter_mp4_filename, save_image)
 from .instagram_type import (InstagramData, get_multiple_medias_from_str,
                              instagran_parse_json_to_obj)
@@ -297,6 +297,15 @@ class DiscordMessageListener(discord.Client):
 
             # 画像を取得する
             image_urls = tw.image_urls
+            for idx,u in enumerate(image_urls):
+                fname_image = make_twitter_image_filename("", tweet_id, idx,u )
+                image_data = download_file(u)
+                # ファイルダウンロード
+                save_image(fname_image, image_data)
+                upload_image_file(fname_image, tweet_id, idx)
+                os.remove(fname_image)
+
+
             await self.send_twitter_images_for_specified_index(
                 skip_one=True, image_urls=image_urls, nums=nums, message=message
             )  # 動画のサムネイル送信
