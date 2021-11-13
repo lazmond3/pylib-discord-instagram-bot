@@ -155,6 +155,27 @@ resource "aws_s3_bucket" "discord-python-video" {
     Environment = "Dev"
   }
 }
+# 画像用 s3
+resource "aws_s3_bucket" "discord-python-image" {
+  bucket = "discord-python-image"
+  acl    = "public-read"
+
+  versioning {
+    enabled = true
+  }
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT", "POST"]
+    allowed_origins = ["*"]
+    expose_headers  = ["ETag"]
+    # max_age_seconds = 3000
+  }
+
+  tags = {
+    Name        = "discord-python-image"
+    Environment = "Dev"
+  }
+}
 
 resource "aws_s3_bucket_policy" "discord-python-video-policy" {
   bucket = aws_s3_bucket.discord-python-video.id
@@ -173,6 +194,29 @@ resource "aws_s3_bucket_policy" "discord-python-video-policy" {
         Resource = [
           aws_s3_bucket.discord-python-video.arn,
           "${aws_s3_bucket.discord-python-video.arn}/*",
+        ]
+      },
+    ]
+  })
+}
+
+resource "aws_s3_bucket_policy" "discord-python-image-policy" {
+  bucket = aws_s3_bucket.discord-python-image.id
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression's result to valid JSON syntax.
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Id      = "discord-python-image-bucket-policy"
+    Statement = [
+      {
+        Sid       = "PublicRead"
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = "s3:*"
+        Resource = [
+          aws_s3_bucket.discord-python-image.arn,
+          "${aws_s3_bucket.discord-python-image.arn}/*",
         ]
       },
     ]

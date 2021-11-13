@@ -28,6 +28,14 @@ def upload_file(fname: str) -> str:
     return f"https://discord-python-video.s3.ap-northeast-1.amazonaws.com/{basename}"
 
 
+def upload_image_file(fname: str, tweet_num: str, index: int):
+    # 1つめ: ファイルパス 2: object key
+    # https://dev.classmethod.jp/articles/boto3-s3-object-put-get/
+    ext = fname.split(".")[1]
+    bucket.upload_file(fname, f"{tweet_num}/{index}.{ext}")
+    basename = os.path.basename(fname)
+    return f"https://discord-python-image.s3.ap-northeast-1.amazonaws.com/{tweet_num}/{index}.{ext}"
+
 if __name__ == "__main__":
     fname = "1408027129644605440.mp4"
     # with open(fname, 'rb')  as fb:
