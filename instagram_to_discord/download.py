@@ -13,10 +13,18 @@ def download_file(url, timeout=10):
     return response.content
 
 
-# 画像のファイル名を決める
+# 動画のファイル名を決める
 def make_twitter_mp4_filename(base_dir, num, url):
     ext = os.path.splitext(url)[1]  # 拡張子を取得
     filename = str(num) + ext  # 番号に拡張子をつけてファイル名にする
+
+    fullpath = os.path.join(base_dir, filename)
+    return fullpath
+
+# 画像のファイル名を決める
+def make_twitter_image_filename(base_dir:str, tweet_num:str, index:int, url:str):
+    ext = os.path.splitext(url)[1]  # 拡張子を取得
+    filename = f"{tweet_num}_{index}{ext}"  # 番号に拡張子をつけてファイル名にする
 
     fullpath = os.path.join(base_dir, filename)
     return fullpath
