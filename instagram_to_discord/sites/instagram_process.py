@@ -79,7 +79,7 @@ async def process_instagram(client: Any, channel, message, content):
         images = get_multiple_medias_from_str(text)
 
         for image in images:
-            print("[listener][twitter] image: " + image)
+            print("[listener][instagram] image: " + image)
         insta_obj = instagran_parse_json_to_obj(text)
 
         msg_list = content.split()
