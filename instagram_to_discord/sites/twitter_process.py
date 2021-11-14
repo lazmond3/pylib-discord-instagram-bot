@@ -57,17 +57,19 @@ async def process_twitter(client: Any, channel, message, content):
 
     # 画像を取得する
     image_urls = tw.image_urls
+    new_image_urls = []
     for idx,u in enumerate(image_urls):
         idx+=1
         fname_image = make_twitter_image_filename("", tweet_id, idx,u )
         image_data = download_file(u)
         # ファイルダウンロード
         save_image(fname_image, image_data)
-        upload_image_file(fname_image, tweet_id, idx)
-        os.remove(fname_image)
+        path = upload_image_file(fname_image, tweet_id, idx)
+        new_image_urls.append(path)
+        # os.remove(fname_image)
 
 
     await send_twitter_images_for_specified_index(
-        skip_one=True, image_urls=image_urls, nums=nums, message=message
+        skip_one=True, image_urls=new_image_urls, nums=nums, message=message
     )  # 動画のサムネイル送信
 

@@ -62,10 +62,9 @@ async def process_instagram(client: Any, channel, message, content):
         image_data = download_file(image)
         # ファイルダウンロード
         save_image(fname_image, image_data)
-        upload_image_file(fname_image, instagram_id, idx)
+        path = upload_image_file(fname_image, instagram_id, idx)
 
-        new_image_url = f"https://discord-python-image.s3.ap-northeast-1.amazonaws.com/{instagram_id}/{idx}.jpg"
-        new_images.append(new_image_url)
+        new_images.append(path)
         os.remove(fname_image)
 
     if insta_obj.is_video:
