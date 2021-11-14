@@ -16,7 +16,7 @@ from .instagram_type import (InstagramData, get_multiple_medias_from_str,
                              instagran_parse_json_to_obj)
 from .sites.tiktok_handler import handle_tiktok_main
 from .sites.youtube_handler import handle_youtube_main
-from .sites.instagram import send_instagram_images_for_specified_index
+from .sites.instagram import send_instagram_images_for_specified_index, create_instagram_pic_embed, create_instagram_video_embed
 from .string_util import sophisticate_string
 from .twitter_multiple import (get_twitter_object, twitter_extract_tweet_id,
                                twitter_extract_tweet_url,
@@ -52,38 +52,6 @@ class DiscordMessageListener(discord.Client):
                 print(f"send_twitter_image: url: {image_urls[idx]}")
             embed = self.create_embed_twitter_image(image_urls[idx])
             await message.channel.send(embed=embed)
-
-    def create_instagram_pic_embed(self, obj: InstagramData, base_url: str):
-        description = sophisticate_string(obj.caption)
-        embed = discord.Embed(
-            title=obj.full_name,
-            description=description,
-            url=base_url,
-            color=discord.Color.red(),
-        )
-        embed.set_image(url=obj.media)
-        embed.set_author(
-            name=obj.full_name,
-            url=instagram_make_author_page(obj.username),
-            icon_url=obj.profile_url,
-        )
-        return embed
-
-    def create_instagram_video_embed(self, obj: InstagramData, base_url: str):
-        description = sophisticate_string(obj.caption)
-        embed = discord.Embed(
-            title=obj.full_name,
-            description=description,
-            url=base_url,
-            color=discord.Color.red(),
-        )
-        # embed.set_image(url=obj.media)
-        embed.set_author(
-            name=obj.full_name,
-            url=instagram_make_author_page(obj.username),
-            icon_url=obj.profile_url,
-        )
-        return embed
 
     async def create_and_send_embed_twitter_video_thumbnail_with_message(
         self,
@@ -174,7 +142,7 @@ class DiscordMessageListener(discord.Client):
 
                     video_s3_url = upload_video_file(fname_video)
                     insta_obj.caption = video_s3_url + "\n" + insta_obj.caption
-                    embed = self.create_instagram_pic_embed(
+                    embed = create_instagram_pic_embed(
                         insta_obj, extracted_base_url
                     )
                     new_fname_small_video = trimming_video_to_8MB(fname_video)
@@ -183,7 +151,7 @@ class DiscordMessageListener(discord.Client):
                 else:
                     # サムネ 1枚 + ファイルアップロード
                     try:
-                        embed = self.create_instagram_video_embed(
+                        embed = create_instagram_video_embed(
                             insta_obj, extracted_base_url
                         )
                         await message.channel.send(embed=embed)
@@ -210,7 +178,7 @@ class DiscordMessageListener(discord.Client):
 
                 image_url = images[nums[0] - 1]
                 insta_obj.media = image_url
-                embed = self.create_instagram_pic_embed(insta_obj, extracted_base_url)
+                embed = create_instagram_pic_embed(insta_obj, extracted_base_url)
                 await message.channel.send(embed=embed)
                 if len(nums) == 1:
                     return
