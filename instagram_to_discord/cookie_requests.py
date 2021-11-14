@@ -3,16 +3,10 @@ import os
 import requests
 from debug import DEBUG
 
-from .redis_cli import REDIS_PASS
-
 MID = os.getenv("MID")
 SESSIONID = os.getenv("SESSIONID")
 
-if REDIS_PASS:
-    from .redis_cli import get_data, store_data
-
 # クッキーの使い方がわかるファイル
-# DANGER instagram の cookie が別サイトにも送信されてしまいうる。
 cookie = dict()
 
 
@@ -36,28 +30,9 @@ def make_cookie(path):
     return cookie
 
 
-# if COOKIE_PATH:
-#     make_cookie(COOKIE_PATH)
-# else:
 cookie["mid"] = MID
 cookie["sessionid"] = SESSIONID
 
-# redis 機能を加える
-
-if REDIS_PASS:
-    # 本当は導通確認でもいいかも。
-    def requests_get_cookie(url, expire=1000):
-        cache = get_data(url)
-        if cache:
-            return cache
-        else:
-            data = requests.get(url, cookies=cookie)
-            store_data(url, data.text, expire)
-            return data.text
-
-
-else:
-
-    def requests_get_cookie(url, expire=1000):
-        data = requests.get(url, cookies=cookie)
-        return data.text
+def requests_get_cookie(url, expire=1000):
+    data = requests.get(url, cookies=cookie)
+    return data.text
