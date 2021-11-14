@@ -141,7 +141,7 @@ class DiscordMessageListener(discord.Client):
         content = message.content
         channel = message.channel
         if IS_DEBUG and "debug" not in channel.name: return
-
+        if not IS_DEBUG and "debug" in channel.name: return
 
         if "instagram-support" in message.author.display_name:
             return
