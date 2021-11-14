@@ -16,6 +16,7 @@ from .instagram_type import (InstagramData, get_multiple_medias_from_str,
                              instagran_parse_json_to_obj)
 from .sites.tiktok_handler import handle_tiktok_main
 from .sites.youtube_handler import handle_youtube_main
+from .sites.instagram import send_instagram_images_for_specified_index
 from .string_util import sophisticate_string
 from .twitter_multiple import (get_twitter_object, twitter_extract_tweet_id,
                                twitter_extract_tweet_url,
@@ -50,20 +51,6 @@ class DiscordMessageListener(discord.Client):
             if DEBUG:
                 print(f"send_twitter_image: url: {image_urls[idx]}")
             embed = self.create_embed_twitter_image(image_urls[idx])
-            await message.channel.send(embed=embed)
-
-    async def send_instagram_images_for_specified_index(
-        self, image_urls: List[str], nums: List[int], message
-    ):
-        for n in nums:
-            idx = n - 1
-            assert idx >= 0
-            if len(image_urls) < n:
-                continue
-            # if n == 1: continue
-            if DEBUG:
-                print(f"send_twitter_image: url: {image_urls[idx]}")
-            embed = self.create_embed_instagram_image(image_urls[idx])
             await message.channel.send(embed=embed)
 
     def create_instagram_pic_embed(self, obj: InstagramData, base_url: str):
@@ -127,10 +114,7 @@ class DiscordMessageListener(discord.Client):
         embed.set_image(url=image_url)
         return embed
 
-    def create_embed_instagram_image(self, image_url: str):
-        embed = discord.Embed(color=discord.Color.red())
-        embed.set_image(url=image_url)
-        return embed
+
 
     async def on_message(self, message):
         print(
@@ -230,7 +214,7 @@ class DiscordMessageListener(discord.Client):
                 await message.channel.send(embed=embed)
                 if len(nums) == 1:
                     return
-                await self.send_instagram_images_for_specified_index(
+                await send_instagram_images_for_specified_index(
                     images, nums[1:], message
                 )
 
