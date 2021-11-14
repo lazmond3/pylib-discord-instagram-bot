@@ -18,6 +18,7 @@ from .sites.tiktok_handler import handle_tiktok_main
 from .sites.youtube_handler import handle_youtube_main
 from .sites.instagram import send_instagram_images_for_specified_index, create_instagram_pic_embed, create_instagram_video_embed
 from .sites.twitter import send_twitter_images_for_specified_index
+from .sites.twitter_process import process_twitter
 from .string_util import sophisticate_string
 from .twitter_multiple import (get_twitter_object, twitter_extract_tweet_id,
                                twitter_extract_tweet_url,
@@ -143,68 +144,7 @@ class DiscordMessageListener(discord.Client):
                 )
 
         elif "https://twitter.com/" in content and "/status/" in content:
-            # ここで最後のtwitter url を記録しておく。
-            self.last_url_twitter[channel] = twitter_extract_tweet_url(content)
-            self.is_twitter_last = True
-
-            nums = [1]
-
-            tweet_id = twitter_extract_tweet_id(content)
-            tw = get_twitter_object(tweet_id)
-            msg_list = content.split()
-            if len(msg_list) > 1:
-                nums = msg_list[1].split(",")
-                nums = map(lambda x: int(x), nums)
-                nums = filter(lambda x: x != 1, nums)
-                nums = list(nums)
-            else:
-                if tw.video_url:
-                    video_url = tw.video_url.split("?")[0]
-                    fname_video = make_twitter_mp4_filename("", tweet_id, video_url)
-
-                    video = download_file(video_url)
-                    # ファイルダウンロード
-                    save_image(fname_video, video)
-
-                    # ファイル送信
-                    fsize = os.path.getsize(fname_video)
-                    if fsize > (FSIZE_TARGET):
-
-                        image_urls = tw.image_urls
-
-                        video_s3_url = upload_video_file(fname_video)
-                        await message.channel.send(video_s3_url)
-
-                    else:
-                        try:
-                            await message.channel.send(file=discord.File(fname_video))
-                        except Exception as e:
-                            print("file send error!  : ", e)
-                            image_urls = tw.image_urls
-                            await send_twitter_images_for_specified_index(
-                                skip_one=False,
-                                image_urls=image_urls,
-                                nums=[1],
-                                message=message,
-                            )  # 動画のサムネイル送信
-                    os.remove(fname_video)
-
-            # 画像を取得する
-            image_urls = tw.image_urls
-            for idx,u in enumerate(image_urls):
-                idx+=1
-                fname_image = make_twitter_image_filename("", tweet_id, idx,u )
-                image_data = download_file(u)
-                # ファイルダウンロード
-                save_image(fname_image, image_data)
-                upload_image_file(fname_image, tweet_id, idx)
-                os.remove(fname_image)
-
-
-            await send_twitter_images_for_specified_index(
-                skip_one=True, image_urls=image_urls, nums=nums, message=message
-            )  # 動画のサムネイル送信
-
+            await process_twitter(self, channel, message, content)
         # 数字のみ: channel に保存されたインデックスの画像を投稿する。
         elif len(list(filter(lambda x: is_int(x), content.split(",")))) > 0 and (
             channel in self.last_url_twitter or channel in self.last_url_instagram
