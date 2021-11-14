@@ -20,7 +20,7 @@ resource "aws_dynamodb_table" "tweet_json" {
 
 # lambda policy
 resource "aws_iam_policy" "iam_dynamo_tweet_json" {
-  name = "lambda_dynamo_music-policy"
+  name = "tweet_json-policy"
   path = "/"
 
   policy = <<EOF
