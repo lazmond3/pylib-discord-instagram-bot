@@ -12,6 +12,10 @@ edge_sidecar_to_children.edges[].node.display_url
 - [ ] 後続で画像idxを指定するとき、s3を利用できていない。
 - [ ] terraform のモジュールを検討する。
 - [ ] ほか、適宜リファクタする。
+- [ ] テスト追加
+- [ ] セッションスコープインジェクション
+- [ ] 結合でsamplesを動かす
+- [ ] ファイル名とか、パス名とか、一元管理する。
 
 # Usage
 
