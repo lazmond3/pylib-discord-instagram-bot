@@ -41,7 +41,7 @@ def add_instagram_json_to_instagram_json(instagram_url: str, data: str):
         instagram_id = instagram_url.split("/p/")[1].split("/")[0]
     elif "/reel/" in instagram_url:
         instagram_id = instagram_url.split("/reel/")[1].split("/")[0]
-    tweet_json.put_item(
+    instagram_json.put_item(
         Item={
             'instagram_id': instagram_id,
             'data': data
