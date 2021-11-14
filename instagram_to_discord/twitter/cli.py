@@ -7,6 +7,7 @@ from debug import DEBUG
 
 from .base64_util import base64_encode_str
 from .twitter_image import TwitterImage, convert_twitter
+from ..boto3 import add_json_to_tweet_json
 
 CONSUMER_KEY: Optional[str] = os.getenv("CONSUMER_KEY")
 CONSUMER_SECRET: Optional[str] = os.getenv("CONSUMER_SECRET")
@@ -79,6 +80,7 @@ def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
             get_one_tweet(tweet_id, True)
 
     tx = r.text
+    add_json_to_tweet_json(tweet_id, tx)
     js = text_to_dict(tx)
 
     with open(f"dump_one_{tweet_id}.json", "w", encoding="utf-8") as f:
