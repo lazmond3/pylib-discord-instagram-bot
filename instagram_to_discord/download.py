@@ -46,3 +46,15 @@ def make_instagram_mp4_filename(base_dir, url):
 def save_image(filename, image):
     with open(filename, "wb") as fout:
         fout.write(image)
+
+if __name__ == "__main__":
+    url = "https://pbs.twimg.com/media/FEEnu0zaQAMfXHy.jpg"
+    image_data = download_file(url)
+    tweet_num = "1459491452048740352"
+    idx = 1
+    fname = make_twitter_image_filename("", tweet_num, idx, url )
+    print(f"fname: {fname}")
+    # save_image("sample.jpg", image_data )
+    save_image(fname, image_data )
+    from .boto3 import upload_image_file
+    upload_image_file(fname, tweet_num, idx)
