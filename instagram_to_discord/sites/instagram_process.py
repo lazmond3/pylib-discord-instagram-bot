@@ -46,6 +46,28 @@ async def process_instagram(client: Any, channel, message, content):
     add_instagram_json_to_instagram_json(a_url, instagram_id, text_decoded)
 
     insta_obj = instagran_parse_json_to_obj(text)
+    images = get_multiple_medias_from_str(text)
+
+    instagram_id = get_instagram_id_from_url(a_url)
+    new_images = []
+    for idx,image in enumerate(images):
+        print("[listener][instagram] image: " + image)
+        idx+=1
+        fname_image = make_instagram_image_filename(
+            "", 
+            instagram_id,
+            idx,
+            image, 
+        )
+        image_data = download_file(image)
+        # ファイルダウンロード
+        save_image(fname_image, image_data)
+        upload_image_file(fname_image, instagram_id, idx)
+
+        new_image_url = f"https://discord-python-image.s3.ap-northeast-1.amazonaws.com/{instagram_id}/{idx}.jpg"
+        new_images.append(new_image_url)
+        os.remove(fname_image)
+
     if insta_obj.is_video:
         video_url = insta_obj.video_url
 
@@ -76,23 +98,6 @@ async def process_instagram(client: Any, channel, message, content):
                 print("[instagram video upload] file send error!  : ", e)
         os.remove(fname_video)
     else:
-        images = get_multiple_medias_from_str(text)
-
-        instagram_id = get_instagram_id_from_url(a_url)
-        for idx,image in enumerate(images):
-            print("[listener][instagram] image: " + image)
-            idx+=1
-            fname_image = make_instagram_image_filename(
-                "", 
-                instagram_id,
-                idx,
-                image, 
-            )
-            image_data = download_file(image)
-            # ファイルダウンロード
-            save_image(fname_image, image_data)
-            upload_image_file(fname_image, instagram_id, idx)
-            # os.remove(fname_image)
         insta_obj = instagran_parse_json_to_obj(text)
 
         msg_list = content.split()
@@ -105,12 +110,12 @@ async def process_instagram(client: Any, channel, message, content):
             nums.append(1)
         assert nums[0] >= 1
 
-        image_url = images[nums[0] - 1]
+        image_url = new_images[nums[0] - 1]
         insta_obj.media = image_url
         embed = create_instagram_pic_embed(insta_obj, extracted_base_url)
         await message.channel.send(embed=embed)
         if len(nums) == 1:
             return
         await send_instagram_images_for_specified_index(
-            images, nums[1:], message
+            new_images, nums[1:], message
         )
