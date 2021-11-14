@@ -32,15 +32,11 @@ def add_json_to_tweet_json(tweet_id: str, data: str):
             'data': data
         }
     )
-def add_instagram_json_to_instagram_json(instagram_url: str, data: str):
+def add_instagram_json_to_instagram_json(instagram_url: str, instagram_id: str, data: str):
     """
     sample url: https://www.instagram.com/p/CVNB-GNldga/
     """
-    instagram_id = ""
-    if "/p/" in instagram_url:
-        instagram_id = instagram_url.split("/p/")[1].split("/")[0]
-    elif "/reel/" in instagram_url:
-        instagram_id = instagram_url.split("/reel/")[1].split("/")[0]
+    
     instagram_json.put_item(
         Item={
             'instagram_id': instagram_id,

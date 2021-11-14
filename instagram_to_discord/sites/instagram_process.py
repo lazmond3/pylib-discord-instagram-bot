@@ -1,5 +1,6 @@
 from typing import Any
 import discord
+import json
 import os
 from ..const_value import FSIZE_TARGET
 from ..twitter_multiple import (get_twitter_object, twitter_extract_tweet_id,
@@ -30,7 +31,20 @@ async def process_instagram(client: Any, channel, message, content):
     client.is_twitter_last = False
 
     text = requests_get_cookie(url=a_url)
-    add_instagram_json_to_instagram_json(a_url, text)
+    instagram_id = ""
+    if "/p/" in a_url:
+        instagram_id = a_url.split("/p/")[1].split("/")[0]
+    elif "/reel/" in a_url:
+        instagram_id = a_url.split("/reel/")[1].split("/")[0]
+    js = json.loads(text)
+    with open(f"dump_instagram_{instagram_id}.json", "w") as f:
+        json.dump(js, f, ensure_ascii=False)
+
+    # unicode escape
+    with open(f"dump_instagram_{instagram_id}.json") as f:
+        text_decoded = f.read()
+    add_instagram_json_to_instagram_json(a_url, instagram_id, text_decoded)
+
     insta_obj = instagran_parse_json_to_obj(text)
     if insta_obj.is_video:
         video_url = insta_obj.video_url
