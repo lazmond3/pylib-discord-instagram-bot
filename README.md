@@ -16,6 +16,7 @@ edge_sidecar_to_children.edges[].node.display_url
 - [ ] セッションスコープインジェクション
 - [ ] 結合でsamplesを動かす
 - [ ] ファイル名とか、パス名とか、一元管理する。
+- [ ] サーバごとの差異を吸収する？
 
 # Usage
 
