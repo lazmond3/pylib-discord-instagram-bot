@@ -301,6 +301,7 @@ class DiscordMessageListener(discord.Client):
             # 画像を取得する
             image_urls = tw.image_urls
             for idx,u in enumerate(image_urls):
+                idx+=1
                 fname_image = make_twitter_image_filename("", tweet_id, idx,u )
                 image_data = download_file(u)
                 # ファイルダウンロード
