@@ -28,6 +28,13 @@ def make_twitter_image_filename(base_dir:str, tweet_num:str, index:int, url:str)
 
     fullpath = os.path.join(base_dir, filename)
     return fullpath
+def make_instagram_image_filename(base_dir:str, instagram_id:str, index:int, url: str):
+    url = url.split("?")[0]
+    ext = os.path.splitext(url)[1]  # 拡張子を取得
+    filename = f"instagram_{instagram_id}_{index}{ext}"  # 番号に拡張子をつけてファイル名にする
+
+    fullpath = os.path.join(base_dir, filename)
+    return fullpath
 
 
 # 画像のファイル名を決める

@@ -10,6 +10,14 @@ def create_embed_instagram_image(image_url: str):
     embed.set_image(url=image_url)
     return embed
 
+def get_instagram_id_from_url(instagram_url: str):
+    instagram_id = ""
+    if "/p/" in instagram_url:
+        instagram_id = instagram_url.split("/p/")[1].split("/")[0]
+    elif "/reel/" in instagram_url:
+        instagram_id = instagram_url.split("/reel/")[1].split("/")[0]
+    return instagram_id
+
 async def send_instagram_images_for_specified_index(
     image_urls: List[str], nums: List[int], message
 ):

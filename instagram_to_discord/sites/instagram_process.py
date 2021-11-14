@@ -6,7 +6,7 @@ from ..const_value import FSIZE_TARGET
 from ..twitter_multiple import (get_twitter_object, twitter_extract_tweet_id,
                                twitter_extract_tweet_url,
                                twitter_line_to_image_urls)
-from ..download import (download_file, make_instagram_mp4_filename, make_twitter_image_filename,
+from ..download import (download_file, make_instagram_image_filename, make_instagram_mp4_filename, make_twitter_image_filename,
                        make_twitter_mp4_filename, save_image)
 from ..boto3 import add_instagram_json_to_instagram_json, upload_video_file, upload_image_file
 from .twitter import send_twitter_images_for_specified_index
@@ -17,7 +17,7 @@ from ..converter_instagram_url import (convert_instagram_url_to_a,
 from ..cookie_requests import requests_get_cookie
 from ..instagram_type import (InstagramData, get_multiple_medias_from_str,
                              instagran_parse_json_to_obj)
-from .instagram import send_instagram_images_for_specified_index, create_instagram_pic_embed, create_instagram_video_embed
+from .instagram import get_instagram_id_from_url, send_instagram_images_for_specified_index, create_instagram_pic_embed, create_instagram_video_embed
 from ..video import trimming_video_to_8MB
 
 async def process_instagram(client: Any, channel, message, content):
@@ -78,8 +78,21 @@ async def process_instagram(client: Any, channel, message, content):
     else:
         images = get_multiple_medias_from_str(text)
 
-        for image in images:
+        instagram_id = get_instagram_id_from_url(a_url)
+        for idx,image in enumerate(images):
             print("[listener][instagram] image: " + image)
+            idx+=1
+            fname_image = make_instagram_image_filename(
+                "", 
+                instagram_id,
+                idx,
+                image, 
+            )
+            image_data = download_file(image)
+            # ファイルダウンロード
+            save_image(fname_image, image_data)
+            upload_image_file(fname_image, instagram_id, idx)
+            # os.remove(fname_image)
         insta_obj = instagran_parse_json_to_obj(text)
 
         msg_list = content.split()
