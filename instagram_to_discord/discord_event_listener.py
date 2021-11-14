@@ -23,6 +23,7 @@ from .twitter_multiple import (get_twitter_object, twitter_extract_tweet_id,
 from .util import is_int
 from .video import trimming_video_to_8MB
 
+IS_DEBUG = os.getenv("IS_DEBUG")
 
 class DiscordMessageListener(discord.Client):
     last_url_twitter: Dict[str, str] = {}
@@ -139,6 +140,8 @@ class DiscordMessageListener(discord.Client):
         )
         content = message.content
         channel = message.channel
+        if IS_DEBUG and "debug" not in channel.name: return
+
 
         if "instagram-support" in message.author.display_name:
             return
