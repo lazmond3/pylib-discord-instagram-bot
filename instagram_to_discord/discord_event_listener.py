@@ -1,30 +1,18 @@
 import os
-from typing import Dict, List
+from typing import Dict
 
 import discord
 from debug import DEBUG
 
-from .boto3 import upload_video_file, upload_image_file
-from .const_value import FSIZE_TARGET
-from .converter_instagram_url import (convert_instagram_url_to_a,
-                                      instagram_extract_from_content,
-                                      instagram_make_author_page)
 from .cookie_requests import requests_get_cookie
-from .download import (download_file, make_instagram_mp4_filename, make_twitter_image_filename,
-                       make_twitter_mp4_filename, save_image)
-from .instagram_type import (InstagramData, get_multiple_medias_from_str,
-                             instagran_parse_json_to_obj)
+from .instagram_type import get_multiple_medias_from_str
 from .sites.tiktok_handler import handle_tiktok_main
 from .sites.youtube_handler import handle_youtube_main
 from .sites.instagram_process import process_instagram
 from .sites.twitter import send_twitter_images_for_specified_index
 from .sites.twitter_process import process_twitter
-from .string_util import sophisticate_string
-from .twitter_multiple import (get_twitter_object, twitter_extract_tweet_id,
-                               twitter_extract_tweet_url,
-                               twitter_line_to_image_urls)
+from .twitter_multiple import twitter_line_to_image_urls
 from .util import is_int
-from .video import trimming_video_to_8MB
 
 IS_DEBUG = os.getenv("IS_DEBUG")
 
