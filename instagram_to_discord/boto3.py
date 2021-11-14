@@ -18,6 +18,7 @@ my_config = Config(
 boto3_s3 = boto3.client("s3", config=my_config)
 dynamo = boto3.resource('dynamodb', region_name='ap-northeast-1')
 tweet_json = dynamo.Table("tweet_json")
+instagram_json = dynamo.Table("instagram_json")
 
 s3 = boto3.resource("s3")
 bucket = s3.Bucket("discord-python-video")
@@ -25,15 +26,27 @@ bucket_image = s3.Bucket("discord-python-image")
 
 
 def add_json_to_tweet_json(tweet_id: str, data: str):
-
     tweet_json.put_item(
         Item={
             'tweet_id': tweet_id,
             'data': data
         }
     )
-
-# returns file URL
+def add_instagram_json_to_instagram_json(instagram_url: str, data: str):
+    """
+    sample url: https://www.instagram.com/p/CVNB-GNldga/
+    """
+    instagram_id = ""
+    if "/p/" in instagram_url:
+        instagram_id = instagram_url.split("/p/")[1].split("/")[0]
+    elif "/reel/" in instagram_url:
+        instagram_id = instagram_url.split("/reel/")[1].split("/")[0]
+    tweet_json.put_item(
+        Item={
+            'instagram_id': instagram_id,
+            'data': data
+        }
+    )
 
 
 def upload_video_file(fname: str) -> str:

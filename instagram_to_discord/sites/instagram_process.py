@@ -7,7 +7,7 @@ from ..twitter_multiple import (get_twitter_object, twitter_extract_tweet_id,
                                twitter_line_to_image_urls)
 from ..download import (download_file, make_instagram_mp4_filename, make_twitter_image_filename,
                        make_twitter_mp4_filename, save_image)
-from ..boto3 import upload_video_file, upload_image_file
+from ..boto3 import add_instagram_json_to_instagram_json, upload_video_file, upload_image_file
 from .twitter import send_twitter_images_for_specified_index
 
 from ..converter_instagram_url import (convert_instagram_url_to_a,
@@ -30,6 +30,7 @@ async def process_instagram(client: Any, channel, message, content):
     client.is_twitter_last = False
 
     text = requests_get_cookie(url=a_url)
+    add_instagram_json_to_instagram_json(a_url, text)
     insta_obj = instagran_parse_json_to_obj(text)
     if insta_obj.is_video:
         video_url = insta_obj.video_url
