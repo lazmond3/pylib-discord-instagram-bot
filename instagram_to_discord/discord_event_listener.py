@@ -313,6 +313,7 @@ class DiscordMessageListener(discord.Client):
                 skip_one=True, image_urls=image_urls, nums=nums, message=message
             )  # 動画のサムネイル送信
 
+        # 数字のみ: channel に保存されたインデックスの画像を投稿する。
         elif len(list(filter(lambda x: is_int(x), content.split(",")))) > 0 and (
             channel in self.last_url_twitter or channel in self.last_url_instagram
         ):  # last_url_twitter が存在する。
