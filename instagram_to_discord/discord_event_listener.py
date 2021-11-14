@@ -17,6 +17,7 @@ from .instagram_type import (InstagramData, get_multiple_medias_from_str,
 from .sites.tiktok_handler import handle_tiktok_main
 from .sites.youtube_handler import handle_youtube_main
 from .sites.instagram import send_instagram_images_for_specified_index, create_instagram_pic_embed, create_instagram_video_embed
+from .sites.twitter import send_twitter_images_for_specified_index
 from .string_util import sophisticate_string
 from .twitter_multiple import (get_twitter_object, twitter_extract_tweet_id,
                                twitter_extract_tweet_url,
@@ -36,51 +37,6 @@ class DiscordMessageListener(discord.Client):
 
     async def on_ready(self):
         print("Logged on as {0}!".format(self.user))
-
-    async def send_twitter_images_for_specified_index(
-        self, skip_one: bool, image_urls: List[str], nums: List[int], message
-    ):
-        for n in nums:
-            idx = n - 1
-            assert idx >= 0
-            assert idx < 4
-            if len(image_urls) < n:
-                continue
-            if skip_one and n == 1:
-                continue
-            if DEBUG:
-                print(f"send_twitter_image: url: {image_urls[idx]}")
-            embed = self.create_embed_twitter_image(image_urls[idx])
-            await message.channel.send(embed=embed)
-
-    async def create_and_send_embed_twitter_video_thumbnail_with_message(
-        self,
-        message,
-        thumbnail_image_url: str,
-        s3_video_url: str,
-        tweet_url: str,
-        author_name: str,
-        author_url: str,
-        author_profile_image_url: str,
-        caption: str,
-    ):
-        description = sophisticate_string(caption)
-        embed = discord.Embed(
-            title=author_name,
-            description=description,
-            url=tweet_url,
-            color=discord.Color.blue(),
-        )
-        embed.set_image(url=thumbnail_image_url)
-        embed.set_author(
-            name=author_name, url=author_url, icon_url=author_profile_image_url
-        )
-        await message.channel.send(embed=embed)
-
-    def create_embed_twitter_image(self, image_url: str):
-        embed = discord.Embed(color=discord.Color.blue())
-        embed.set_image(url=image_url)
-        return embed
 
 
 
@@ -225,7 +181,7 @@ class DiscordMessageListener(discord.Client):
                         except Exception as e:
                             print("file send error!  : ", e)
                             image_urls = tw.image_urls
-                            await self.send_twitter_images_for_specified_index(
+                            await send_twitter_images_for_specified_index(
                                 skip_one=False,
                                 image_urls=image_urls,
                                 nums=[1],
@@ -245,7 +201,7 @@ class DiscordMessageListener(discord.Client):
                 os.remove(fname_image)
 
 
-            await self.send_twitter_images_for_specified_index(
+            await send_twitter_images_for_specified_index(
                 skip_one=True, image_urls=image_urls, nums=nums, message=message
             )  # 動画のサムネイル送信
 
@@ -261,7 +217,7 @@ class DiscordMessageListener(discord.Client):
                     )
                 )
                 image_urls = twitter_line_to_image_urls(self.last_url_twitter[channel])
-                await self.send_twitter_images_for_specified_index(
+                await send_twitter_images_for_specified_index(
                     skip_one=True, image_urls=image_urls, nums=nums, message=message
                 )  # 動画のサムネイル送信
             else:  # instagram
@@ -273,7 +229,7 @@ class DiscordMessageListener(discord.Client):
                 )
                 text = requests_get_cookie(url=self.last_url_instagram[channel])
                 image_urls = get_multiple_medias_from_str(text)
-                await self.send_twitter_images_for_specified_index(
+                await send_twitter_images_for_specified_index(
                     skip_one=False, image_urls=image_urls, nums=nums, message=message
                 )  # 動画のサムネイル送信
 
