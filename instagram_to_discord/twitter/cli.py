@@ -80,11 +80,15 @@ def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
             get_one_tweet(tweet_id, True)
 
     tx = r.text
-    add_json_to_tweet_json(tweet_id, tx)
     js = text_to_dict(tx)
 
     with open(f"dump_one_{tweet_id}.json", "w", encoding="utf-8") as f:
         json.dump(js, f, ensure_ascii=False)
+    # 直し方がよくわからないので、json の結果を利用させてもらう。
+    with open(f"dump_one_{tweet_id}.json") as f:
+        txt_decoded = f.read()
+        add_json_to_tweet_json(tweet_id, txt_decoded)
+
 
     # キャッシュを利用する.
     # with open(f"dump_one_{tweet_id}.json", 'r') as f:
@@ -120,6 +124,11 @@ def get_sumatome(tweet_id: str, is_second: bool = False) -> None:
     # デバッグのためのダンプ
     with open(f"dump_one_{tweet_id}.json", "w", encoding="utf-8") as f:
         json.dump(js, f, ensure_ascii=False)
+    # 直し方がよくわからないので、json の結果を利用させてもらう。
+    with open(f"dump_one_{tweet_id}.json") as f:
+        txt_decoded = f.read()
+        add_json_to_tweet_json(tweet_id, txt_decoded)
+
 
     if not js["in_reply_to_status_id_str"]:
         get_one_tweet(js["in_reply_to_status_id_str"])
