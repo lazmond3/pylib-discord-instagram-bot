@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional
 
 import discord
 
-from ..boto3 import upload_file
+from ..boto3 import upload_video_file
 from ..tiktok import download_tiktok_video, extract_tiktok_url
 from ..video import trimming_video_to_8MB
 
@@ -90,7 +90,7 @@ async def handle_tiktok_main(client: discord.Client, channel_id: int, content: s
 
     channel = client.get_channel(id=channel_id)
     if over_8mb:
-        video_s3_url = upload_file(fname)
+        video_s3_url = upload_video_file(fname)
         embed = create_tiktok_video_embed(info_dict, video_s3_url)
         small_filesize_fname = trimming_video_to_8MB(fname)
         await channel.send(embed=embed)

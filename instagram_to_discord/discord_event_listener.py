@@ -4,7 +4,7 @@ from typing import Dict, List
 import discord
 from debug import DEBUG
 
-from .boto3 import upload_file, upload_image_file
+from .boto3 import upload_video_file, upload_image_file
 from .const_value import FSIZE_TARGET
 from .converter_instagram_url import (convert_instagram_url_to_a,
                                       instagram_extract_from_content,
@@ -188,7 +188,7 @@ class DiscordMessageListener(discord.Client):
                 if fsize > FSIZE_TARGET:
                     print("[insta-video] inner fsize is larger!: than ", FSIZE_TARGET)
 
-                    video_s3_url = upload_file(fname_video)
+                    video_s3_url = upload_video_file(fname_video)
                     insta_obj.caption = video_s3_url + "\n" + insta_obj.caption
                     embed = self.create_instagram_pic_embed(
                         insta_obj, extracted_base_url
@@ -264,7 +264,7 @@ class DiscordMessageListener(discord.Client):
 
                         image_urls = tw.image_urls
 
-                        video_s3_url = upload_file(fname_video)
+                        video_s3_url = upload_video_file(fname_video)
                         await message.channel.send(video_s3_url)
 
                         # twitter は、そもそも OGPがあるので、 動画の時のembed は不要

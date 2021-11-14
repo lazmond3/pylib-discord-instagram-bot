@@ -36,8 +36,8 @@ def add_json_to_tweet_json(tweet_id: str, data: str):
 # returns file URL
 
 
-def upload_file(fname: str) -> str:
-    bucket.upload_file(fname, fname)
+def upload_video_file(fname: str) -> str:
+    bucket.upload_file(fname, fname, ExtraArgs={'ContentType': "video/mp4"})
     basename = os.path.basename(fname)
     return f"https://discord-python-video.s3.ap-northeast-1.amazonaws.com/{basename}"
 
