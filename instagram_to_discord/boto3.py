@@ -16,13 +16,26 @@ my_config = Config(
 
 # boto3_client = boto3.client('kinesis', config=my_config)
 boto3_s3 = boto3.client("s3", config=my_config)
+dynamo = boto3.resource('dynamodb', region_name='ap-northeast-1')
+tweet_json = dynamo.Table("tweet_json")
 
 s3 = boto3.resource("s3")
 bucket = s3.Bucket("discord-python-video")
 bucket_image = s3.Bucket("discord-python-image")
 
 
+def add_json_to_tweet_json(tweet_id: str, data: str):
+
+    tweet_json.put_item(
+        Item={
+            'tweet_id': tweet_id,
+            'data': data
+        }
+    )
+
 # returns file URL
+
+
 def upload_file(fname: str) -> str:
     bucket.upload_file(fname, fname)
     basename = os.path.basename(fname)
@@ -37,9 +50,23 @@ def upload_image_file(fname: str, tweet_num: str, index: int):
     basename = os.path.basename(fname)
     return f"https://discord-python-image.s3.ap-northeast-1.amazonaws.com/{tweet_num}/{index}.{ext}"
 
+
 if __name__ == "__main__":
-    fname = "1408027129644605440.mp4"
-    # with open(fname, 'rb')  as fb:
-    #     boto3_s3.upload_fileobj(fb, "discord-python-video",  fname)
-    # with open(fname, 'rb')  as fb:
-    bucket.upload_file(fname, fname)
+    # fname = "1408027129644605440.mp4"
+    # bucket.upload_file(fname, fname)
+
+    # 読み込み
+    data = tweet_json.get_item(Key={
+        'tweet_id': "1459491452048740352"
+    })
+    print(f"data: {data} type: {type(data['Item'])}")
+    print(f"data: {data['Item']['data']} type: {type(data['Item']['data'])}")
+
+    import json
+    js = json.loads(data['Item']['data'])
+    print(f"js: {js}")
+
+    # 書き込み
+    # with open("dump_one_1459491452048740352.json") as f:
+    #     ustr = f.read()
+    #     # add_json_to_tweet_json("1459491452048740352", ustr)
