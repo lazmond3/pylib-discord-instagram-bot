@@ -1,9 +1,6 @@
 import re
 from typing import List
 
-from debug import DEBUG
-
-# from twitter_cli import get_one_tweet, TwitterImage
 from .twitter.cli import get_one_tweet
 from .twitter.twitter_image import TwitterImage
 
@@ -26,18 +23,21 @@ def twitter_extract_tweet_url(line: str) -> str:
         raise Exception(f"error failed to parse re line: {line}")
 
 
-def twitter_fetch_content(tweet_id: str) -> List[str]:
+def twitter_fetch_content_return_image_urls(tweet_id: str) -> List[str]:
+    """get_one_tweet し、 image_urls を返す関数"""
     tw = get_one_tweet(tweet_id)
     return tw.image_urls
 
 
+# TODO: extended_entities が入ってなければ、 Noneを返すようにしたい。
 def get_twitter_object(tweet_id: str) -> TwitterImage:
+    """get_one_tweet し、 TwitterImageにする関数"""
     return get_one_tweet(tweet_id)
 
 
 def twitter_line_to_image_urls(line: str) -> List[str]:
     tweet_id = twitter_extract_tweet_id(line)
-    return twitter_fetch_content(tweet_id)
+    return twitter_fetch_content_return_image_urls(tweet_id)
 
 
 if __name__ == "__main__":
@@ -45,5 +45,5 @@ if __name__ == "__main__":
 
     r = twitter_extract_tweet_id(argv[1])
     print("result: ", r)
-    urls = twitter_fetch_content(r)
+    urls = twitter_fetch_content_return_image_urls(r)
     print(f"urls: {urls}")
