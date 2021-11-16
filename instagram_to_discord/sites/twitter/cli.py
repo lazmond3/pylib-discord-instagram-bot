@@ -1,24 +1,29 @@
+from logging import LogRecord, getLogger,StreamHandler,DEBUG,INFO
+logger = getLogger(__name__)    #以降、このファイルでログが出たということがはっきりする。
+handler = StreamHandler()
+handler.setLevel(DEBUG)
+logger.setLevel(DEBUG)
+logger.addHandler(handler)
+logger.propagate = False
+
 import json
 import os
 from typing import Any, Dict, Optional, cast
 
 import requests
-from debug import DEBUG
+from ...params import IS_DEBUG
+
+if not IS_DEBUG:
+    logger.setLevel(INFO)
 
 from .base64_util import base64_encode_str
 from .twitter_image import TwitterImage, convert_twitter
 from ...boto3 import add_json_to_dynamo_tweet_json
 
-CONSUMER_KEY: Optional[str] = os.getenv("CONSUMER_KEY")
-CONSUMER_SECRET: Optional[str] = os.getenv("CONSUMER_SECRET")
-TOKEN: Optional[str] = os.getenv("TOKEN")
-TOKEN_SECRET: Optional[str] = os.getenv("TOKEN_SECRET")
+from ...params import TW_CONSUMER_KEY, TW_CONSUMER_SECRET
 
 # const
-TOKEN_FILENAME: str = "dump.json"
-
-if not all([CONSUMER_KEY, CONSUMER_SECRET, TOKEN, TOKEN_SECRET]):
-    pass
+TOKEN_FILENAME: str = ".token.json"
 
 
 def _make_basic(consumer_key: str, consumer_secret: str) -> str:
@@ -28,26 +33,32 @@ def _make_basic(consumer_key: str, consumer_secret: str) -> str:
 
 
 def _get_auth(url: str, basic: str) -> None:
+    """
+    twitter API の access token を取得する __inner__
+    """
     headers = {"Authorization": f"Basic {basic}"}
     payload = {"grant_type": "client_credentials"}
     r = requests.post(url, headers=headers, params=payload)
 
-    if DEBUG:
-        print(r)
-        print("-------")
-        print(r.text)
+    if IS_DEBUG:
+        logger.debug(r)
+        logger.debug("-------")
+        logger.debug(r.text)
     with open(TOKEN_FILENAME, "w") as f:
         f.write(r.text)
 
 
 def get_auth_wrapper() -> None:
-    if not all([CONSUMER_KEY, CONSUMER_SECRET]):
+    """
+    twitter API の access token を取得する __wrapper__
+    """
+    if not all([TW_CONSUMER_KEY, TW_CONSUMER_SECRET]):
         print("specify consumer key/secret")
         exit(1)
-    assert CONSUMER_KEY
-    assert CONSUMER_SECRET
+    assert TW_CONSUMER_KEY
+    assert TW_CONSUMER_SECRET
 
-    basic = cast(str, _make_basic(CONSUMER_KEY, CONSUMER_SECRET))
+    basic = cast(str, _make_basic(TW_CONSUMER_KEY, TW_CONSUMER_SECRET))
     url = "https://api.twitter.com/oauth2/token"
     _get_auth(url, basic)
 
@@ -57,9 +68,8 @@ def text_to_dict(str_: str) -> Dict[str, Any]:
     js = json.loads(str_)
     return cast(Dict[str, Any], js)
 
-
-# この名前だが、画像ツイート情報を取得する。
 def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
+    logger.debug(f"[get_one_tweet] tweet_id: {tweet_id}")
     if not os.path.exists(TOKEN_FILENAME):
         get_auth_wrapper()
     with open(TOKEN_FILENAME) as f:
@@ -75,6 +85,7 @@ def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
         with open(f"dump_json/dump_one_{tweet_id}.json", 'r') as f:
             js = json.load(f)
         tw = convert_twitter(js)
+        logger.debug(f"[cached] video: {tw.video_url} images: {' '.join(tw.image_urls)}")
         return tw
 
     try:
@@ -97,6 +108,7 @@ def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
         add_json_to_dynamo_tweet_json(tweet_id, txt_decoded)
 
     tw = convert_twitter(js)
+    logger.debug(f"video: {tw.video_url} images: {','.join(tw.image_urls)}, ")
     return tw
 
 

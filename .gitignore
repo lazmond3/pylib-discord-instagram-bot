@@ -20,3 +20,4 @@ dump_images
 dump_videos
 dump_json
 
+.token.json
