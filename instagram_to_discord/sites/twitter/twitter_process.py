@@ -1,22 +1,21 @@
 
-from logging import getLogger,StreamHandler,INFO
-logger = getLogger(__name__)    #以降、このファイルでログが出たということがはっきりする。
+from ...params import IS_DEBUG
+from .twitter import send_twitter_images_from_cache_for_specified_index
+from ...boto3 import upload_video_file
+from ...download import (download_file_to_path, make_twitter_mp4_filename)
+from .twitter import (create_new_image_urls_with_downloading, get_twitter_object, twitter_extract_tweet_id,
+                      twitter_extract_tweet_url)
+from ...const_value import FSIZE_TARGET
+import os
+import discord
+from typing import Any
+from logging import getLogger, StreamHandler, INFO
+logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()
 handler.setLevel(INFO)
 logger.setLevel(INFO)
 logger.addHandler(handler)
 
-from typing import Any
-import discord
-import os
-from ...const_value import FSIZE_TARGET
-from .twitter import (create_new_image_urls_with_downloading, get_twitter_object, twitter_extract_tweet_id,
-                                 twitter_extract_tweet_url)
-from ...download import (download_file, make_twitter_image_filename,
-                         make_twitter_mp4_filename, save_image)
-from ...boto3 import upload_video_file, upload_image_file
-from .twitter import send_twitter_images_from_cache_for_specified_index
-from ...params import IS_DEBUG
 
 async def process_twitter(client: Any, channel, message, content):
     client.last_url_twitter[channel] = twitter_extract_tweet_url(content)
@@ -30,7 +29,8 @@ async def process_twitter(client: Any, channel, message, content):
     # 画像を取得する
     image_urls = tw.image_urls
     # TODO: もしキャッシュが存在していれば(KVS)、ダウンロードしないしアップロードもしない。
-    new_image_urls = create_new_image_urls_with_downloading(tweet_id, image_urls)
+    new_image_urls = create_new_image_urls_with_downloading(
+        tweet_id, image_urls)
 
     msg_list = content.split()
     if len(msg_list) > 1:
@@ -40,11 +40,11 @@ async def process_twitter(client: Any, channel, message, content):
         nums = list(nums)
     elif tw.video_url:
         video_url = tw.video_url.split("?")[0]
-        fname_video = make_twitter_mp4_filename("dump_videos", tweet_id, video_url)
+        fname_video = make_twitter_mp4_filename(
+            "dump_videos", tweet_id, video_url)
 
         # ファイルダウンロード
-        video = download_file(video_url)
-        save_image(fname_video, video)
+        download_file_to_path(video_url, fname_video)
 
         # ファイル送信
         fsize = os.path.getsize(fname_video)
@@ -69,7 +69,6 @@ async def process_twitter(client: Any, channel, message, content):
                 )  # 動画のサムネイル送信
         if not IS_DEBUG:
             os.remove(fname_video)
-
 
     await send_twitter_images_from_cache_for_specified_index(
         skip_one=True, image_urls=new_image_urls, nums=nums, message=message
