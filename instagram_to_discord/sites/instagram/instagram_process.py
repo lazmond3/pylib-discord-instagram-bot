@@ -9,7 +9,7 @@ from ...boto3 import add_instagram_json_to_instagram_json, upload_video_file, up
 from .converter_instagram_url import (convert_instagram_url_to_a,
                                       instagram_extract_from_content)
 from ...cookie_requests import requests_get_cookie
-from ...instagram_type import (get_multiple_medias_from_str,
+from .instagram_type import (get_multiple_medias_from_str,
                              instagran_parse_json_to_obj)
 from .instagram import get_instagram_id_from_url, send_instagram_images_for_specified_index, create_instagram_pic_embed, create_instagram_video_embed
 from ...video import trimming_video_to_8MB

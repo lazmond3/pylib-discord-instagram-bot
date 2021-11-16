@@ -1,7 +1,7 @@
 from typing import List
 from debug import DEBUG
 import discord
-from ...instagram_type import InstagramData
+from .instagram_type import InstagramData
 from ...string_util import sophisticate_string
 from .converter_instagram_url import instagram_make_author_page
 
