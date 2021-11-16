@@ -1,11 +1,34 @@
 from typing import List
 from debug import DEBUG
 import discord
-from ...string_util import sophisticate_string
+import os
+from ...boto3 import upload_image_file
+
+from ...download import download_file, download_file_to_path, make_twitter_image_filename, save_image
+from ...params import IS_DEBUG
 import re
 from typing import List
 from ..twitter.cli import get_one_tweet
 from ..twitter.twitter_image import TwitterImage
+
+
+def create_new_image_urls_with_downloading(tweet_id: str, image_urls: List[str]):
+    """
+    image_urls を利用して、ファイルをダウンロードし、新しい image_urls (s3) に変換する。
+    """
+    # TODO: ここに、dynamo KVS から結果を取得し(あれば), そのキャッシュの値を返す。
+
+    new_image_urls = []
+    for idx, u in enumerate(image_urls):
+        idx += 1
+        fname_image = make_twitter_image_filename("dump_images", tweet_id, idx, u)
+        # ファイルダウンロード
+        download_file_to_path(u, fname_image)
+        path = upload_image_file(fname_image, tweet_id, idx)
+        new_image_urls.append(path)
+        if not IS_DEBUG:
+            os.remove(fname_image)
+    return new_image_urls
 
 async def send_twitter_images_from_cache_for_specified_index(
     skip_one: bool, image_urls: List[str], nums: List[int], message
@@ -31,6 +54,9 @@ def create_embed_twitter_image(image_url: str):
 
 
 def twitter_extract_tweet_id(line: str) -> str:
+    """
+    コンテンツ(メッセージ) の中にtwitterの URL が含まれていれば、それだけ抽出して、tweet_id を返す。
+    """
     # sample: https://twitter.com/mmmlmmm2/status/1372519422380797955?s=09
     m = re.match(r"^.*https://twitter.com/([^/]+)/status/([0-9]+).*$", line)
     if m:
