@@ -1,3 +1,15 @@
+from logging import getLogger,StreamHandler,INFO,DEBUG
+logger = getLogger(__name__)    #以降、このファイルでログが出たということがはっきりする。
+handler = StreamHandler()
+handler.setLevel(INFO)
+logger.setLevel(INFO)
+logger.addHandler(handler)
+logger.propagate = False
+
+from ...params import IS_DEBUG
+if IS_DEBUG:
+    logger.setLevel(DEBUG)
+
 from typing import Any
 import discord
 import json
@@ -15,10 +27,10 @@ from .instagram import get_instagram_id_from_url, send_instagram_images_for_spec
 from ...video import trimming_video_to_8MB
 
 async def process_instagram(client: Any, channel, message, content):
-    print("[log] channel name: ", message.channel.name)
+    logger.debug("[log] channel name: ", message.channel.name)
     extracted_base_url = instagram_extract_from_content(content)
     if not extracted_base_url:
-        print("[error] failed to parse base_url for : ", content)
+        logger.error("[error] failed to parse base_url for : ", content)
         return
     a_url = convert_instagram_url_to_a(extracted_base_url)
     client.last_url_instagram[channel] = a_url
@@ -31,11 +43,11 @@ async def process_instagram(client: Any, channel, message, content):
     elif "/reel/" in a_url:
         instagram_id = a_url.split("/reel/")[1].split("/")[0]
     js = json.loads(text)
-    with open(f"dump_instagram_{instagram_id}.json", "w") as f:
+    with open(f"dump_json_instagram/dump_instagram_{instagram_id}.json", "w") as f:
         json.dump(js, f, ensure_ascii=False)
 
     # unicode escape
-    with open(f"dump_instagram_{instagram_id}.json") as f:
+    with open(f"dump_json_instagram/dump_instagram_{instagram_id}.json") as f:
         text_decoded = f.read()
     add_instagram_json_to_dynamo_instagram_json(a_url, instagram_id, text_decoded)
 
@@ -51,7 +63,7 @@ async def process_instagram(client: Any, channel, message, content):
     # IS_FORCE_DOWNLOAD だったら、これを行う、とかにする。
     # コマンドラインツールにすれば ？
     for idx,image in enumerate(images):
-        print("[listener][instagram] download image local and upload to s3: image: " + image)
+        logger.debug("[listener][instagram] download image local and upload to s3: image: " + image)
         idx+=1
         fname_image = make_instagram_image_filename(
             "", 
@@ -67,15 +79,16 @@ async def process_instagram(client: Any, channel, message, content):
         new_images.append(path)
         os.remove(fname_image)
 
-    if insta_obj.is_video: # 1枚だけビデオのこととかある。
+    # TODO: 1枚だけvideo, 他は画像のケースに対応できるようにする。
+    if insta_obj.is_video:
         video_url = insta_obj.video_url
 
-        fname_video = make_instagram_mp4_filename("", video_url)
+        fname_video = make_instagram_mp4_filename("dump_videos_instagram", video_url)
         video_content = download_file(video_url)
         save_image(fname_video, video_content)
         fsize = os.path.getsize(fname_video)
         if fsize > FSIZE_TARGET:
-            print("[insta-video] inner fsize is larger!: than ", FSIZE_TARGET)
+            logger.info("[insta-video] inner fsize is larger!: than ", FSIZE_TARGET)
 
             video_s3_url = upload_video_file(fname_video)
             insta_obj.caption = video_s3_url + "\n" + insta_obj.caption
@@ -94,8 +107,9 @@ async def process_instagram(client: Any, channel, message, content):
                 await message.channel.send(embed=embed)
                 await message.channel.send(file=discord.File(fname_video))
             except Exception as e:
-                print("[instagram video upload] file send error!  : ", e)
-        os.remove(fname_video)
+                logger.error("[instagram video upload] file send error!  : ", e)
+        if not IS_DEBUG:
+            os.remove(fname_video)
     else:
         insta_obj = instagran_parse_json_to_obj(text)
 
