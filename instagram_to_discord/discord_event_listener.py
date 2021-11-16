@@ -62,8 +62,9 @@ class DiscordMessageListener(discord.Client):
 
         elif "https://www.instagram.com/" in content and (
             "/p/" in content or "/reel/" in content
-        ):
+        ): # TODO: stories などの対応を加える。
             # process instagram
+            # ここで instagram_id を出した方がいい, a_url も
             await process_instagram(self, channel, message, content)
         elif "https://twitter.com/" in content and "/status/" in content:
             await process_twitter(self, channel, message, content)

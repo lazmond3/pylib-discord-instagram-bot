@@ -45,8 +45,11 @@ async def process_instagram(client: Any, channel, message, content):
     instagram_id = get_instagram_id_from_url(a_url)
     new_images = []
 
-    # もし instagram_id に対して、データを保存済みだったら、これを行わない (cdn でも、BANが怖い)
+    # TODO: 
+    # もし instagram_id に対して、データを保存済みだったら、これを行わない (cdn でも、BANが怖い) 遅いため
+    # dynamo DB に cache を 用意する。
     # IS_FORCE_DOWNLOAD だったら、これを行う、とかにする。
+    # コマンドラインツールにすれば ？
     for idx,image in enumerate(images):
         print("[listener][instagram] download image local and upload to s3: image: " + image)
         idx+=1
@@ -64,7 +67,7 @@ async def process_instagram(client: Any, channel, message, content):
         new_images.append(path)
         os.remove(fname_image)
 
-    if insta_obj.is_video:
+    if insta_obj.is_video: # 1枚だけビデオのこととかある。
         video_url = insta_obj.video_url
 
         fname_video = make_instagram_mp4_filename("", video_url)
