@@ -2,7 +2,6 @@ import os
 from typing import Dict
 
 import discord
-from debug import DEBUG
 
 from instagram_to_discord.sites.instagram.instagram import send_instagram_images_from_cache_for_specified_index
 
@@ -15,7 +14,7 @@ from .sites.twitter.twitter import send_twitter_images_from_cache_for_specified_
 from .sites.twitter.twitter_process import process_twitter
 from .util import is_int
 
-IS_DEBUG = os.getenv("IS_DEBUG")
+from .params import IS_DEBUG
 
 class DiscordMessageListener(discord.Client):
     last_url_twitter: Dict[str, str] = {}
@@ -101,6 +100,6 @@ def main():
     client = DiscordMessageListener()
 
     TOKEN = os.getenv("TOKEN")
-    if DEBUG and TOKEN:
+    if IS_DEBUG and TOKEN:
         print("TOKEN: ", TOKEN[0:4] + "....." + TOKEN[-3:])
     client.run(TOKEN)

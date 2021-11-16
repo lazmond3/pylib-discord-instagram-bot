@@ -16,7 +16,6 @@ def env_check():
             os.getenv("CONSUMER_SECRET"),
             os.getenv("MID"),
             os.getenv("SESSIONID"),
-            os.getenv("CONTAINER_TAG"),
         ]
     ):
         print("all environment variables are set.")
