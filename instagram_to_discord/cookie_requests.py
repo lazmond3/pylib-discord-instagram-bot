@@ -1,3 +1,10 @@
+from logging import getLogger,StreamHandler,INFO
+logger = getLogger(__name__)    #以降、このファイルでログが出たということがはっきりする。
+handler = StreamHandler()
+handler.setLevel(INFO)
+logger.setLevel(INFO)
+logger.addHandler(handler)
+
 import requests
 from .params import IS_DEBUG, INSTA_MID, INSTA_SESSIONID
 
@@ -15,7 +22,7 @@ def make_cookie(path):
         splited = text.split("; ")
         for each in splited:
             if IS_DEBUG:
-                print("split: ", each.split("="))
+                logger.debug("split: ", each.split("="))
             key, v = each.split("=")[0], "".join(each.split("=")[1:])
             cookie2[key] = v
     for k in cookie2.keys():
