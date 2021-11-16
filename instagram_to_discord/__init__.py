@@ -2,9 +2,6 @@ import os
 
 import nest_asyncio
 
-from . import cookie_requests  # noqa: F401
-from . import (converter_instagram_url, download, string_util,
-               tiktok, video, youtube)
 from .discord_event_listener import main
 
 nest_asyncio.apply()

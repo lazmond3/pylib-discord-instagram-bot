@@ -6,7 +6,7 @@ from ...const_value import FSIZE_TARGET
 
 from ...download import (download_file, make_instagram_image_filename, make_instagram_mp4_filename, save_image)
 from ...boto3 import add_instagram_json_to_instagram_json, upload_video_file, upload_image_file
-from ...converter_instagram_url import (convert_instagram_url_to_a,
+from .converter_instagram_url import (convert_instagram_url_to_a,
                                       instagram_extract_from_content)
 from ...cookie_requests import requests_get_cookie
 from ...instagram_type import (get_multiple_medias_from_str,
