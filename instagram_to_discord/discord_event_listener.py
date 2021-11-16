@@ -1,3 +1,10 @@
+from logging import getLogger,StreamHandler,INFO
+logger = getLogger(__name__)    #以降、このファイルでログが出たということがはっきりする。
+handler = StreamHandler()
+handler.setLevel(INFO)
+logger.setLevel(INFO)
+logger.addHandler(handler)
+
 import os
 from typing import Dict
 
@@ -14,7 +21,7 @@ from .sites.twitter.twitter import send_twitter_images_from_cache_for_specified_
 from .sites.twitter.twitter_process import process_twitter
 from .util import is_int
 
-from .params import IS_DEBUG
+from .params import IS_DEBUG, DISCORD_TOKEN
 
 class DiscordMessageListener(discord.Client):
     last_url_twitter: Dict[str, str] = {}
@@ -25,12 +32,12 @@ class DiscordMessageListener(discord.Client):
         super().__init__()
 
     async def on_ready(self):
-        print("Logged on as {0}!".format(self.user))
+        logger.info("Logged on as {0}!".format(self.user))
 
 
 
     async def on_message(self, message):
-        print(
+        logger.info(
             "Message from {0.author.display_name} in ({0.channel}): {0.content}".format(
                 message
             )
@@ -49,12 +56,12 @@ class DiscordMessageListener(discord.Client):
             or "https://youtube.com" in content
         ):
 
-            print("[youtube] channel: ", channel.id)
+            logger.info("[youtube] channel: ", channel.id)
 
             await handle_youtube_main(self, channel_id=channel.id, content=content)
 
         elif "https://" in content and "tiktok.com" in content:
-            print("[tiktok] -> " + content, channel.id)
+            logger.info("[tiktok] -> " + content, channel.id)
             await handle_tiktok_main(self, channel_id=channel.id, content=content)
             # 今後SQSに投げて functions で処理していく
 
@@ -99,7 +106,6 @@ class DiscordMessageListener(discord.Client):
 def main():
     client = DiscordMessageListener()
 
-    TOKEN = os.getenv("TOKEN")
-    if IS_DEBUG and TOKEN:
-        print("TOKEN: ", TOKEN[0:4] + "....." + TOKEN[-3:])
-    client.run(TOKEN)
+    if IS_DEBUG and DISCORD_TOKEN:
+        logger.info(f"TOKEN: {DISCORD_TOKEN[0:4]}.....{DISCORD_TOKEN[-3:]}")
+    client.run(DISCORD_TOKEN)
