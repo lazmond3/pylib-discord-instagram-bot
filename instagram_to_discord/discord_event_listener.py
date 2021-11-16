@@ -54,14 +54,11 @@ class DiscordMessageListener(discord.Client):
             print("[youtube] channel: ", channel.id)
 
             await handle_youtube_main(self, channel_id=channel.id, content=content)
-            # p = Process(target=handle_youtube, args=(channel.id, content))
-            # p.start()
 
         elif "https://" in content and "tiktok.com" in content:
             print("[tiktok] -> " + content, channel.id)
             await handle_tiktok_main(self, channel_id=channel.id, content=content)
-            # p = Process(target=handle_tiktok, args=(channel.id, content))
-            # p.start()
+            # 今後SQSに投げて functions で処理していく
 
         elif "https://www.instagram.com/" in content and (
             "/p/" in content or "/reel/" in content

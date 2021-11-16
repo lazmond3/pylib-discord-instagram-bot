@@ -49,7 +49,7 @@ async def process_instagram(client: Any, channel, message, content):
     instagram_id = get_instagram_id_from_url(a_url)
     new_images = []
     for idx,image in enumerate(images):
-        print("[listener][instagram] image: " + image)
+        print("[listener][instagram] download image local and upload to s3: image: " + image)
         idx+=1
         fname_image = make_instagram_image_filename(
             "", 
