@@ -42,6 +42,7 @@ async def process_instagram(client: Any, channel, message, content):
         instagram_id = a_url.split("/p/")[1].split("/")[0]
     elif "/reel/" in a_url:
         instagram_id = a_url.split("/reel/")[1].split("/")[0]
+    # TODO: stories に対応できるようにする。
     js = json.loads(text)
     with open(f"dump_json_instagram/dump_instagram_{instagram_id}.json", "w") as f:
         json.dump(js, f, ensure_ascii=False)
