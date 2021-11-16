@@ -120,7 +120,7 @@ def convert_json_str_to_obj(str_):
     return Dict2Obj(dic_)
 
 
-def instagran_parse_json_to_obj(str):
+def instagram_parse_json_to_obj(str):
     """
     __a=1 の json レスポンスを InstagramData に変換する。
     """

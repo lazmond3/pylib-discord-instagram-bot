@@ -22,7 +22,7 @@ from .converter_instagram_url import (convert_instagram_url_to_a,
                                       instagram_extract_from_content)
 from ...cookie_requests import requests_get_cookie
 from .instagram_type import (get_multiple_medias_from_str,
-                             instagran_parse_json_to_obj)
+                             instagram_parse_json_to_obj)
 from .instagram import get_instagram_id_from_url, send_instagram_images_for_specified_index, create_instagram_pic_embed, create_instagram_video_embed
 from ...video import trimming_video_to_8MB
 
@@ -51,7 +51,7 @@ async def process_instagram(client: Any, channel, message, content):
         text_decoded = f.read()
     add_instagram_json_to_dynamo_instagram_json(a_url, instagram_id, text_decoded)
 
-    insta_obj = instagran_parse_json_to_obj(text)
+    insta_obj = instagram_parse_json_to_obj(text)
     images = get_multiple_medias_from_str(text)
 
     instagram_id = get_instagram_id_from_url(a_url)
@@ -111,7 +111,7 @@ async def process_instagram(client: Any, channel, message, content):
         if not IS_DEBUG:
             os.remove(fname_video)
     else:
-        insta_obj = instagran_parse_json_to_obj(text)
+        insta_obj = instagram_parse_json_to_obj(text)
 
         msg_list = content.split()
         nums = []
