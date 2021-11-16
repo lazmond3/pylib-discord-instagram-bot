@@ -1,3 +1,10 @@
+from logging import getLogger,StreamHandler,INFO
+logger = getLogger(__name__)    #以降、このファイルでログが出たということがはっきりする。
+handler = StreamHandler()
+handler.setLevel(INFO)
+logger.setLevel(INFO)
+logger.addHandler(handler)
+
 import os
 
 import nest_asyncio
@@ -18,16 +25,16 @@ def env_check():
             os.getenv("SESSIONID"),
         ]
     ):
-        print("all environment variables are set.")
-        print("container tag: ", os.getenv("CONTAINER_TAG"))
+        logger.error("all environment variables are set.")
+        logger.error("container tag: ", os.getenv("CONTAINER_TAG"))
     else:
-        print("some of required variables are not set.")
+        logger.error("some of required variables are not set.")
         exit(1)
     if not os.getenv("MID"):
-        print("ERROR! MID NOT SET")
+        logger.error("ERROR! MID NOT SET")
         exit(1)
     if not os.getenv("SESSIONID"):
-        print("ERROR! SESSIONID NOT SET")
+        logger.error("ERROR! SESSIONID NOT SET")
         exit(1)
 
 
