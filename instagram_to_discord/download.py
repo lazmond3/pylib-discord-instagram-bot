@@ -13,6 +13,20 @@ def download_file(url, timeout=10):
     return response.content
 
 
+# 画像を保存する
+def save_image(filename, image):
+    with open(filename, "wb") as fout:
+        fout.write(image)
+
+
+def download_file_to_path(url:str, fpath:str, timeout=10):
+    """
+    ファイルをダウンロードして、指定(fpath)の場所にファイル作成する。
+    """
+    content = download_file(url)
+    save_image(fpath, content)
+
+
 # 動画のファイル名を決める
 def make_twitter_mp4_filename(base_dir, num, url):
     ext = os.path.splitext(url)[1]  # 拡張子を取得
@@ -47,12 +61,6 @@ def make_instagram_mp4_filename(base_dir, url):
 
     fullpath = os.path.join(base_dir, filename)
     return fullpath
-
-
-# 画像を保存する
-def save_image(filename, image):
-    with open(filename, "wb") as fout:
-        fout.write(image)
 
 if __name__ == "__main__":
     url = "https://pbs.twimg.com/media/FEEnu0zaQAMfXHy.jpg"
