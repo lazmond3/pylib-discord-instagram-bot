@@ -17,5 +17,6 @@ dist
 run.bash
 dumps
 dump_images
+dump_videos
 dump_json
 
