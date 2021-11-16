@@ -1,9 +1,9 @@
 from typing import List
 from debug import DEBUG
 import discord
-from ..instagram_type import InstagramData
-from ..string_util import sophisticate_string
-from ..converter_instagram_url import instagram_make_author_page
+from ...instagram_type import InstagramData
+from ...string_util import sophisticate_string
+from ...converter_instagram_url import instagram_make_author_page
 
 def create_embed_instagram_image(image_url: str):
     embed = discord.Embed(color=discord.Color.red())

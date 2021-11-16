@@ -1,14 +1,14 @@
 from typing import Any
 import discord
 import os
-from ..const_value import FSIZE_TARGET
-from ..twitter_multiple import (get_twitter_object, twitter_extract_tweet_id,
-                               twitter_extract_tweet_url,
-                               twitter_line_to_image_urls)
-from ..download import (download_file, make_instagram_mp4_filename, make_twitter_image_filename,
-                       make_twitter_mp4_filename, save_image)
-from ..boto3 import upload_video_file, upload_image_file
+from ...const_value import FSIZE_TARGET
+from ...twitter_multiple import (get_twitter_object, twitter_extract_tweet_id,
+                                 twitter_extract_tweet_url)
+from ...download import (download_file, make_twitter_image_filename,
+                         make_twitter_mp4_filename, save_image)
+from ...boto3 import upload_video_file, upload_image_file
 from .twitter import send_twitter_images_from_cache_for_specified_index
+
 
 async def process_twitter(client: Any, channel, message, content):
     client.last_url_twitter[channel] = twitter_extract_tweet_url(content)
@@ -58,9 +58,9 @@ async def process_twitter(client: Any, channel, message, content):
     # 画像を取得する
     image_urls = tw.image_urls
     new_image_urls = []
-    for idx,u in enumerate(image_urls):
-        idx+=1
-        fname_image = make_twitter_image_filename("", tweet_id, idx,u )
+    for idx, u in enumerate(image_urls):
+        idx += 1
+        fname_image = make_twitter_image_filename("", tweet_id, idx, u)
         image_data = download_file(u)
         # ファイルダウンロード
         save_image(fname_image, image_data)
@@ -68,8 +68,6 @@ async def process_twitter(client: Any, channel, message, content):
         new_image_urls.append(path)
         # os.remove(fname_image)
 
-
     await send_twitter_images_from_cache_for_specified_index(
         skip_one=True, image_urls=new_image_urls, nums=nums, message=message
     )  # 動画のサムネイル送信
-

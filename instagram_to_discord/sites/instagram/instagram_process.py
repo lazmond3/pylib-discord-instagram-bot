@@ -2,21 +2,17 @@ from typing import Any
 import discord
 import json
 import os
-from ..const_value import FSIZE_TARGET
-from ..twitter_multiple import (get_twitter_object, twitter_extract_tweet_id,
-                               twitter_extract_tweet_url,
-                               twitter_line_to_image_urls)
-from ..download import (download_file, make_instagram_image_filename, make_instagram_mp4_filename, make_twitter_image_filename,
-                       make_twitter_mp4_filename, save_image)
-from ..boto3 import add_instagram_json_to_instagram_json, upload_video_file, upload_image_file
-from ..converter_instagram_url import (convert_instagram_url_to_a,
-                                      instagram_extract_from_content,
-                                      instagram_make_author_page)
-from ..cookie_requests import requests_get_cookie
-from ..instagram_type import (InstagramData, get_multiple_medias_from_str,
+from ...const_value import FSIZE_TARGET
+
+from ...download import (download_file, make_instagram_image_filename, make_instagram_mp4_filename, save_image)
+from ...boto3 import add_instagram_json_to_instagram_json, upload_video_file, upload_image_file
+from ...converter_instagram_url import (convert_instagram_url_to_a,
+                                      instagram_extract_from_content)
+from ...cookie_requests import requests_get_cookie
+from ...instagram_type import (get_multiple_medias_from_str,
                              instagran_parse_json_to_obj)
 from .instagram import get_instagram_id_from_url, send_instagram_images_for_specified_index, create_instagram_pic_embed, create_instagram_video_embed
-from ..video import trimming_video_to_8MB
+from ...video import trimming_video_to_8MB
 
 async def process_instagram(client: Any, channel, message, content):
     print("[log] channel name: ", message.channel.name)
@@ -48,6 +44,9 @@ async def process_instagram(client: Any, channel, message, content):
 
     instagram_id = get_instagram_id_from_url(a_url)
     new_images = []
+
+    # もし instagram_id に対して、データを保存済みだったら、これを行わない (cdn でも、BANが怖い)
+    # IS_FORCE_DOWNLOAD だったら、これを行う、とかにする。
     for idx,image in enumerate(images):
         print("[listener][instagram] download image local and upload to s3: image: " + image)
         idx+=1

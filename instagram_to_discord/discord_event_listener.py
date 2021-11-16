@@ -4,15 +4,15 @@ from typing import Dict
 import discord
 from debug import DEBUG
 
-from instagram_to_discord.sites.instagram import send_instagram_images_from_cache_for_specified_index
+from instagram_to_discord.sites.instagram.instagram import send_instagram_images_from_cache_for_specified_index
 
 from .cookie_requests import requests_get_cookie
 from .instagram_type import get_multiple_medias_from_str
 from .sites.tiktok_handler import handle_tiktok_main
 from .sites.youtube_handler import handle_youtube_main
-from .sites.instagram_process import process_instagram
-from .sites.twitter import send_twitter_images_from_cache_for_specified_index
-from .sites.twitter_process import process_twitter
+from .sites.instagram.instagram_process import process_instagram
+from .sites.twitter.twitter import send_twitter_images_from_cache_for_specified_index
+from .sites.twitter.twitter_process import process_twitter
 from .twitter_multiple import twitter_line_to_image_urls
 from .util import is_int
 
@@ -83,6 +83,7 @@ class DiscordMessageListener(discord.Client):
                     skip_one=True, image_urls=image_urls, nums=nums, message=message
                 )  # 動画のサムネイル送信
             else:  # instagram
+                # cache した 画像データ から、こちらの images を取得するようにする。
                 nums = list(
                     map(
                         lambda x: int(x),
