@@ -3,7 +3,7 @@ from debug import DEBUG
 import discord
 from ..string_util import sophisticate_string
 
-async def send_twitter_images_for_specified_index(
+async def send_twitter_images_from_cache_for_specified_index(
     skip_one: bool, image_urls: List[str], nums: List[int], message
 ):
     for n in nums:

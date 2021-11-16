@@ -4,12 +4,14 @@ from typing import Dict
 import discord
 from debug import DEBUG
 
+from instagram_to_discord.sites.instagram import send_instagram_images_from_cache_for_specified_index
+
 from .cookie_requests import requests_get_cookie
 from .instagram_type import get_multiple_medias_from_str
 from .sites.tiktok_handler import handle_tiktok_main
 from .sites.youtube_handler import handle_youtube_main
 from .sites.instagram_process import process_instagram
-from .sites.twitter import send_twitter_images_for_specified_index
+from .sites.twitter import send_twitter_images_from_cache_for_specified_index
 from .sites.twitter_process import process_twitter
 from .twitter_multiple import twitter_line_to_image_urls
 from .util import is_int
@@ -80,7 +82,7 @@ class DiscordMessageListener(discord.Client):
                     )
                 )
                 image_urls = twitter_line_to_image_urls(self.last_url_twitter[channel])
-                await send_twitter_images_for_specified_index(
+                await send_twitter_images_from_cache_for_specified_index(
                     skip_one=True, image_urls=image_urls, nums=nums, message=message
                 )  # 動画のサムネイル送信
             else:  # instagram
@@ -92,7 +94,7 @@ class DiscordMessageListener(discord.Client):
                 )
                 text = requests_get_cookie(url=self.last_url_instagram[channel])
                 image_urls = get_multiple_medias_from_str(text)
-                await send_twitter_images_for_specified_index(
+                await send_instagram_images_from_cache_for_specified_index(
                     skip_one=False, image_urls=image_urls, nums=nums, message=message
                 )  # 動画のサムネイル送信
 

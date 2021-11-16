@@ -10,6 +10,22 @@ def create_embed_instagram_image(image_url: str):
     embed.set_image(url=image_url)
     return embed
 
+async def send_instagram_images_from_cache_for_specified_index(
+    skip_one: bool, image_urls: List[str], nums: List[int], message
+):
+    for n in nums:
+        idx = n - 1
+        assert idx >= 0
+        if len(image_urls) < n:
+            continue
+        if skip_one and n == 1:
+            continue
+        if DEBUG:
+            print(f"send_twitter_image: url: {image_urls[idx]}")
+        embed = create_embed_instagram_image(image_urls[idx])
+        await message.channel.send(embed=embed)
+
+
 def get_instagram_id_from_url(instagram_url: str):
     instagram_id = ""
     if "/p/" in instagram_url:

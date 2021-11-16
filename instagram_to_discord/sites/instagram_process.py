@@ -9,8 +9,6 @@ from ..twitter_multiple import (get_twitter_object, twitter_extract_tweet_id,
 from ..download import (download_file, make_instagram_image_filename, make_instagram_mp4_filename, make_twitter_image_filename,
                        make_twitter_mp4_filename, save_image)
 from ..boto3 import add_instagram_json_to_instagram_json, upload_video_file, upload_image_file
-from .twitter import send_twitter_images_for_specified_index
-
 from ..converter_instagram_url import (convert_instagram_url_to_a,
                                       instagram_extract_from_content,
                                       instagram_make_author_page)

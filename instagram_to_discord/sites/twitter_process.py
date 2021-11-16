@@ -8,7 +8,7 @@ from ..twitter_multiple import (get_twitter_object, twitter_extract_tweet_id,
 from ..download import (download_file, make_instagram_mp4_filename, make_twitter_image_filename,
                        make_twitter_mp4_filename, save_image)
 from ..boto3 import upload_video_file, upload_image_file
-from .twitter import send_twitter_images_for_specified_index
+from .twitter import send_twitter_images_from_cache_for_specified_index
 
 async def process_twitter(client: Any, channel, message, content):
     client.last_url_twitter[channel] = twitter_extract_tweet_url(content)
@@ -47,7 +47,7 @@ async def process_twitter(client: Any, channel, message, content):
             except Exception as e:
                 print("file send error!  : ", e)
                 image_urls = tw.image_urls
-                await send_twitter_images_for_specified_index(
+                await send_twitter_images_from_cache_for_specified_index(
                     skip_one=False,
                     image_urls=image_urls,
                     nums=[1],
@@ -69,7 +69,7 @@ async def process_twitter(client: Any, channel, message, content):
         # os.remove(fname_image)
 
 
-    await send_twitter_images_for_specified_index(
+    await send_twitter_images_from_cache_for_specified_index(
         skip_one=True, image_urls=new_image_urls, nums=nums, message=message
     )  # 動画のサムネイル送信
 
