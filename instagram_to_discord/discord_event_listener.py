@@ -4,6 +4,7 @@ handler = StreamHandler()
 handler.setLevel(INFO)
 logger.setLevel(INFO)
 logger.addHandler(handler)
+logger.propagate = False
 
 import os
 from typing import Dict
@@ -104,6 +105,7 @@ class DiscordMessageListener(discord.Client):
 
 
 def main():
+
     client = DiscordMessageListener()
 
     if IS_DEBUG and DISCORD_TOKEN:
