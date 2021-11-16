@@ -1,3 +1,11 @@
+from logging import getLogger,StreamHandler,INFO
+logger = getLogger(__name__)    #以降、このファイルでログが出たということがはっきりする。
+handler = StreamHandler()
+handler.setLevel(INFO)
+logger.setLevel(INFO)
+logger.addHandler(handler)
+logger.propagate = False
+
 from dataclasses import dataclass
 from typing import Any, Dict, List
 
@@ -17,7 +25,7 @@ class TwitterImage:
 # 入力は js_dict
 def convert_twitter(dic: Dict[str, Any]) -> TwitterImage:
     images: List[Dict[str, str]] = dic["extended_entities"]["media"]
-    print(f"images: {images}")
+    logger.debug(f"images: {images}")
     user_display_name = dic["user"]["name"]
     user_screen_name = dic["user"]["screen_name"]
     user_url = f"https://twitter.com/{user_screen_name}"

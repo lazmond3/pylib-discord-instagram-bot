@@ -4,6 +4,7 @@ handler = StreamHandler()
 handler.setLevel(INFO)
 logger.setLevel(INFO)
 logger.addHandler(handler)
+logger.propagate = False
 
 import requests
 from .params import IS_DEBUG, INSTA_MID, INSTA_SESSIONID
