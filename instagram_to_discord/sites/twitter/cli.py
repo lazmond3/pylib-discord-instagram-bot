@@ -7,7 +7,7 @@ from debug import DEBUG
 
 from .base64_util import base64_encode_str
 from .twitter_image import TwitterImage, convert_twitter
-from ...boto3 import add_json_to_tweet_json
+from ...boto3 import add_json_to_dynamo_tweet_json
 
 CONSUMER_KEY: Optional[str] = os.getenv("CONSUMER_KEY")
 CONSUMER_SECRET: Optional[str] = os.getenv("CONSUMER_SECRET")
@@ -70,6 +70,13 @@ def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
     params = {"id": tweet_id, "tweet_mode": "extended"}
     headers = {"Authorization": f"Bearer {token}"}
 
+    # キャッシュを利用する.
+    if os.path.exists(f"dump_json/dump_one_{tweet_id}.json"):
+        with open(f"dump_json/dump_one_{tweet_id}.json", 'r') as f:
+            js = json.load(f)
+        tw = convert_twitter(js)
+        return tw
+
     try:
         r = requests.get(url, params=params, headers=headers)
     except Exception:
@@ -82,17 +89,12 @@ def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
     tx = r.text
     js = text_to_dict(tx)
 
-    with open(f"dump_one_{tweet_id}.json", "w", encoding="utf-8") as f:
+    with open(f"dump_json/dump_one_{tweet_id}.json", "w", encoding="utf-8") as f:
         json.dump(js, f, ensure_ascii=False)
     # 直し方がよくわからないので、json の結果を利用させてもらう。
-    with open(f"dump_one_{tweet_id}.json") as f:
+    with open(f"dump_json/dump_one_{tweet_id}.json") as f:
         txt_decoded = f.read()
-        add_json_to_tweet_json(tweet_id, txt_decoded)
-
-
-    # キャッシュを利用する.
-    # with open(f"dump_one_{tweet_id}.json", 'r') as f:
-    # js = json.load(f)
+        add_json_to_dynamo_tweet_json(tweet_id, txt_decoded)
 
     tw = convert_twitter(js)
     return tw
@@ -127,7 +129,7 @@ def get_sumatome(tweet_id: str, is_second: bool = False) -> None:
     # 直し方がよくわからないので、json の結果を利用させてもらう。
     with open(f"dump_one_{tweet_id}.json") as f:
         txt_decoded = f.read()
-        add_json_to_tweet_json(tweet_id, txt_decoded)
+        add_json_to_dynamo_tweet_json(tweet_id, txt_decoded)
 
 
     if not js["in_reply_to_status_id_str"]:

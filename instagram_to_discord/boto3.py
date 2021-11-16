@@ -25,14 +25,14 @@ bucket = s3.Bucket("discord-python-video")
 bucket_image = s3.Bucket("discord-python-image")
 
 
-def add_json_to_tweet_json(tweet_id: str, data: str):
+def add_json_to_dynamo_tweet_json(tweet_id: str, data: str):
     tweet_json.put_item(
         Item={
             'tweet_id': tweet_id,
             'data': data
         }
     )
-def add_instagram_json_to_instagram_json(instagram_url: str, instagram_id: str, data: str):
+def add_instagram_json_to_dynamo_instagram_json(instagram_url: str, instagram_id: str, data: str):
     """
     sample url: https://www.instagram.com/p/CVNB-GNldga/
     """

@@ -45,6 +45,7 @@ def mkdir_notexists(dirs: List[str]):
 
 if __name__ == "__main__":
     mkdir_notexists(["dumps",
+                     "dump_videos",
                      "dump_images",
                      "dump_json"])
     env_check()
