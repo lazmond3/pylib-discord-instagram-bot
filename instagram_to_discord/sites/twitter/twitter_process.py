@@ -1,3 +1,11 @@
+
+from logging import getLogger,StreamHandler,INFO
+logger = getLogger(__name__)    #以降、このファイルでログが出たということがはっきりする。
+handler = StreamHandler()
+handler.setLevel(INFO)
+logger.setLevel(INFO)
+logger.addHandler(handler)
+
 from typing import Any
 import discord
 import os
@@ -8,7 +16,7 @@ from ...download import (download_file, make_twitter_image_filename,
                          make_twitter_mp4_filename, save_image)
 from ...boto3 import upload_video_file, upload_image_file
 from .twitter import send_twitter_images_from_cache_for_specified_index
-
+from ...params import IS_DEBUG
 
 async def process_twitter(client: Any, channel, message, content):
     client.last_url_twitter[channel] = twitter_extract_tweet_url(content)
@@ -26,10 +34,10 @@ async def process_twitter(client: Any, channel, message, content):
         nums = list(nums)
     elif tw.video_url:
         video_url = tw.video_url.split("?")[0]
-        fname_video = make_twitter_mp4_filename("", tweet_id, video_url)
+        fname_video = make_twitter_mp4_filename("dump_videos", tweet_id, video_url)
 
-        video = download_file(video_url)
         # ファイルダウンロード
+        video = download_file(video_url)
         save_image(fname_video, video)
 
         # ファイル送信
@@ -45,7 +53,7 @@ async def process_twitter(client: Any, channel, message, content):
             try:
                 await message.channel.send(file=discord.File(fname_video))
             except Exception as e:
-                print("file send error!  : ", e)
+                logger.error("file send error!  : ", e)
                 image_urls = tw.image_urls
                 await send_twitter_images_from_cache_for_specified_index(
                     skip_one=False,
@@ -61,12 +69,13 @@ async def process_twitter(client: Any, channel, message, content):
     for idx, u in enumerate(image_urls):
         idx += 1
         fname_image = make_twitter_image_filename("", tweet_id, idx, u)
-        image_data = download_file(u)
         # ファイルダウンロード
+        image_data = download_file(u)
         save_image(fname_image, image_data)
         path = upload_image_file(fname_image, tweet_id, idx)
         new_image_urls.append(path)
-        # os.remove(fname_image)
+        if not IS_DEBUG:
+            os.remove(fname_image)
 
     await send_twitter_images_from_cache_for_specified_index(
         skip_one=True, image_urls=new_image_urls, nums=nums, message=message
