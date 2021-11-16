@@ -1,9 +1,16 @@
+from logging import getLogger,StreamHandler,INFO
+logger = getLogger(__name__)    #以降、このファイルでログが出たということがはっきりする。
+handler = StreamHandler()
+handler.setLevel(INFO)
+logger.setLevel(INFO)
+logger.addHandler(handler)
+
 from typing import List
-from debug import DEBUG
 import discord
 from .instagram_type import InstagramData
 from ...string_util import sophisticate_string
 from .converter_instagram_url import instagram_make_author_page
+from ...params import IS_DEBUG
 
 def create_embed_instagram_image(image_url: str):
     embed = discord.Embed(color=discord.Color.red())
@@ -20,8 +27,8 @@ async def send_instagram_images_from_cache_for_specified_index(
             continue
         if skip_one and n == 1:
             continue
-        if DEBUG:
-            print(f"send_twitter_image: url: {image_urls[idx]}")
+        if IS_DEBUG:
+            logger.debug(f"send_twitter_image: url: {image_urls[idx]}")
         embed = create_embed_instagram_image(image_urls[idx])
         await message.channel.send(embed=embed)
 
@@ -42,8 +49,8 @@ async def send_instagram_images_for_specified_index(
         assert idx >= 0
         if len(image_urls) < n:
             continue
-        if DEBUG:
-            print(f"send_twitter_image: url: {image_urls[idx]}")
+        if IS_DEBUG:
+            logger.debug(f"send_twitter_image: url: {image_urls[idx]}")
         embed = create_embed_instagram_image(image_urls[idx])
         await message.channel.send(embed=embed)
 

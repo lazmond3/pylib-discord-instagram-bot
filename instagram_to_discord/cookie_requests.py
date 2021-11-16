@@ -1,14 +1,8 @@
-import os
-
 import requests
-from debug import DEBUG
-
-MID = os.getenv("MID")
-SESSIONID = os.getenv("SESSIONID")
+from .params import IS_DEBUG, INSTA_MID, INSTA_SESSIONID
 
 # クッキーの使い方がわかるファイル
 cookie = dict()
-
 
 def make_cookie(path):
     global cookie
@@ -20,7 +14,7 @@ def make_cookie(path):
         text = "".join(alltext)
         splited = text.split("; ")
         for each in splited:
-            if DEBUG:
+            if IS_DEBUG:
                 print("split: ", each.split("="))
             key, v = each.split("=")[0], "".join(each.split("=")[1:])
             cookie2[key] = v
@@ -30,8 +24,8 @@ def make_cookie(path):
     return cookie
 
 
-cookie["mid"] = MID
-cookie["sessionid"] = SESSIONID
+cookie["mid"] = INSTA_MID
+cookie["sessionid"] = INSTA_SESSIONID
 
 def requests_get_cookie(url, expire=1000):
     data = requests.get(url, cookies=cookie)
