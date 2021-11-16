@@ -2,7 +2,7 @@ from typing import Any
 import discord
 import os
 from ...const_value import FSIZE_TARGET
-from ...twitter_multiple import (get_twitter_object, twitter_extract_tweet_id,
+from .twitter import (get_twitter_object, twitter_extract_tweet_id,
                                  twitter_extract_tweet_url)
 from ...download import (download_file, make_twitter_image_filename,
                          make_twitter_mp4_filename, save_image)

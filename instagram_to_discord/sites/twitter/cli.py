@@ -7,7 +7,7 @@ from debug import DEBUG
 
 from .base64_util import base64_encode_str
 from .twitter_image import TwitterImage, convert_twitter
-from ..boto3 import add_json_to_tweet_json
+from ...boto3 import add_json_to_tweet_json
 
 CONSUMER_KEY: Optional[str] = os.getenv("CONSUMER_KEY")
 CONSUMER_SECRET: Optional[str] = os.getenv("CONSUMER_SECRET")
