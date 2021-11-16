@@ -77,6 +77,10 @@ def convert_to_instagram_type(oj) -> InstagramData:
 
     caption = convert_long_caption(caption)
     is_video = oj.graphql.shortcode_media.is_video
+    # TODO: 途中だけvideo の場合
+    # shortcode_media.edge_sidecar_to_children.edges
+    # [0].node.video_url が入る.
+
     profile_url = oj.graphql.shortcode_media.owner.profile_pic_url
     username = oj.graphql.shortcode_media.owner.username
     full_name = oj.graphql.shortcode_media.owner.full_name
