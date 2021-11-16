@@ -10,7 +10,7 @@ from typing import Any
 import discord
 import os
 from ...const_value import FSIZE_TARGET
-from .twitter import (get_twitter_object, twitter_extract_tweet_id,
+from .twitter import (create_new_image_urls_with_downloading, get_twitter_object, twitter_extract_tweet_id,
                                  twitter_extract_tweet_url)
 from ...download import (download_file, make_twitter_image_filename,
                          make_twitter_mp4_filename, save_image)
@@ -26,6 +26,12 @@ async def process_twitter(client: Any, channel, message, content):
 
     tweet_id = twitter_extract_tweet_id(content)
     tw = get_twitter_object(tweet_id)
+
+    # 画像を取得する
+    image_urls = tw.image_urls
+    # TODO: もしキャッシュが存在していれば(KVS)、ダウンロードしないしアップロードもしない。
+    new_image_urls = create_new_image_urls_with_downloading(tweet_id, image_urls)
+
     msg_list = content.split()
     if len(msg_list) > 1:
         nums = msg_list[1].split(",")
@@ -53,7 +59,7 @@ async def process_twitter(client: Any, channel, message, content):
             try:
                 await message.channel.send(file=discord.File(fname_video))
             except Exception as e:
-                logger.error("file send error!  : ", e)
+                logger.error("[twitter] video: file send error!  : ", e)
                 image_urls = tw.image_urls
                 await send_twitter_images_from_cache_for_specified_index(
                     skip_one=False,
@@ -61,21 +67,9 @@ async def process_twitter(client: Any, channel, message, content):
                     nums=[1],
                     message=message,
                 )  # 動画のサムネイル送信
-        os.remove(fname_video)
-
-    # 画像を取得する
-    image_urls = tw.image_urls
-    new_image_urls = []
-    for idx, u in enumerate(image_urls):
-        idx += 1
-        fname_image = make_twitter_image_filename("", tweet_id, idx, u)
-        # ファイルダウンロード
-        image_data = download_file(u)
-        save_image(fname_image, image_data)
-        path = upload_image_file(fname_image, tweet_id, idx)
-        new_image_urls.append(path)
         if not IS_DEBUG:
-            os.remove(fname_image)
+            os.remove(fname_video)
+
 
     await send_twitter_images_from_cache_for_specified_index(
         skip_one=True, image_urls=new_image_urls, nums=nums, message=message
