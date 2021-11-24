@@ -33,12 +33,8 @@ async def process_twitter(client: Any, channel, message, content):
         tweet_id, image_urls)
 
     msg_list = content.split()
-    if len(msg_list) > 1:
-        nums = msg_list[1].split(",")
-        nums = map(lambda x: int(x), nums)
-        nums = filter(lambda x: x != 1, nums)
-        nums = list(nums)
-    elif tw.video_url:
+
+    if tw.video_url:
         video_url = tw.video_url.split("?")[0]
         fname_video = make_twitter_mp4_filename(
             "dump_videos", tweet_id, video_url)
@@ -48,27 +44,24 @@ async def process_twitter(client: Any, channel, message, content):
 
         # ファイル送信
         fsize = os.path.getsize(fname_video)
-        if fsize > (FSIZE_TARGET):
+        # if fsize > (FSIZE_TARGET):
 
-            image_urls = tw.image_urls
+        image_urls = tw.image_urls
 
-            video_s3_url = upload_video_file(fname_video)
-            await message.channel.send(video_s3_url)
-
-        else:
-            try:
-                await message.channel.send(file=discord.File(fname_video))
-            except Exception as e:
-                logger.error("[twitter] video: file send error!  : ", e)
-                image_urls = tw.image_urls
-                await send_twitter_images_from_cache_for_specified_index(
-                    skip_one=False,
-                    image_urls=image_urls,
-                    nums=[1],
-                    message=message,
-                )  # 動画のサムネイル送信
+        video_s3_url = upload_video_file(fname_video)
+        await message.channel.send(video_s3_url)
         if not IS_DEBUG:
             os.remove(fname_video)
+
+    elif len(msg_list) > 1:
+        nums = msg_list[1].split(",")
+        try:
+            nums = map(lambda x: int(x), nums)
+        except:
+            logger.info(f"数字じゃなかった： {msg_list[1]}")
+            return
+        nums = filter(lambda x: x != 1, nums)
+        nums = list(nums)
 
     await send_twitter_images_from_cache_for_specified_index(
         skip_one=True, image_urls=new_image_urls, nums=nums, message=message
