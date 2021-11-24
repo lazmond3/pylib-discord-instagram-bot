@@ -15,6 +15,7 @@ handler = StreamHandler()
 handler.setLevel(INFO)
 logger.setLevel(INFO)
 logger.addHandler(handler)
+logger.propagate = False
 
 
 async def process_twitter(client: Any, channel, message, content):
@@ -57,11 +58,11 @@ async def process_twitter(client: Any, channel, message, content):
         nums = msg_list[1].split(",")
         try:
             nums = map(lambda x: int(x), nums)
-        except:
-            logger.info(f"数字じゃなかった： {msg_list[1]}")
+            nums = filter(lambda x: x != 1, nums)
+            nums = list(nums)
+        except ValueError:
+            logger.info(f"\t[tweet_process] 文字付き: ツイート後の文字が数字じゃなかった： {msg_list[1]}")
             return
-        nums = filter(lambda x: x != 1, nums)
-        nums = list(nums)
 
     await send_twitter_images_from_cache_for_specified_index(
         skip_one=True, image_urls=new_image_urls, nums=nums, message=message
