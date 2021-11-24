@@ -58,7 +58,7 @@ def twitter_extract_tweet_id(line: str) -> str:
     コンテンツ(メッセージ) の中にtwitterの URL が含まれていれば、それだけ抽出して、tweet_id を返す。
     """
     # sample: https://twitter.com/mmmlmmm2/status/1372519422380797955?s=09
-    m = re.match(r"^.*https://twitter.com/([^/]+)/status/([0-9]+).*$", line)
+    m = re.match(r"^.*https://twitter.com/([^/]+)/status/([0-9]+).*$", line, re.M)
     if m:
         return m.group(2)
     else:
@@ -67,7 +67,7 @@ def twitter_extract_tweet_id(line: str) -> str:
 
 def twitter_extract_tweet_url(line: str) -> str:
     # sample: https://twitter.com/mmmlmmm2/status/1372519422380797955?s=09
-    m = re.match(r"^.*(https://twitter.com/([^/]+)/status/([0-9]+)).*$", line)
+    m = re.match(r"^.*(https://twitter.com/([^/]+)/status/([0-9]+)).*$", line, re.M)
     if m:
         return m.group(1)
     else:
