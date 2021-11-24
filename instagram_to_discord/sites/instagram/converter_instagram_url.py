@@ -19,7 +19,7 @@ def instagram_make_base_url(url):
 
 
 def extract_url(line: str):
-    m = re.match(r"^.*(https://www.instagram.com/(p|reel)/([^/])+).*$", line)
+    m = re.match(r"^.*(https://www.instagram.com/(p|reel)/([^/])+).*$", line, re.M)
     if m:
         return m.group(1)
     else:
