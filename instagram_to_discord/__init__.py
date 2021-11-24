@@ -8,6 +8,7 @@ handler = StreamHandler()
 handler.setLevel(INFO)
 logger.setLevel(INFO)
 logger.addHandler(handler)
+logger.propagate = False
 
 
 nest_asyncio.apply()
@@ -25,7 +26,6 @@ def env_check():
         ]
     ):
         logger.error("all environment variables are set.")
-        logger.error("container tag: ", os.getenv("CONTAINER_TAG"))
     else:
         logger.error("some of required variables are not set.")
         exit(1)
@@ -41,15 +41,6 @@ def mkdir_notexists(dirs: List[str]):
     for dirpath in dirs:
         if not os.path.exists(dirpath):
             os.makedirs(dirpath)
+            logger.info(f"[mkdir_noexists] mkdir {dirpath}")
 
 
-if __name__ == "__main__":
-    mkdir_notexists(["dumps",
-                     "dump_videos",
-                     "dump_videos_instagram",
-                     "dump_images",
-                     "dump_images_instagram",
-                     "dump_json_instagram",
-                     "dump_json"])
-    env_check()
-    main()
