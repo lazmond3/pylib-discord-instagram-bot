@@ -46,7 +46,12 @@ def add_instagram_json_to_dynamo_instagram_json(instagram_url: str, instagram_id
 
 
 def upload_video_file(fname: str) -> str:
-    bucket.upload_file(fname, fname, ExtraArgs={'ContentType': "video/mp4"})
+    """
+    fname はファイルのある位置。object key は basenameを利用する。
+    """
+    base_fname = os.path.basename(fname)
+    # 第二引数はkey
+    bucket.upload_file(fname, base_fname, ExtraArgs={'ContentType': "video/mp4"})
     basename = os.path.basename(fname)
     return f"https://discord-python-video.s3.ap-northeast-1.amazonaws.com/{basename}"
 
