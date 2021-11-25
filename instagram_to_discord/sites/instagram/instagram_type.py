@@ -1,8 +1,6 @@
 import json
 from typing import List
 
-import dict2obj
-from debug import DEBUG
 from dict2obj import Dict2Obj
 
 
@@ -77,6 +75,10 @@ def convert_to_instagram_type(oj) -> InstagramData:
 
     caption = convert_long_caption(caption)
     is_video = oj.graphql.shortcode_media.is_video
+    # TODO: 途中だけvideo の場合
+    # shortcode_media.edge_sidecar_to_children.edges
+    # [0].node.video_url が入る.
+
     profile_url = oj.graphql.shortcode_media.owner.profile_pic_url
     username = oj.graphql.shortcode_media.owner.username
     full_name = oj.graphql.shortcode_media.owner.full_name
@@ -118,7 +120,7 @@ def convert_json_str_to_obj(str_):
     return Dict2Obj(dic_)
 
 
-def instagran_parse_json_to_obj(str):
+def instagram_parse_json_to_obj(str):
     """
     __a=1 の json レスポンスを InstagramData に変換する。
     """

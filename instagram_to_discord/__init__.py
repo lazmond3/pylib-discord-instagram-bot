@@ -1,11 +1,15 @@
-import os
-
-import nest_asyncio
-
-from . import cookie_requests  # noqa: F401
-from . import (converter_instagram_url, download, redis_cli, string_util,
-               tiktok, video, youtube)
 from .discord_event_listener import main
+from typing import List
+import nest_asyncio
+import os
+from logging import getLogger, StreamHandler, INFO
+logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
+handler = StreamHandler()
+handler.setLevel(INFO)
+logger.setLevel(INFO)
+logger.addHandler(handler)
+logger.propagate = False
+
 
 nest_asyncio.apply()
 FSIZE_TARGET = 2 ** 23 - 100
@@ -19,22 +23,24 @@ def env_check():
             os.getenv("CONSUMER_SECRET"),
             os.getenv("MID"),
             os.getenv("SESSIONID"),
-            os.getenv("CONTAINER_TAG"),
         ]
     ):
-        print("all environment variables are set.")
-        print("container tag: ", os.getenv("CONTAINER_TAG"))
+        logger.error("all environment variables are set.")
     else:
-        print("some of required variables are not set.")
+        logger.error("some of required variables are not set.")
         exit(1)
     if not os.getenv("MID"):
-        print("ERROR! MID NOT SET")
+        logger.error("ERROR! MID NOT SET")
         exit(1)
     if not os.getenv("SESSIONID"):
-        print("ERROR! SESSIONID NOT SET")
+        logger.error("ERROR! SESSIONID NOT SET")
         exit(1)
 
 
-if __name__ == "__main__":
-    env_check()
-    main()
+def mkdir_notexists(dirs: List[str]):
+    for dirpath in dirs:
+        if not os.path.exists(dirpath):
+            os.makedirs(dirpath)
+            logger.info(f"[mkdir_noexists] mkdir {dirpath}")
+
+

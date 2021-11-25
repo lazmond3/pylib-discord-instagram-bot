@@ -1,20 +1,16 @@
-import os
+from logging import getLogger,StreamHandler,INFO
+logger = getLogger(__name__)    #以降、このファイルでログが出たということがはっきりする。
+handler = StreamHandler()
+handler.setLevel(INFO)
+logger.setLevel(INFO)
+logger.addHandler(handler)
+logger.propagate = False
 
 import requests
-from debug import DEBUG
-
-from .redis_cli import REDIS_PASS
-
-MID = os.getenv("MID")
-SESSIONID = os.getenv("SESSIONID")
-
-if REDIS_PASS:
-    from .redis_cli import get_data, store_data
+from .params import IS_DEBUG, INSTA_MID, INSTA_SESSIONID
 
 # クッキーの使い方がわかるファイル
-# DANGER instagram の cookie が別サイトにも送信されてしまいうる。
 cookie = dict()
-
 
 def make_cookie(path):
     global cookie
@@ -26,8 +22,8 @@ def make_cookie(path):
         text = "".join(alltext)
         splited = text.split("; ")
         for each in splited:
-            if DEBUG:
-                print("split: ", each.split("="))
+            if IS_DEBUG:
+                logger.debug("split: ", each.split("="))
             key, v = each.split("=")[0], "".join(each.split("=")[1:])
             cookie2[key] = v
     for k in cookie2.keys():
@@ -36,28 +32,9 @@ def make_cookie(path):
     return cookie
 
 
-# if COOKIE_PATH:
-#     make_cookie(COOKIE_PATH)
-# else:
-cookie["mid"] = MID
-cookie["sessionid"] = SESSIONID
+cookie["mid"] = INSTA_MID
+cookie["sessionid"] = INSTA_SESSIONID
 
-# redis 機能を加える
-
-if REDIS_PASS:
-    # 本当は導通確認でもいいかも。
-    def requests_get_cookie(url, expire=1000):
-        cache = get_data(url)
-        if cache:
-            return cache
-        else:
-            data = requests.get(url, cookies=cookie)
-            store_data(url, data.text, expire)
-            return data.text
-
-
-else:
-
-    def requests_get_cookie(url, expire=1000):
-        data = requests.get(url, cookies=cookie)
-        return data.text
+def requests_get_cookie(url, expire=1000):
+    data = requests.get(url, cookies=cookie)
+    return data.text

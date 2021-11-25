@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional
 
 import discord
 
-from ..boto3 import upload_file
+from ..boto3 import upload_video_file
 from ..youtube import download_youtube_video, extract_youtube_url
 
 
@@ -85,7 +85,7 @@ async def handle_youtube_main(client: discord.Client, channel_id: int, content: 
 
     channel = client.get_channel(id=channel_id)
     if over_8mb:
-        video_s3_url = upload_file(fname)
+        video_s3_url = upload_video_file(fname)
         # small_filesize_fname: str = trimming_video_to_8MB(fname)
         # await channel.send(file=discord.File(small_filesize_fname))
         # url を貼るだけで discord の中でみられる。
