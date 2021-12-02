@@ -116,12 +116,17 @@ async def process_instagram(client: Any, channel, message, content):
 
         msg_list = content.split()
         nums = []
-        if len(msg_list) > 1:
-            nums = msg_list[1].split(",")
-            nums = map(lambda x: int(x), nums)
-            nums = list(nums)
-        else:
-            nums.append(1)
+        try:
+            if len(msg_list) > 1:
+                nums = msg_list[1].split(",")
+                nums = map(lambda x: int(x), nums)
+                nums = list(nums)                
+            else:
+                nums.append(1)
+        except ValueError:
+            logger.info(f"[instagram_process] 文字付き: ツイートの後の文字が数字じゃなかった: {msg_list[1]}")
+            nums = [1]
+
         assert nums[0] >= 1
 
         image_url = new_images[nums[0] - 1]
