@@ -24,3 +24,4 @@ nest_asyncio
 # pycln
 Flask
 mypy
+beautifulsoup4
