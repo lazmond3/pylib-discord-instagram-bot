@@ -1,14 +1,14 @@
 from typing import List
-from debug import DEBUG
-import discord
 import os
+
+from instagram_to_discord.util2.embed import create_twitter_image_embed
 from ...boto3 import upload_image_file
 
-from ...download import download_file, download_file_to_path, make_twitter_image_filename, save_image
-from ...params import IS_DEBUG
+from ...download import download_file_to_path, make_twitter_image_filename, save_image
+from ...const_value import IS_DEBUG
 import re
 from typing import List
-from ..twitter.cli import get_one_tweet
+from ..twitter.api import get_one_tweet
 from ..twitter.twitter_image import TwitterImage
 
 
@@ -41,17 +41,8 @@ async def send_twitter_images_from_cache_for_specified_index(
             continue
         if skip_one and n == 1:
             continue
-        if DEBUG:
-            print(f"send_twitter_image: url: {image_urls[idx]}")
-        embed = create_embed_twitter_image(image_urls[idx])
+        embed = create_twitter_image_embed(image_urls[idx])
         await message.channel.send(embed=embed)
-
-def create_embed_twitter_image(image_url: str):
-    embed = discord.Embed(color=discord.Color.blue())
-    embed.set_image(url=image_url)
-    return embed
-
-
 
 def twitter_extract_tweet_id(line: str) -> str:
     """
@@ -80,7 +71,6 @@ def twitter_fetch_content_return_image_urls(tweet_id: str) -> List[str]:
     return tw.image_urls
 
 
-# TODO: extended_entities が入ってなければ、 Noneを返すようにしたい。
 def get_twitter_object(tweet_id: str) -> TwitterImage:
     """get_one_tweet し、 TwitterImageにする関数"""
     return get_one_tweet(tweet_id)

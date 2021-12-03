@@ -1,13 +1,12 @@
-from logging import getLogger,StreamHandler,INFO
-logger = getLogger(__name__)    #以降、このファイルでログが出たということがはっきりする。
+from typing import Any, Dict, List
+from dataclasses import dataclass
+from logging import getLogger, StreamHandler, INFO
+logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()
 handler.setLevel(INFO)
 logger.setLevel(INFO)
 logger.addHandler(handler)
 logger.propagate = False
-
-from dataclasses import dataclass
-from typing import Any, Dict, List
 
 
 @dataclass
@@ -20,12 +19,11 @@ class TwitterImage:
     user_url: str
     user_profile_image_url: str
     text: str
+    link: str
 
 
 # 入力は js_dict
 def convert_twitter(dic: Dict[str, Any]) -> TwitterImage:
-    images: List[Dict[str, str]] = dic["extended_entities"]["media"]
-    logger.debug(f"images: {images}")
     user_display_name = dic["user"]["name"]
     user_screen_name = dic["user"]["screen_name"]
     user_url = f"https://twitter.com/{user_screen_name}"
@@ -35,6 +33,26 @@ def convert_twitter(dic: Dict[str, Any]) -> TwitterImage:
     video_url_inner: str = None
     image_url_inner: str = ""
     image_urls: List[str] = []
+    link = ""
+    # link があれば入れる
+    if "entities" in dic and "urls" in dic["entities"]:
+        link = dic["entities"]["urls"][0]["expanded_url"]
+
+    if not "extended_entities" in dic:
+        return TwitterImage(
+            id_str=dic["id_str"],
+            image_urls=image_urls,
+            video_url="",
+            user_display_name=user_display_name,
+            user_screen_name=user_screen_name,
+            user_url=user_url,
+            user_profile_image_url=user_profile_image_url,
+            text=text,
+            link = link
+        )
+
+    images: List[Dict[str, str]] = dic["extended_entities"]["media"]
+    logger.debug(f"images: {images}")
     if "video_info" in dic["extended_entities"]["media"][0]:
         video_info: Dict[str, List[Dict[str, str]]] = dic["extended_entities"]["media"][
             0
@@ -44,7 +62,8 @@ def convert_twitter(dic: Dict[str, Any]) -> TwitterImage:
             filter(lambda x: x["content_type"] == "video/mp4", variants)
         )
         # ビットレート最大を取得
-        video_mp4_list = sorted(video_mp4_list, key=lambda x: -int(x["bitrate"]))
+        video_mp4_list = sorted(
+            video_mp4_list, key=lambda x: -int(x["bitrate"]))
 
         video_url_inner = video_mp4_list[0]["url"]
         image_url_inner = dic["extended_entities"]["media"][0]["media_url_https"]
@@ -61,4 +80,5 @@ def convert_twitter(dic: Dict[str, Any]) -> TwitterImage:
         user_url=user_url,
         user_profile_image_url=user_profile_image_url,
         text=text,
+        link = link
     )

@@ -11,7 +11,7 @@ import os
 from typing import Any, Dict, Optional, cast
 
 import requests
-from ...params import IS_DEBUG
+from ...const_value import IS_DEBUG
 
 if not IS_DEBUG:
     logger.setLevel(INFO)
@@ -20,7 +20,7 @@ from .base64_util import base64_encode_str
 from .twitter_image import TwitterImage, convert_twitter
 from ...boto3 import add_json_to_dynamo_tweet_json
 
-from ...params import TW_CONSUMER_KEY, TW_CONSUMER_SECRET
+from ...const_value import TW_CONSUMER_KEY, TW_CONSUMER_SECRET
 
 # const
 TOKEN_FILENAME: str = ".token.json"

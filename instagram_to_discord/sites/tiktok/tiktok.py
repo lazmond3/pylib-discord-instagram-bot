@@ -5,7 +5,7 @@ from typing import Any, Dict, Tuple
 
 import youtube_dl
 
-from .const_value import FSIZE_TARGET
+from ...const_value import FSIZE_TARGET
 
 
 # https://vt.tiktok.com/ZSJgGCR9S/

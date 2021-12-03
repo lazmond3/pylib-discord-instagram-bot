@@ -1,4 +1,6 @@
 from logging import getLogger,StreamHandler,INFO,DEBUG
+
+from instagram_to_discord.util2.embed import create_instagram_pic_embed, create_instagram_video_embed
 logger = getLogger(__name__)    #以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()
 handler.setLevel(INFO)
@@ -6,7 +8,7 @@ logger.setLevel(INFO)
 logger.addHandler(handler)
 logger.propagate = False
 
-from ...params import IS_DEBUG
+from ...const_value import IS_DEBUG
 if IS_DEBUG:
     logger.setLevel(DEBUG)
 
@@ -23,7 +25,7 @@ from .converter_instagram_url import (convert_instagram_url_to_a,
 from ...cookie_requests import requests_get_cookie
 from .instagram_type import (get_multiple_medias_from_str,
                              instagram_parse_json_to_obj)
-from .instagram import get_instagram_id_from_url, send_instagram_images_for_specified_index, create_instagram_pic_embed, create_instagram_video_embed
+from .instagram_sender import get_instagram_id_from_url, send_instagram_images_for_specified_index
 from ...video import trimming_video_to_8MB
 
 async def process_instagram(client: Any, channel, message, content):
@@ -116,12 +118,17 @@ async def process_instagram(client: Any, channel, message, content):
 
         msg_list = content.split()
         nums = []
-        if len(msg_list) > 1:
-            nums = msg_list[1].split(",")
-            nums = map(lambda x: int(x), nums)
-            nums = list(nums)
-        else:
-            nums.append(1)
+        try:
+            if len(msg_list) > 1:
+                nums = msg_list[1].split(",")
+                nums = map(lambda x: int(x), nums)
+                nums = list(nums)                
+            else:
+                nums.append(1)
+        except ValueError:
+            logger.info(f"[instagram_process] 文字付き: ツイートの後の文字が数字じゃなかった: {msg_list[1]}")
+            nums = [1]
+
         assert nums[0] >= 1
 
         image_url = new_images[nums[0] - 1]

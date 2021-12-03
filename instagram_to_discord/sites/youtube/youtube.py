@@ -5,7 +5,7 @@ from typing import Any, Dict, Tuple
 
 import youtube_dl
 
-from .video import trimming_video_to_8MB
+from ...video import trimming_video_to_8MB
 
 
 # TODO: shorts の場合に対応
