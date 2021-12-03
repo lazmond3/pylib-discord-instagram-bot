@@ -29,7 +29,7 @@ async def process_twitter(client: Any, channel, message, content):
     tweet_id = twitter_extract_tweet_id(content)
     tw = get_twitter_object(tweet_id)
 
-    print(f"tw author: {tw.user_screen_name} tx: {tw.text} link: {tw.link}")
+    logger.debug(f"tw author: {tw.user_screen_name} tx: {tw.text} link: {tw.link}")
     # tw author: koba31okm tx: 兄弟と現在仲良いですか？？今大学生なんですけど、打算的に見える兄が少し嫌いです。 — 私は現在は仲良くやってますし、そうなって良かったと思ってます。子供ができたときに、親兄弟と仲が悪いのってあまり胸張って子供に言えることじゃないし、今どきは子供がお友達と… https://t.co/sM2nxsgWzb
     if tw.user_screen_name == "koba31okm" and "ask.fm" in tw.link:
         ask_html_text = get_ask_html_text_from_url(tw.link)
