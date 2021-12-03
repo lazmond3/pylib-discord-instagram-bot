@@ -1,10 +1,12 @@
 import os
+import re
 from typing import Any, Dict, Optional
 
 import discord
 
-from ..boto3 import upload_video_file
-from ..youtube import download_youtube_video, extract_youtube_url
+from ...boto3 import upload_video_file
+from .tiktok import download_tiktok_video, extract_tiktok_url
+from ...video import trimming_video_to_8MB
 
 
 def play_count_to_text(count: int) -> str:
@@ -35,11 +37,16 @@ def uploaded_at_to_text(datest: str) -> str:
     return f"{year}年{month}月{day}日"
 
 
-def create_youtube_video_embed(
-    base_url: str, info_dict: Dict[str, Any], s3_url: Optional[str] = None
-):
-    seconds: int = info_dict["duration"]
-    minutes: int = 0
+def convert_to_author_url(webpage_url: str) -> str:
+    m = re.match(r"(https://(www.)?tiktok.com/@[^/]+)", webpage_url)
+    if m:
+        return m.group(1)
+    raise Exception("[tiktok convert_to_author_url] 変換できません: " + webpage_url)
+
+
+def create_tiktok_video_embed(info_dict: Dict[str, Any], s3_url: Optional[str] = None):
+    seconds = info_dict["duration"]
+    minutes = None
     if seconds > 60:
         minutes = seconds // 60
         seconds = seconds % 60
@@ -54,54 +61,52 @@ def create_youtube_video_embed(
         description = ""
     play_count_text = play_count_to_text(info_dict["view_count"])
     uploaded_at_text = uploaded_at_to_text(info_dict["upload_date"])
-    description += info_dict["description"][:5]  # キャプション作りたい
+    description += "\n".join(info_dict["description"].split("\n")[:5])  # キャプション作りたい
     description += "\n" + f"投稿日: {uploaded_at_text}"
     description += "\n" + f"再生🔁: {play_count_text}"
     description += "\n" + f"時間▶️: {minutes_text}"
     if "like_count" in info_dict:
-        description += (
-            "\n" + f'👍: {info_dict["like_count"]} 👎: {info_dict["dislike_count"]}'
-        )
+        description += "\n" + f'👍: {info_dict["like_count"]}'
+
+    author_url = convert_to_author_url(info_dict["webpage_url"])
     embed = discord.Embed(
         title=info_dict["title"],
         description=description,
-        url=base_url,
-        color=discord.Color.red(),
+        url=info_dict["webpage_url"],
+        color=discord.Color(0x3A3939),  # 黒
     )
 
     embed.set_image(url=info_dict["thumbnail"])
-    embed.set_author(
-        name=info_dict["channel"], url=info_dict["channel_url"]
-    )  # icon_url もある
+    embed.set_author(name=info_dict["uploader"], url=author_url)
     return embed
 
 
-async def handle_youtube_main(client: discord.Client, channel_id: int, content: str):
+async def handle_tiktok_main(client: discord.Client, channel_id: int, content: str):
     await client.wait_until_ready()
-    extracted_url: str = extract_youtube_url(
+    extracted_url: str = extract_tiktok_url(
         content
     )  # is like "https://www.youtube.com/watch?v=Yp6Hc8yN_rs"
-    fname, over_8mb, info_dict = download_youtube_video(extracted_url)
+    fname, over_8mb, info_dict = download_tiktok_video(extracted_url)
 
     channel = client.get_channel(id=channel_id)
     if over_8mb:
         video_s3_url = upload_video_file(fname)
-        # small_filesize_fname: str = trimming_video_to_8MB(fname)
-        # await channel.send(file=discord.File(small_filesize_fname))
-        # url を貼るだけで discord の中でみられる。
-        # embed = create_youtube_video_embed(extracted_url, info_dict, video_s3_url)
-        # await channel.send(embed=embed)
-        await channel.send(video_s3_url)
+        embed = create_tiktok_video_embed(info_dict, video_s3_url)
+        small_filesize_fname = trimming_video_to_8MB(fname)
+        await channel.send(embed=embed)
+        await channel.send(file=discord.File(small_filesize_fname))
     else:
-        # embed = create_youtube_video_embed(extracted_url, info_dict, None)
-        # await channel.send(embed=embed)
+        embed = create_tiktok_video_embed(info_dict, None)
+
+        await channel.send(embed=embed)
         await channel.send(file=discord.File(fname))
 
-    print("[handle_youtube] メッセージ送信終了したので、プロセスexitします: " + info_dict["title"])
+    print("[handle_tiktok_main] メッセージ送信終了したので、プロセスexitします: " + info_dict["title"])
+    # await client.close()
 
 
-def handle_youtube(channel_id: int, content: str):
+def handle_tiktok(channel_id: int, content: str):
     client = discord.Client()
     TOKEN = os.getenv("TOKEN")
-    client.loop.create_task(handle_youtube_main(client, channel_id, content))
+    client.loop.create_task(handle_tiktok_main(client, channel_id, content))
     client.run(TOKEN)

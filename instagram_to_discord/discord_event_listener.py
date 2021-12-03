@@ -14,15 +14,22 @@ import discord
 from instagram_to_discord.sites.instagram.instagram_sender import send_instagram_images_from_cache_for_specified_index
 
 from .cookie_requests import requests_get_cookie
-from .sites.tiktok_handler import handle_tiktok_main
-from .sites.youtube_handler import handle_youtube_main
+from .sites.tiktok.tiktok_handler import handle_tiktok_main
+from .sites.youtube.youtube_handler import handle_youtube_main
 from .sites.instagram.instagram_type import get_multiple_medias_from_str
 from .sites.instagram.instagram_process import process_instagram
 from .sites.twitter.twitter import send_twitter_images_from_cache_for_specified_index, twitter_line_to_image_urls
 from .sites.twitter.twitter_process import process_twitter
-from .util import is_int
 
 from .params import IS_DEBUG, DISCORD_TOKEN
+
+def is_int(s):
+    try:
+        int(s)
+    except:
+        return False
+    return True
+
 
 class DiscordMessageListener(discord.Client):
     last_url_twitter: Dict[str, str] = {}
