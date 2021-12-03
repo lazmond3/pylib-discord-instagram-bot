@@ -72,7 +72,6 @@ def twitter_fetch_content_return_image_urls(tweet_id: str) -> List[str]:
     return tw.image_urls
 
 
-# TODO: extended_entities が入ってなければ、 Noneを返すようにしたい。
 def get_twitter_object(tweet_id: str) -> TwitterImage:
     """get_one_tweet し、 TwitterImageにする関数"""
     return get_one_tweet(tweet_id)
