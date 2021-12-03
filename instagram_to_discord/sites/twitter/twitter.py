@@ -1,7 +1,7 @@
 from typing import List
 import os
 
-from instagram_to_discord.util2.embed import create_embed_twitter_image
+from instagram_to_discord.util2.embed import create_twitter_image_embed
 from ...boto3 import upload_image_file
 
 from ...download import download_file_to_path, make_twitter_image_filename, save_image
@@ -41,7 +41,7 @@ async def send_twitter_images_from_cache_for_specified_index(
             continue
         if skip_one and n == 1:
             continue
-        embed = create_embed_twitter_image(image_urls[idx])
+        embed = create_twitter_image_embed(image_urls[idx])
         await message.channel.send(embed=embed)
 
 def twitter_extract_tweet_id(line: str) -> str:

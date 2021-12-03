@@ -38,7 +38,7 @@ def create_instagram_pic_embed(obj: InstagramData, base_url: str):
     )
     return embed
 
-def create_embed_instagram_image(image_url: str):
+def create_instagram_embed_image(image_url: str):
     embed = discord.Embed(color=discord.Color.red())
     embed.set_image(url=image_url)
     return embed
@@ -58,7 +58,7 @@ def create_instagram_video_embed(obj: InstagramData, base_url: str):
     )
     return embed
 
-def create_embed_twitter_image(image_url: str):
+def create_twitter_image_embed(image_url: str):
     embed = discord.Embed(color=discord.Color.blue())
     embed.set_image(url=image_url)
     return embed

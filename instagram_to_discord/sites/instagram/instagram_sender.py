@@ -1,6 +1,6 @@
 from logging import getLogger,StreamHandler,INFO
 
-from instagram_to_discord.util2.embed import create_embed_instagram_image
+from instagram_to_discord.util2.embed import create_instagram_embed_image
 logger = getLogger(__name__)    #以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()
 handler.setLevel(INFO)
@@ -27,7 +27,7 @@ async def send_instagram_images_from_cache_for_specified_index(
             continue
         if IS_DEBUG:
             logger.debug(f"send_twitter_image: url: {image_urls[idx]}")
-        embed = create_embed_instagram_image(image_urls[idx])
+        embed = create_instagram_embed_image(image_urls[idx])
         await message.channel.send(embed=embed)
 
 
@@ -49,7 +49,7 @@ async def send_instagram_images_for_specified_index(
             continue
         if IS_DEBUG:
             logger.debug(f"send_twitter_image: url: {image_urls[idx]}")
-        embed = create_embed_instagram_image(image_urls[idx])
+        embed = create_instagram_embed_image(image_urls[idx])
         await message.channel.send(embed=embed)
 
 
