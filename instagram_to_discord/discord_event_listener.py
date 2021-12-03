@@ -11,7 +11,7 @@ from typing import Dict
 
 import discord
 
-from instagram_to_discord.sites.instagram.instagram import send_instagram_images_from_cache_for_specified_index
+from instagram_to_discord.sites.instagram.instagram_sender import send_instagram_images_from_cache_for_specified_index
 
 from .cookie_requests import requests_get_cookie
 from .sites.tiktok_handler import handle_tiktok_main
