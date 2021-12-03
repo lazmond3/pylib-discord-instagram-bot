@@ -3,12 +3,9 @@
 # from .context import use_hello
 import unittest
 
-from debug import DEBUG
-
 from . import context
 
 instagram_to_discord = context.instagram_to_discord
-
 
 class BasicTestSuite(unittest.TestCase):
     """Basic test cases."""
@@ -21,9 +18,6 @@ class BasicTestSuite(unittest.TestCase):
         result = instagram_to_discord.converter_instagram_url.instagram_make_base_url(
             input_str
         )
-        if DEBUG:
-            print(f"answer: {answer}")
-            print(f"result: {result}")
         assert answer == result
 
     def test_instagram_make_author_page(self):
@@ -46,17 +40,12 @@ class BasicTestSuite(unittest.TestCase):
                 input_content
             )
         )
-        if DEBUG:
-            print(f"result: {result}")
-            print(f"[debug] result len: {len(result)}, answer len: {len(answer)}")
         assert result == answer
 
     def test_extract_url(self):
         input_content = """こんにちは。データは https://www.instagram.com/p/CGEF-ewBxNm/?utm_source=ig_web_copy_link です。"""
         answer = "https://www.instagram.com/p/CGEF-ewBxNm"
         result = instagram_to_discord.converter_instagram_url.extract_url(input_content)
-        if DEBUG:
-            print(f"answer: {answer}, result: {result}")
         assert answer == result
 
 

@@ -1,5 +1,4 @@
 from typing import List
-from debug import DEBUG
 import discord
 import os
 
