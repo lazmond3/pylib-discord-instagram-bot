@@ -21,7 +21,7 @@ from .sites.instagram.instagram_process import process_instagram
 from .sites.twitter.twitter import send_twitter_images_from_cache_for_specified_index, twitter_line_to_image_urls
 from .sites.twitter.twitter_process import process_twitter
 
-from .params import IS_DEBUG, DISCORD_TOKEN
+from .const_value import IS_DEBUG, DISCORD_TOKEN
 
 def is_int(s):
     try:

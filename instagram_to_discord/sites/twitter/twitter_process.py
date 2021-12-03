@@ -1,7 +1,7 @@
 
 from instagram_to_discord.sites.ask.ask import get_ask_html_text_from_url, process_question_and_answer_from_text
 from instagram_to_discord.util2.embed import create_ask_embed
-from ...params import IS_DEBUG
+from ...const_value import IS_DEBUG
 from .twitter import send_twitter_images_from_cache_for_specified_index
 from ...boto3 import upload_video_file
 from ...download import (download_file_to_path, make_twitter_mp4_filename)

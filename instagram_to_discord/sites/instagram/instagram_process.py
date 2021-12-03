@@ -8,7 +8,7 @@ logger.setLevel(INFO)
 logger.addHandler(handler)
 logger.propagate = False
 
-from ...params import IS_DEBUG
+from ...const_value import IS_DEBUG
 if IS_DEBUG:
     logger.setLevel(DEBUG)
 

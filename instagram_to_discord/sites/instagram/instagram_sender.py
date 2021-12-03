@@ -12,7 +12,7 @@ from typing import List
 from .instagram_type import InstagramData
 from ...string_util import sophisticate_string
 from .converter_instagram_url import instagram_make_author_page
-from ...params import IS_DEBUG
+from ...const_value import IS_DEBUG
 
 
 async def send_instagram_images_from_cache_for_specified_index(

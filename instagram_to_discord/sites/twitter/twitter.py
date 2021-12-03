@@ -5,7 +5,7 @@ from instagram_to_discord.util2.embed import create_embed_twitter_image
 from ...boto3 import upload_image_file
 
 from ...download import download_file_to_path, make_twitter_image_filename, save_image
-from ...params import IS_DEBUG
+from ...const_value import IS_DEBUG
 import re
 from typing import List
 from ..twitter.api import get_one_tweet

@@ -7,7 +7,7 @@ logger.addHandler(handler)
 logger.propagate = False
 
 import requests
-from .params import IS_DEBUG, INSTA_MID, INSTA_SESSIONID
+from .const_value import IS_DEBUG, INSTA_MID, INSTA_SESSIONID
 
 # クッキーの使い方がわかるファイル
 cookie = dict()
