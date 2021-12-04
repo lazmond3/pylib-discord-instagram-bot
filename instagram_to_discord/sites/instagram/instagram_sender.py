@@ -1,5 +1,6 @@
 import discord
 from instagram_to_discord.sites.instagram.instagram_type import InstagramInnerNode
+from instagram_to_discord.sites.instagram.upload_video import upload_instagram_video
 from ...const_value import IS_DEBUG
 from typing import List
 from logging import getLogger, StreamHandler, INFO
@@ -27,8 +28,9 @@ async def send_instagram_images_from_cache_for_specified_index(
             logger.debug(f"send_twitter_image: url: {medias[idx]}")
         m = medias[idx]
         if m.is_video:
-            # TODO: FIX
-            await message.channel.send(file=discord.File(m.url))
+            uploaded_video_url = upload_instagram_video(m.url)
+            await message.channel.send(uploaded_video_url)
+            # await message.channel.send(file=discord.File(uploaded_video_url))
         else:
             embed = create_instagram_embed_image(medias[idx].url)
             await message.channel.send(embed=embed)

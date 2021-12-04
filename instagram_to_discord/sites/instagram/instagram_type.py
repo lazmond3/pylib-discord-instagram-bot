@@ -9,6 +9,7 @@ from dataclasses import dataclass
 class InstagramInnerNode:
     url: str
     is_video: bool
+    display_url: str = ""
 
 
 @dataclass
@@ -150,12 +151,14 @@ def get_multiple_mediasV2(oj) -> List[InstagramInnerNode]:
             if node.node.is_video:
                 inst_node = InstagramInnerNode(
                     url=node.node.video_url,
-                    is_video=True
+                    is_video=True,
+                    display_url=node.node.display_url
                 )
             else:
                 inst_node = InstagramInnerNode(
                     url=node.node.display_url,
-                    is_video=False
+                    is_video=False,
+                    display_url=node.node.display_url
                 )
             ans.append(inst_node)
         return ans
@@ -163,7 +166,8 @@ def get_multiple_mediasV2(oj) -> List[InstagramInnerNode]:
         media = oj.graphql.shortcode_media.display_url
         return [InstagramInnerNode(
             url=media,
-            is_video=False
+            is_video=False,
+            display_url=media
         )]
 
 

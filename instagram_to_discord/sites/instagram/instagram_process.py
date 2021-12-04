@@ -139,13 +139,24 @@ async def process_instagram(client: Any, channel, message, content):
         assert nums[0] >= 1
 
         media_url = new_uploaded_media_urls[nums[0] - 1]
-        insta_obj.media = media_url  # TODO: video URL が入るかもしれないので気持ち悪いが...?
 
-        embed = create_instagram_pic_embed(insta_obj, extracted_base_url)
-        await message.channel.send(embed=embed)
+        target_index = nums[0] - 1
+        if medias[target_index].is_video:
+            embed = create_instagram_pic_embed(insta_obj, extracted_base_url)
+            await message.channel.send(embed=embed)
+            await message.channel.send(media_url)
+            if len(nums) == 1:
+                return
+            await send_instagram_images_for_specified_index(
+                new_uploaded_media_urls, nums[1:], message
+            )
 
-        if len(nums) == 1:
-            return
-        await send_instagram_images_for_specified_index(
-            new_uploaded_media_urls, nums[1:], message
-        )
+        else:
+            insta_obj.media = media_url  # TODO: video URL が入るかもしれないので気持ち悪いが...?
+            embed = create_instagram_pic_embed(insta_obj, extracted_base_url)
+            await message.channel.send(embed=embed)
+            if len(nums) == 1:
+                return
+            await send_instagram_images_for_specified_index(
+                new_uploaded_media_urls, nums[1:], message
+            )
