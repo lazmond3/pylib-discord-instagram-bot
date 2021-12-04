@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-from instagram_to_discord.instagram_type import (convert_long_caption,
-                                                 instagran_parse_json_to_obj)
-
-from . import context
-
-instagram_to_discord = context.instagram_to_discord
+from instagram_to_discord.sites.instagram.instagram_type import convert_long_caption, instagram_parse_json_to_obj
 
 
 def get_media() -> str:
@@ -33,38 +28,34 @@ def get_full_name() -> str:
     return "美女navi ☻*"
 
 
-class BasicTestSuite(unittest.TestCase):
-    """Basic test cases."""
-
-    def test_convert_long_caption(self):
-        text = """1234567890-----
+def test_convert_long_caption():
+    text = """1234567890-----
 """
-        long_text = "\n".join(list(map(str, range(100))))
+    long_text = "\n".join(list(map(str, range(100))))
 
-        assert convert_long_caption(text) == text
-        assert convert_long_caption(long_text) == "\n".join(list(map(str, range(10))))
-
-    def test_converter(self):
-        with open("tests/instagram/instagram_sample_img.json") as f:
-            js_str = "".join(f.readlines())
-        insta_obj = instagran_parse_json_to_obj(js_str)
-        assert insta_obj.media == get_media()
-        assert insta_obj.is_video == is_video()
-        assert insta_obj.caption == convert_long_caption(get_caption())
-        assert insta_obj.profile_url == get_profile_url()
-        assert insta_obj.username == get_username()
-        assert insta_obj.full_name == get_full_name()
-        assert insta_obj.video_url is None
-
-    def test_converter_video(self):
-        with open("tests/instagram/instagram_video.json") as f:
-            js_str = "".join(f.readlines())
-        insta_obj = instagran_parse_json_to_obj(js_str)
-        assert (
-            insta_obj.video_url
-            == "https://scontent-sjc3-1.cdninstagram.com/v/t50.2886-16/205064059_2276556202474871_4228301026603728176_n.mp4?_nc_ht=scontent-sjc3-1.cdninstagram.com&_nc_cat=111&_nc_ohc=k8l8DhYtjCMAX9C8LNP&edm=APfKNqwBAAAA&ccb=7-4&oe=60E408DE&oh=3ff999247ea45edd802b746e6f0c6e83&_nc_sid=74f7ba"
-        )
+    assert convert_long_caption(text) == text
+    assert convert_long_caption(long_text) == "\n".join(
+        list(map(str, range(10))))
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_converter():
+    with open("tests/instagram/instagram_sample_img.json") as f:
+        js_str = "".join(f.readlines())
+    insta_obj = instagram_parse_json_to_obj(js_str)
+    assert insta_obj.media == get_media()
+    assert insta_obj.is_video == is_video()
+    assert insta_obj.caption == convert_long_caption(get_caption())
+    assert insta_obj.profile_url == get_profile_url()
+    assert insta_obj.username == get_username()
+    assert insta_obj.full_name == get_full_name()
+    assert insta_obj.video_url is None
+
+
+def test_converter_video():
+    with open("tests/instagram/instagram_video.json") as f:
+        js_str = "".join(f.readlines())
+    insta_obj = instagram_parse_json_to_obj(js_str)
+    assert (
+        insta_obj.video_url
+        == "https://scontent-sjc3-1.cdninstagram.com/v/t50.2886-16/205064059_2276556202474871_4228301026603728176_n.mp4?_nc_ht=scontent-sjc3-1.cdninstagram.com&_nc_cat=111&_nc_ohc=k8l8DhYtjCMAX9C8LNP&edm=APfKNqwBAAAA&ccb=7-4&oe=60E408DE&oh=3ff999247ea45edd802b746e6f0c6e83&_nc_sid=74f7ba"
+    )
