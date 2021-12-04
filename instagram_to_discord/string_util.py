@@ -1,5 +1,6 @@
 import re
 
+
 def sophisticate_string(st):
     st_list = st.strip().split("\n")
     new_lst = []

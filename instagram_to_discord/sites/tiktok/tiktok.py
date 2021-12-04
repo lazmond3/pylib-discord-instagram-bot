@@ -56,7 +56,8 @@ if __name__ == "__main__":
     head_fname = "__out__big__2__"
     print("hello world")
     # url = "https://www.youtube.com/watch?v=XCs7FacjHQY"
-    urls = ["https://vt.tiktok.com/ZSJgGCR9S/", "https://vt.tiktok.com/ZSJgGvR7c/"]
+    urls = ["https://vt.tiktok.com/ZSJgGCR9S/",
+            "https://vt.tiktok.com/ZSJgGvR7c/"]
     ydlmp4 = youtube_dl.YoutubeDL(
         {
             "format": "0",

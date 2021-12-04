@@ -25,10 +25,12 @@ def trimming_video_to_8MB(fname: str) -> str:
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
         )
-        current_duration: int = int(float(result.stdout.decode("utf-8").strip()))
+        current_duration: int = int(
+            float(result.stdout.decode("utf-8").strip()))
         print("current duration: ", current_duration)
 
-        target_duration_f: float = float(FSIZE_TARGET) / fsize * current_duration
+        target_duration_f: float = float(
+            FSIZE_TARGET) / fsize * current_duration
         target_duration: int = int(target_duration_f)
         new_file_name = target_name.split(".")[0] + "-trimmed" + ".mp4"
 

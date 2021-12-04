@@ -48,7 +48,7 @@ def convert_twitter(dic: Dict[str, Any]) -> TwitterImage:
             user_url=user_url,
             user_profile_image_url=user_profile_image_url,
             text=text,
-            link = link
+            link=link
         )
 
     images: List[Dict[str, str]] = dic["extended_entities"]["media"]
@@ -80,5 +80,5 @@ def convert_twitter(dic: Dict[str, Any]) -> TwitterImage:
         user_url=user_url,
         user_profile_image_url=user_profile_image_url,
         text=text,
-        link = link
+        link=link
     )

@@ -1,6 +1,6 @@
+import os
 FSIZE_TARGET = 2 ** 23 - 100
 
-import os
 
 DISCORD_TOKEN = os.getenv("TOKEN")
 TW_CONSUMER_KEY = os.getenv("CONSUMER_KEY")

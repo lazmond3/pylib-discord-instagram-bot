@@ -60,7 +60,8 @@ def create_youtube_video_embed(
     description += "\n" + f"時間▶️: {minutes_text}"
     if "like_count" in info_dict:
         description += (
-            "\n" + f'👍: {info_dict["like_count"]} 👎: {info_dict["dislike_count"]}'
+            "\n" +
+            f'👍: {info_dict["like_count"]} 👎: {info_dict["dislike_count"]}'
         )
     embed = discord.Embed(
         title=info_dict["title"],

@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
+
 def get_ask_html_text_from_url(url: str):
     """url -> str text"""
     data = requests.get(url)
@@ -13,11 +14,11 @@ def process_question_and_answer_from_text(text: str):
     q = soup.select_one("title")
     q_text = q.text
     q_text = q_text[:q_text.find(" | ask.fm")]
-    
+
     # こちらだと尻切れだった
     # ans =soup.select_one("meta[name='description']")["content"]
 
-    ans =soup.select_one("div.streamItem_content").text
+    ans = soup.select_one("div.streamItem_content").text
     return q_text, ans
 
 
@@ -33,7 +34,7 @@ if __name__ == "__main__":
     text = ""
     with open("dump_ask/dump_ask2.txt") as f:
         text = f.read()
-    
+
     soup = BeautifulSoup(text, "html.parser")
 
     q = soup.select_one("title")
@@ -43,4 +44,3 @@ if __name__ == "__main__":
     r = soup.select_one("div.streamItem_content")
     print(f"r: ", r.text)
     print(f"r: ", soup.select_one("meta[name='description']")["content"])
-    
