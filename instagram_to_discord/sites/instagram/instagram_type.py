@@ -20,11 +20,13 @@ class InstagramData:
     """
     media: str
     is_video: bool
+    is_video_for_first: bool
     caption: str
     profile_url: str
     username: str
     full_name: str
     video_url: str
+    media_urls: List[str]
 
     def __str__(self):
         n_caption = " ".join(self.caption[:100].split("\n"))
@@ -43,6 +45,8 @@ class InstagramData:
     full_name: {self.full_name}
 ==================================================
     video_url: {self.video_url}
+==================================================
+    media_urls: {", ".join(self.media_urls)}
 ==================================================
         """
 
@@ -64,6 +68,8 @@ class InstagramData:
         self.username = username  # ユーザネーム(アルファベット)
         self.full_name = full_name  # 表示名
         self.video_url = video_url
+        self.media_urls = []
+        self.is_video_for_first = is_video
 
 
 def convert_long_caption(caption: str) -> str:
