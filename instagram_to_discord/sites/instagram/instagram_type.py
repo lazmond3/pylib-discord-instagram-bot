@@ -2,8 +2,10 @@ import json
 from typing import List
 
 from dict2obj import Dict2Obj
+from dataclasses import dataclass
 
 
+@dataclass
 class InstagramData:
     """[summary]
 
@@ -16,6 +18,13 @@ class InstagramData:
     caption: :class:`str`
         The description by the author.
     """
+    media: str
+    is_video: bool
+    caption: str
+    profile_url: str
+    username: str
+    full_name: str
+    video_url: str
 
     def __str__(self):
         n_caption = " ".join(self.caption[:100].split("\n"))
