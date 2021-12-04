@@ -1,3 +1,5 @@
+import discord
+from instagram_to_discord.sites.instagram.instagram_type import InstagramInnerNode
 from ...const_value import IS_DEBUG
 from typing import List
 from logging import getLogger, StreamHandler, INFO
@@ -12,19 +14,24 @@ logger.propagate = False
 
 
 async def send_instagram_images_from_cache_for_specified_index(
-    skip_one: bool, image_urls: List[str], nums: List[int], message
+    skip_one: bool, medias: List[InstagramInnerNode], nums: List[int], message
 ):
     for n in nums:
         idx = n - 1
         assert idx >= 0
-        if len(image_urls) < n:
+        if len(medias) < n:
             continue
         if skip_one and n == 1:
             continue
         if IS_DEBUG:
-            logger.debug(f"send_twitter_image: url: {image_urls[idx]}")
-        embed = create_instagram_embed_image(image_urls[idx])
-        await message.channel.send(embed=embed)
+            logger.debug(f"send_twitter_image: url: {medias[idx]}")
+        m = medias[idx]
+        if m.is_video:
+            # TODO: FIX
+            await message.channel.send(file=discord.File(m.url))
+        else:
+            embed = create_instagram_embed_image(medias[idx].url)
+            await message.channel.send(embed=embed)
 
 
 def get_instagram_id_from_url(instagram_url: str):

@@ -126,15 +126,20 @@ def convert_to_instagram_type(oj) -> InstagramData:
 
 
 def get_multiple_medias(oj) -> List[str]:
-    ans = []
-    if hasattr(oj.graphql.shortcode_media, "edge_sidecar_to_children"):
-        for node in oj.graphql.shortcode_media.edge_sidecar_to_children.edges:
-            display_url = node.node.display_url
-            ans.append(display_url)
-        return ans
-    else:
-        media = oj.graphql.shortcode_media.display_url
-        return [media]
+    medias = get_multiple_mediasV2(oj)
+    ans_list = []
+    for m in medias:
+        ans_list.append(m.url)
+    return ans_list
+    # ans = []
+    # if hasattr(oj.graphql.shortcode_media, "edge_sidecar_to_children"):
+    #     for node in oj.graphql.shortcode_media.edge_sidecar_to_children.edges:
+    #         display_url = node.node.display_url
+    #         ans.append(display_url)
+    #     return ans
+    # else:
+    #     media = oj.graphql.shortcode_media.display_url
+    #     return [media]
 
 
 def get_multiple_mediasV2(oj) -> List[InstagramInnerNode]:
@@ -166,6 +171,12 @@ def get_multiple_medias_from_str(str_arg) -> List[str]:
     dic_ = json.loads(str_arg)
     oj = Dict2Obj(dic_)
     return get_multiple_medias(oj)
+
+
+def get_multiple_mediasV2_from_str(str_arg) -> List[InstagramInnerNode]:
+    dic_ = json.loads(str_arg)
+    oj = Dict2Obj(dic_)
+    return get_multiple_mediasV2(oj)
 
 
 def convert_json_str_to_obj(str_):

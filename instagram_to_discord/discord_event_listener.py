@@ -2,7 +2,7 @@ from .const_value import IS_DEBUG, DISCORD_TOKEN
 from .sites.twitter.twitter_process import process_twitter
 from .sites.twitter.twitter import send_twitter_images_from_cache_for_specified_index, twitter_line_to_image_urls
 from .sites.instagram.instagram_process import process_instagram
-from .sites.instagram.instagram_type import get_multiple_medias_from_str
+from .sites.instagram.instagram_type import get_multiple_medias_from_str, get_multiple_mediasV2_from_str
 from .sites.youtube.youtube_handler import handle_youtube_main
 from .sites.tiktok.tiktok_handler import handle_tiktok_main
 from .cookie_requests import requests_get_cookie
@@ -104,13 +104,23 @@ class DiscordMessageListener(discord.Client):
                         filter(lambda x: is_int(x), content.split(",")),
                     )
                 )
+                nums = sorted(nums)
+
                 text = requests_get_cookie(
                     url=self.last_url_instagram[channel])
-                image_urls = get_multiple_medias_from_str(text)
+                # image_urls = get_multiple_medias_from_str(text)
+                medias = get_multiple_mediasV2_from_str(text)
 
-                # 動画のサムネイル送信
+                # for n in nums:
+                #     n -= 1
+                #     me = medias[n]
+                #     print(f"me url: {me.url}")
+                #     if me.is_video:
+                #         await message.channel.send(file=discord.File(me.url))
+                #     else:
+
                 await send_instagram_images_from_cache_for_specified_index(
-                    skip_one=False, image_urls=image_urls, nums=nums, message=message
+                    skip_one=False, medias=medias, nums=nums, message=message
                 )
 
 
