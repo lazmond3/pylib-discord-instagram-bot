@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# from .context import use_hello
-import unittest
-
-# from . import context
-
-# instagram_to_discord = context.instagram_to_discord
 from instagram_to_discord.sites.instagram import converter_instagram_url
 
 
