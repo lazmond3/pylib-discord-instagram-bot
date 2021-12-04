@@ -35,7 +35,8 @@ def convert_twitter(dic: Dict[str, Any]) -> TwitterImage:
     image_urls: List[str] = []
     link = ""
     # link があれば入れる
-    if "entities" in dic and "urls" in dic["entities"]:
+    if "entities" in dic and "urls" in dic["entities"] \
+            and len(dic["entities"]["urls"]) >= 1:
         link = dic["entities"]["urls"][0]["expanded_url"]
 
     if not "extended_entities" in dic:
