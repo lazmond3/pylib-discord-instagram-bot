@@ -46,7 +46,7 @@ def test_converter_instagram_画像複数枚():
 
 # TODO 未対応
 # def test_converter_instagram_動画複数():
-#     with open("tests/instagram/instagram_multiple_image_and_video_娘はやらん.json") as f:
+#     with open("tests/instagram/instagram_multiple_image_and_video_佐々木希.json") as f:
 #         js_str = "".join(f.readlines())
 #     insta_obj = instagram_parse_json_to_obj(js_str)
 #     assert insta_obj.media == get_media()

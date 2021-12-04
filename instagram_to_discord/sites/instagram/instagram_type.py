@@ -6,6 +6,12 @@ from dataclasses import dataclass
 
 
 @dataclass
+class InstagramInnerNode:
+    url: str
+    is_video: bool
+
+
+@dataclass
 class InstagramData:
     """[summary]
 
@@ -26,7 +32,7 @@ class InstagramData:
     username: str
     full_name: str
     video_url: str
-    media_urls: List[str]
+    medias: List[InstagramInnerNode]
 
     def __str__(self):
         n_caption = " ".join(self.caption[:100].split("\n"))
@@ -46,12 +52,12 @@ class InstagramData:
 ==================================================
     video_url: {self.video_url}
 ==================================================
-    media_urls: {", ".join(self.media_urls)}
+    media_urls: {", ".join(map(lambda x: x.url, self.medias))}
 ==================================================
         """
 
     def __init__(
-        self, media, is_video, caption, profile_url, username, full_name, video_url
+        self, media, is_video, caption, profile_url, username, full_name, video_url, medias
     ):
         """init
         media: 写真投稿に対する メイン画像 url
@@ -63,13 +69,13 @@ class InstagramData:
         """
         self.media = media  # 写真投稿に対する メイン画像 url
         self.is_video = is_video  # ビデオかどうか
+        self.is_video_for_first = is_video  # rename した要素を追加した。
         self.caption = caption  # キャプション(投稿時のメッセージ)
         self.profile_url = profile_url  # プロフィール画像のurl
         self.username = username  # ユーザネーム(アルファベット)
         self.full_name = full_name  # 表示名
         self.video_url = video_url
-        self.media_urls = []
-        self.is_video_for_first = is_video
+        self.medias = medias
 
 
 def convert_long_caption(caption: str) -> str:
@@ -124,6 +130,31 @@ def get_multiple_medias(oj) -> List[str]:
         return [media]
 
 
+def get_multiple_mediasV2(oj) -> List[InstagramInnerNode]:
+    """oj から それぞれのnodeが動画かどうか判定する"""
+    ans = []
+    if hasattr(oj.graphql.shortcode_media, "edge_sidecar_to_children"):
+        for node in oj.graphql.shortcode_media.edge_sidecar_to_children.edges:
+            if node.node.is_video:
+                inst_node = InstagramInnerNode(
+                    url=node.node.video_url,
+                    is_video=True
+                )
+            else:
+                inst_node = InstagramInnerNode(
+                    url=node.node.display_url,
+                    is_video=False
+                )
+            ans.append(inst_node)
+        return ans
+    else:
+        media = oj.graphql.shortcode_media.display_url
+        return [InstagramInnerNode(
+            url=media,
+            is_video=False
+        )]
+
+
 def get_multiple_medias_from_str(str_arg) -> List[str]:
     dic_ = json.loads(str_arg)
     oj = Dict2Obj(dic_)
@@ -144,17 +175,57 @@ def instagram_parse_json_to_obj(str):
     return convert_to_instagram_type(oj)
 
 
+def convert_to_instagram_type2(oj) -> InstagramData:
+    media = oj.graphql.shortcode_media.display_url
+    if len(oj.graphql.shortcode_media.edge_media_to_caption.edges) == 0:
+        caption = ""
+    else:
+        caption = oj.graphql.shortcode_media.edge_media_to_caption.edges[0].node.text
+
+    caption = convert_long_caption(caption)
+    is_video = oj.graphql.shortcode_media.is_video
+    profile_url = oj.graphql.shortcode_media.owner.profile_pic_url
+    username = oj.graphql.shortcode_media.owner.username
+    full_name = oj.graphql.shortcode_media.owner.full_name
+
+    # 新規追加
+    medias: List[InstagramInnerNode] = get_multiple_mediasV2(oj)
+
+    if is_video:
+        video_url = oj.graphql.shortcode_media.video_url
+    else:
+        video_url = None
+    return InstagramData(
+        media=media,
+        is_video=is_video,
+        caption=caption,
+        profile_url=profile_url,
+        username=username,
+        full_name=full_name,
+        video_url=video_url,
+        medias=medias
+    )
+
+
 if __name__ == "__main__":
-    import json
-
-    with open("yoshioka.json") as f:
+    with open("tests/instagram/instagram_multiple_image_and_video_佐々木希.json") as f:
         dic_ = json.load(f)
-    with open("instagram_multi_img.json") as f:
-        str_ = f.read()
+    # with open("instagram_multi_img.json") as f:
+    #     str_ = f.read()
     oj = Dict2Obj(dic_)
+    # print(f"oj: {oj}")
+    inObj = convert_to_instagram_type2(oj)
+    print(f"inObj: {inObj}")
+    # import json
 
-    for i in get_multiple_medias(oj):
-        print(i)
-    # for i in get_multiple_medias_from_str(str_):
+    # with open("yoshioka.json") as f:
+    #     dic_ = json.load(f)
+    # with open("instagram_multi_img.json") as f:
+    #     str_ = f.read()
+    # oj = Dict2Obj(dic_)
+
+    # for i in get_multiple_medias(oj):
     #     print(i)
-    # print(get_multiple_medias(oj))
+    # # for i in get_multiple_medias_from_str(str_):
+    # #     print(i)
+    # # print(get_multiple_medias(oj))
