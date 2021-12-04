@@ -36,6 +36,12 @@ class InstagramData:
 
     def __str__(self):
         n_caption = " ".join(self.caption[:100].split("\n"))
+        newline_tab = "\n\t"
+        media_lines = ""
+        for i, m in enumerate(self.medias):
+            media_lines += f"[{i+1:02d}] {m.url}"
+            if i != len(self.medias)-1:
+                media_lines += newline_tab
         return f"""
 ==================================================
     media: {self.media}
@@ -52,9 +58,9 @@ class InstagramData:
 ==================================================
     video_url: {self.video_url}
 ==================================================
-    media_urls: {", ".join(map(lambda x: x.url, self.medias))}
+    media_urls: {newline_tab}{media_lines}
 ==================================================
-        """
+    """
 
     def __init__(
         self, media, is_video, caption, profile_url, username, full_name, video_url, medias
@@ -96,13 +102,13 @@ def convert_to_instagram_type(oj) -> InstagramData:
 
     caption = convert_long_caption(caption)
     is_video = oj.graphql.shortcode_media.is_video
-    # TODO: 途中だけvideo の場合
-    # shortcode_media.edge_sidecar_to_children.edges
-    # [0].node.video_url が入る.
-
     profile_url = oj.graphql.shortcode_media.owner.profile_pic_url
     username = oj.graphql.shortcode_media.owner.username
     full_name = oj.graphql.shortcode_media.owner.full_name
+
+    # 新規追加
+    medias: List[InstagramInnerNode] = get_multiple_mediasV2(oj)
+
     if is_video:
         video_url = oj.graphql.shortcode_media.video_url
     else:
@@ -115,6 +121,7 @@ def convert_to_instagram_type(oj) -> InstagramData:
         username=username,
         full_name=full_name,
         video_url=video_url,
+        medias=medias
     )
 
 
@@ -175,38 +182,6 @@ def instagram_parse_json_to_obj(str):
     return convert_to_instagram_type(oj)
 
 
-def convert_to_instagram_type2(oj) -> InstagramData:
-    media = oj.graphql.shortcode_media.display_url
-    if len(oj.graphql.shortcode_media.edge_media_to_caption.edges) == 0:
-        caption = ""
-    else:
-        caption = oj.graphql.shortcode_media.edge_media_to_caption.edges[0].node.text
-
-    caption = convert_long_caption(caption)
-    is_video = oj.graphql.shortcode_media.is_video
-    profile_url = oj.graphql.shortcode_media.owner.profile_pic_url
-    username = oj.graphql.shortcode_media.owner.username
-    full_name = oj.graphql.shortcode_media.owner.full_name
-
-    # 新規追加
-    medias: List[InstagramInnerNode] = get_multiple_mediasV2(oj)
-
-    if is_video:
-        video_url = oj.graphql.shortcode_media.video_url
-    else:
-        video_url = None
-    return InstagramData(
-        media=media,
-        is_video=is_video,
-        caption=caption,
-        profile_url=profile_url,
-        username=username,
-        full_name=full_name,
-        video_url=video_url,
-        medias=medias
-    )
-
-
 if __name__ == "__main__":
     with open("tests/instagram/instagram_multiple_image_and_video_佐々木希.json") as f:
         dic_ = json.load(f)
@@ -214,7 +189,7 @@ if __name__ == "__main__":
     #     str_ = f.read()
     oj = Dict2Obj(dic_)
     # print(f"oj: {oj}")
-    inObj = convert_to_instagram_type2(oj)
+    inObj = convert_to_instagram_type(oj)
     print(f"inObj: {inObj}")
     # import json
 
