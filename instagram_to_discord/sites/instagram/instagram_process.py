@@ -1,3 +1,4 @@
+from instagram_to_discord.util2.types import DiscordMemoClient
 from ...video import trimming_video_to_8MB
 from .instagram_sender import get_instagram_id_from_url, send_instagram_images_for_specified_index
 from .instagram_type import (get_multiple_medias_from_str, get_multiple_mediasV2_from_str,
@@ -28,7 +29,7 @@ if IS_DEBUG:
     logger.setLevel(DEBUG)
 
 
-async def process_instagram(client: Any, channel, message, content):
+async def process_instagram(client: DiscordMemoClient, channel, message, content):
     logger.debug("[log] channel name: ", message.channel.name)
     extracted_base_url = instagram_extract_from_content(content)
     if not extracted_base_url:
