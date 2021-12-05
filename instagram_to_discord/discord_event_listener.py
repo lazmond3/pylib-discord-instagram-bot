@@ -28,7 +28,7 @@ def is_int(s):
 
 
 class DiscordMessageListener(discord.Client):
-    last_url_twitter: Dict[str, str] = {}
+    last_url_twitter: Dict[discord.TextChannel, str] = {}
     last_url_instagram: Dict[str, str] = {}
     is_twitter_last = True
 
@@ -44,8 +44,9 @@ class DiscordMessageListener(discord.Client):
                 message
             )
         )
-        content = message.content
-        channel = message.channel
+        content: str = message.content
+        channel: discord.TextChannel = message.channel
+
         if IS_DEBUG and "debug" not in channel.name:
             return
         if not IS_DEBUG and "debug" in channel.name:
@@ -71,7 +72,6 @@ class DiscordMessageListener(discord.Client):
         elif "https://www.instagram.com/" in content and (
             "/p/" in content or "/reel/" in content
         ):  # TODO: stories などの対応を加える。
-            # TODO: 複数動画 などの対応を加える。
             # ここで instagram_id を出した方がいい, a_url も
             await process_instagram(self, channel, message, content)
 
@@ -81,8 +81,9 @@ class DiscordMessageListener(discord.Client):
         # 数字のみ: channel に保存されたインデックスの画像を投稿する。
         elif len(list(filter(lambda x: is_int(x), content.split(",")))) > 0 and (
             channel in self.last_url_twitter or channel in self.last_url_instagram
-        ):  # last_url_twitter が存在する。
+        ):
 
+            # last_url_twitter が存在する。
             if self.is_twitter_last:
                 nums = list(
                     map(
@@ -96,8 +97,8 @@ class DiscordMessageListener(discord.Client):
                     skip_one=True, image_urls=image_urls, nums=nums, message=message
                 )  # 動画のサムネイル送信
 
-            else:  # instagram
-                # cache した 画像データ から、こちらの images を取得するようにする。
+            else:
+                # TODO: cache した 画像データ から、こちらの images を取得するようにする。
                 nums = list(
                     map(
                         lambda x: int(x),
@@ -108,16 +109,7 @@ class DiscordMessageListener(discord.Client):
 
                 text = requests_get_cookie(
                     url=self.last_url_instagram[channel])
-                # image_urls = get_multiple_medias_from_str(text)
                 medias = get_multiple_mediasV2_from_str(text)
-
-                # for n in nums:
-                #     n -= 1
-                #     me = medias[n]
-                #     print(f"me url: {me.url}")
-                #     if me.is_video:
-                #         await message.channel.send(file=discord.File(me.url))
-                #     else:
 
                 await send_instagram_images_from_cache_for_specified_index(
                     skip_one=False, medias=medias, nums=nums, message=message

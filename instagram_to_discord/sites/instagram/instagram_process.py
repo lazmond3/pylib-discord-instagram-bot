@@ -29,8 +29,15 @@ if IS_DEBUG:
     logger.setLevel(DEBUG)
 
 
-async def process_instagram(client: DiscordMemoClient, channel, message, content):
-    logger.debug("[log] channel name: ", message.channel.name)
+async def process_instagram(
+        client: DiscordMemoClient,
+        channel: discord.TextChannel,
+        message: discord.Message,
+        content: str
+):
+    channel: discord.TextChannel = message.channel
+    logger.debug("[log] channel name: ", channel.name)
+
     extracted_base_url = instagram_extract_from_content(content)
     if not extracted_base_url:
         logger.error("[error] failed to parse base_url for : ", content)
@@ -45,6 +52,7 @@ async def process_instagram(client: DiscordMemoClient, channel, message, content
         instagram_id = a_url.split("/p/")[1].split("/")[0]
     elif "/reel/" in a_url:
         instagram_id = a_url.split("/reel/")[1].split("/")[0]
+
     # TODO: stories に対応できるようにする。
     js = json.loads(text)
     with open(f"dump_json_instagram/dump_instagram_{instagram_id}.json", "w") as f:
