@@ -162,7 +162,9 @@ async def process_instagram(
             )
 
         else:
-            insta_obj.media = media_url  # TODO: video URL が入るかもしれないので気持ち悪いが...?
+            # TODO: video URL が入るかもしれないので気持ち悪いが...?
+            # TODO: ここに media URL を代入してるのがめちゃくちゃ気持ち悪い！ (オブジェクト指向すぎて)
+            insta_obj.media = media_url
             embed = create_instagram_pic_embed(insta_obj, extracted_base_url)
             await message.channel.send(embed=embed)
             if len(nums) == 1:
