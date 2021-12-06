@@ -80,7 +80,11 @@ async def test_process_instagram(mocker: pytest_mock.MockerFixture):
         icon_url="https://scontent-sjc3-1.cdninstagram.com/v/t51.2885-19/s150x150/24175048_1706810412710767_1281070886199230464_n.jpg?_nc_ht=scontent-sjc3-1.cdninstagram.com&_nc_cat=1&_nc_ohc=OzlpjF-F5_MAX_zYlhx&edm=AABBvjUBAAAA&ccb=7-4&oh=6954b174179012577379e144883a0456&oe=61B40F0F&_nc_sid=83d603"
     )
 
+    # 何もしないが、あとで embed で呼ばれたか確認する。
     mocker.patch.object(discord.abc.Messageable, "send")
+    # 何もしないようにする (dynamo put)
+    mocker.patch.object(instagram_to_discord.sites.instagram.instagram_process, "add_instagram_json_to_dynamo_instagram_json")  # nopep8
+
     mocker.patch.object(instagram_to_discord.sites.instagram.instagram_process, "requests_get_cookie", return_value=text)  # nopep8
     mocker.patch.object(instagram_to_discord.sites.instagram.instagram_process, "save_image")  # nopep8
     mocker.patch.object(instagram_to_discord.sites.instagram.instagram_process, "download_file")  # nopep8
