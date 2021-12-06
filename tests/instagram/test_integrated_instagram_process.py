@@ -1,3 +1,4 @@
+from instagram_to_discord import mkdir_notexists
 import instagram_to_discord.cookie_requests
 from instagram_to_discord.sites.instagram.converter_instagram_url import instagram_make_author_page
 from instagram_to_discord.string_util import sophisticate_string
@@ -14,6 +15,7 @@ import pytest
 
 @pytest.mark.asyncio
 async def test_process_instagram(mocker: pytest_mock.MockerFixture):
+    mkdir_notexists(["dump_json_instagram"])
     client = DiscordMemoClient(
         last_url_instagram=dict(),
         last_url_twitter=dict(),
