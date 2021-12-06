@@ -64,6 +64,7 @@ async def test_process_instagram(mocker: pytest_mock.MockerFixture):
         text = f.read()
     mock_image_url = "dummy_url"
 
+    # 一応作ってるけど mock です。
     embed = discord.Embed(
         title="佐々木希",
         description=sophisticate_string("#VOCE 2022年1月号 \nオフショット💄💕"),
