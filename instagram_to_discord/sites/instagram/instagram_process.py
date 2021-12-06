@@ -1,3 +1,4 @@
+import pickle
 from instagram_to_discord.util2.types import DiscordMemoClient
 from ...video import trimming_video_to_8MB
 from .instagram_sender import get_instagram_id_from_url, send_instagram_images_for_specified_index
@@ -31,7 +32,6 @@ if IS_DEBUG:
 
 async def process_instagram(
         client: DiscordMemoClient,
-        channel: discord.TextChannel,
         message: discord.Message,
         content: str
 ):
