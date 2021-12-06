@@ -44,3 +44,13 @@ def test_extract_url():
     result = converter_instagram_url.extract_url(
         input_content)
     assert answer == result
+
+
+def test_instagram_make_base_url():
+    content = """https://www.instagram.com/leberitokyo/p/CXGx27OPixc/?utm_medium=share_sheet なし。"""
+    result = converter_instagram_url.instagram_extract_from_content(content)
+    print(result)
+
+
+if __name__ == "__main__":
+    test_instagram_make_base_url()
