@@ -88,6 +88,7 @@ async def process_instagram(
         )
         image_data = download_file(me.url)
         # ファイルダウンロード
+        # TODO: コメント: 関数名もimageだけではなくvideoも可能ということを明示する
         save_image(fname_media, image_data)
         path = upload_image_file(fname_media, instagram_id, idx)
 

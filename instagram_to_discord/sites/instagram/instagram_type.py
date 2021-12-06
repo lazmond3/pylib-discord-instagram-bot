@@ -155,19 +155,30 @@ def get_multiple_mediasV2(oj) -> List[InstagramInnerNode]:
                     display_url=node.node.display_url
                 )
             else:
+                display_resources = node.node.display_resources
+                max_resolution = sorted(
+                    display_resources, key=lambda x: -x.config_height)[0]
                 inst_node = InstagramInnerNode(
-                    url=node.node.display_url,
+                    # url=node.node.display_url,
+                    # display_url=node.node.display_url
+                    url=max_resolution.src,
+                    display_url=max_resolution.src,
                     is_video=False,
-                    display_url=node.node.display_url
                 )
             ans.append(inst_node)
         return ans
     else:
         media = oj.graphql.shortcode_media.display_url
+        display_resources = oj.graphql.shortcode_media.display_resources
+        max_resolution = sorted(
+            display_resources, key=lambda x: -x.config_height)[0]
+
         return [InstagramInnerNode(
-            url=media,
             is_video=False,
-            display_url=media
+            url=max_resolution.src,
+            display_url=max_resolution.src
+            # url=media,
+            # display_url=media
         )]
 
 
