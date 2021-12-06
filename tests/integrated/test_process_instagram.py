@@ -60,7 +60,7 @@ async def test_process_instagram(mocker: pytest_mock.MockerFixture):
     content = "https://www.instagram.com/p/CW4YfYIvgHD/ 5"
 
     text = ""
-    with open("tests/instagram/dump_instagram_CW4YfYIvgHD.json") as f:
+    with open("tests/data/dump_instagram_CW4YfYIvgHD.json") as f:
         text = f.read()
     mock_image_url = "dummy_url"
 

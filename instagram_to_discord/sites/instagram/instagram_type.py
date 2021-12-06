@@ -209,7 +209,7 @@ def instagram_parse_json_to_obj(str):
 
 
 if __name__ == "__main__":
-    with open("tests/instagram/instagram_multiple_image_and_video_佐々木希.json") as f:
+    with open("tests/data/instagram_multiple_image_and_video_佐々木希.json") as f:
         dic_ = json.load(f)
     # with open("instagram_multi_img.json") as f:
     #     str_ = f.read()

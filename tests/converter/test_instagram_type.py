@@ -13,7 +13,7 @@ def test_convert_long_caption():
 
 
 def test_converter_instagram_画像1枚のみ():
-    with open("tests/instagram/instagram_single_image.json") as f:
+    with open("tests/data/instagram_single_image.json") as f:
         js_str = "".join(f.readlines())
     insta_obj = instagram_parse_json_to_obj(js_str)
     assert insta_obj.media == get_media()
@@ -26,7 +26,7 @@ def test_converter_instagram_画像1枚のみ():
 
 
 def test_converter_instagram_画像複数枚():
-    with open("tests/instagram/instagram_multiple_image.json") as f:
+    with open("tests/data/instagram_multiple_image.json") as f:
         js_str = "".join(f.readlines())
     insta_obj = instagram_parse_json_to_obj(js_str)
     print(f"insta_obj: {insta_obj}")
@@ -46,7 +46,7 @@ def test_converter_instagram_画像複数枚():
 
 
 def test_converter_instagram_動画複数():
-    with open("tests/instagram/instagram_multiple_image_and_video_佐々木希.json") as f:
+    with open("tests/data/instagram_multiple_image_and_video_佐々木希.json") as f:
         js_str = "".join(f.readlines())
     insta_obj = instagram_parse_json_to_obj(js_str)
     assert insta_obj.media == "https://scontent-sjc3-1.cdninstagram.com/v/t51.2885-15/e35/p1080x1080/262625889_622862275427031_6553776972827608590_n.jpg?_nc_ht=scontent-sjc3-1.cdninstagram.com&_nc_cat=1&_nc_ohc=wKQ1UkHHWSEAX-ftqTs&edm=AABBvjUBAAAA&ccb=7-4&oh=cc8273a64829f48fd3eb74862860d224&oe=61B28AC3&_nc_sid=83d603"
@@ -74,7 +74,7 @@ def test_converter_instagram_動画複数():
 
 
 def test_converter_instagram_動画メイン1つ():
-    with open("tests/instagram/instagram_single_video.json") as f:
+    with open("tests/data/instagram_single_video.json") as f:
         js_str = "".join(f.readlines())
     insta_obj = instagram_parse_json_to_obj(js_str)
     assert (
