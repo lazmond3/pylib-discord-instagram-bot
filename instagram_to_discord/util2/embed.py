@@ -24,7 +24,7 @@ def create_ask_embed(
     return embed
 
 
-def create_instagram_pic_embed(obj: InstagramData, base_url: str):
+def create_instagram_pic_embed(obj: InstagramData, base_url: str) -> discord.Embed:
     description = sophisticate_string(obj.caption)
     embed = discord.Embed(
         title=obj.full_name,
