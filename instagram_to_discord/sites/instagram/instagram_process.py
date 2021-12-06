@@ -53,7 +53,6 @@ async def process_instagram(
     elif "/reel/" in a_url:
         instagram_id = a_url.split("/reel/")[1].split("/")[0]
 
-    # TODO: stories に対応できるようにする。
     js = json.loads(text)
     with open(f"dump_json_instagram/dump_instagram_{instagram_id}.json", "w") as f:
         json.dump(js, f, ensure_ascii=False)
@@ -65,7 +64,6 @@ async def process_instagram(
         a_url, instagram_id, text_decoded)
 
     insta_obj = instagram_parse_json_to_obj(text)
-    images = get_multiple_medias_from_str(text)
     medias = get_multiple_mediasV2_from_str(text)
 
     instagram_id = get_instagram_id_from_url(a_url)
@@ -95,7 +93,6 @@ async def process_instagram(
         new_uploaded_media_urls.append(path)
         os.remove(fname_media)
 
-    # TODO: 1枚だけvideo, 他は画像のケースに対応できるようにする。
     if insta_obj.is_video:
         video_url = insta_obj.video_url
 
