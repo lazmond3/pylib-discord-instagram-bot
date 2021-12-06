@@ -129,7 +129,7 @@ async def process_instagram(
                     "[instagram video upload] file send error!  : ", e)
         if not IS_DEBUG:
             os.remove(fname_video)
-    else:
+    else:  # *** 画像の場合 ***
         insta_obj = instagram_parse_json_to_obj(text)
 
         msg_list = content.split()
