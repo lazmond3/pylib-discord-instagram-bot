@@ -1,26 +1,24 @@
-from logging import LogRecord, getLogger,StreamHandler,DEBUG,INFO
-logger = getLogger(__name__)    #以降、このファイルでログが出たということがはっきりする。
+from ...const_value import TW_CONSUMER_KEY, TW_CONSUMER_SECRET
+from ...boto3 import add_json_to_dynamo_tweet_json
+from .twitter_image import TwitterImage, convert_twitter
+from .base64_util import base64_encode_str
+from ...const_value import IS_DEBUG
+import requests
+from typing import Any, Dict, Optional, cast
+import os
+import json
+from logging import LogRecord, getLogger, StreamHandler, DEBUG, INFO
+logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()
 handler.setLevel(DEBUG)
 logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-import json
-import os
-from typing import Any, Dict, Optional, cast
-
-import requests
-from ...const_value import IS_DEBUG
 
 if not IS_DEBUG:
     logger.setLevel(INFO)
 
-from .base64_util import base64_encode_str
-from .twitter_image import TwitterImage, convert_twitter
-from ...boto3 import add_json_to_dynamo_tweet_json
-
-from ...const_value import TW_CONSUMER_KEY, TW_CONSUMER_SECRET
 
 # const
 TOKEN_FILENAME: str = ".token.json"
@@ -68,6 +66,7 @@ def text_to_dict(str_: str) -> Dict[str, Any]:
     js = json.loads(str_)
     return cast(Dict[str, Any], js)
 
+
 def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
     logger.debug(f"[get_one_tweet] tweet_id: {tweet_id}")
     if not os.path.exists(TOKEN_FILENAME):
@@ -85,7 +84,8 @@ def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
         with open(f"dump_json/dump_one_{tweet_id}.json", 'r') as f:
             js = json.load(f)
         tw = convert_twitter(js)
-        logger.debug(f"[cached] video: {tw.video_url} images: {' '.join(tw.image_urls)}")
+        logger.debug(
+            f"[cached] video: {tw.video_url} images: {' '.join(tw.image_urls)}")
         return tw
 
     try:
@@ -143,9 +143,9 @@ def get_sumatome(tweet_id: str, is_second: bool = False) -> None:
         txt_decoded = f.read()
         add_json_to_dynamo_tweet_json(tweet_id, txt_decoded)
 
-
-    if not js["in_reply_to_status_id_str"]:
-        get_one_tweet(js["in_reply_to_status_id_str"])
+    # TODO: ダウンロードはできるけど、どうしたものか。
+    if js["in_reply_to_status_id_str"]:
+        get_sumatome(js["in_reply_to_status_id_str"])
 
     # キャッシュを利用する.
     # with open(f"dump_one_{tweet_id}.json", 'r') as f:
