@@ -19,6 +19,7 @@ async def test_process_twitter_画像2枚目(mocker: pytest_mock.MockerFixture):
 
     new_urls = ["url1", "url2"]
     mocker.patch("requests.get", return_value=text)
+    mocker.patch.object(instagram_to_discord.sites.twitter.api, "get_auth_wrapper")  # nopep8
     mocker.patch.object(instagram_to_discord.sites.twitter.twitter_process, "create_new_image_urls_with_downloading", return_value=new_urls)  # nopep8
     mocker.patch.object(instagram_to_discord.sites.twitter.twitter_process, "send_twitter_images_from_cache_for_specified_index")  # nopep8
 
