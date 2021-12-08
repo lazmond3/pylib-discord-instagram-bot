@@ -27,6 +27,7 @@ async def process_twitter(
         content: str
 ):
     channel: discord.TextChannel = message.channel
+    print(f"channel : {channel}, mes: {message}")
     client.last_url_twitter[channel] = twitter_extract_tweet_url(content)
     client.is_twitter_last = True
 

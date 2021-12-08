@@ -18,49 +18,8 @@ import pytest
 async def test_process_twitter_画像2枚目(mocker: pytest_mock.MockerFixture):
     mkdir_notexists(["dump_json_twitter"])
 
-    client = DiscordMemoClient(
-        last_url_instagram=dict(),
-        last_url_twitter=dict(),
-        is_twitter_last=False
-    )
-
-    data = dict({
-        "id": 1,
-        "type": ChannelType.text,
-        "name": "name",
-        "position": 0,
-        "attachments": [],
-        "embeds": [],
-        "edited_timestamp": None,
-        "pinned": False,
-        "mention_everyone": False,
-        "tts": None,
-        "content": "not true content: error",
-        "nonce": None,
-        "stickers": []
-    })
-    state = ConnectionState(
-        dispatch=None,
-        handlers=None,
-        hooks=None,
-        syncer=None,
-        http=None,
-        loop=None
-    )
-
-    channel = discord.TextChannel(state=state,
-                                  guild=discord.Guild(
-                                      data=data,
-                                      state=state
-                                  ),
-                                  data=data)
-
-    message = discord.Message(
-        state=state,
-        data=data,
-        channel=channel
-    )
-
+    client = mocker.patch("instagram_to_discord.util2.types.DiscordMemoClient")
+    message = mocker.patch("discord.Message")
     content = "https://twitter.com/yoyo30g/status/1466983215714168837?s=21 2"
 
     with open("tests/data/twitter/dump_twitter_1466983215714168837.json") as f:
