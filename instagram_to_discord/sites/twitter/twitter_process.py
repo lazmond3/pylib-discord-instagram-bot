@@ -48,7 +48,9 @@ async def process_twitter(
     image_urls = tw.image_urls
     # TODO: もしキャッシュが存在していれば(KVS)、ダウンロードしないしアップロードもしない。
     new_image_urls = create_new_image_urls_with_downloading(
-        tweet_id, image_urls)
+        tweet_id,
+        image_urls
+    )
 
     msg_list = content.split()
 
