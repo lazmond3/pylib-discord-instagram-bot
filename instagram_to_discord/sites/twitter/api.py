@@ -178,6 +178,46 @@ def get_tweets_of_user(
     # return tw
 
 
+def get_following_list(
+        screen_name: str,
+        cursor: int = -1,
+        count: int = 200
+):
+    logger.debug(f"[get_following_list] screen_name: {screen_name}")
+    if not os.path.exists(TOKEN_FILENAME):
+        get_auth_wrapper()
+    with open(TOKEN_FILENAME) as f:
+        s = json.load(f)
+        token = s["access_token"]
+
+    url = "https://api.twitter.com/1.1/friends/list.json"
+    params = {"screen_name": screen_name, "cursor": cursor, "count": count}
+
+    headers = {"Authorization": f"Bearer {token}"}
+
+    # キャッシュを利用する.
+    mkdir_notexists([f"dump_following"])
+    fname = f"dump_following/following_{screen_name}_{cursor}.json"
+    if os.path.exists(fname):
+        with open(fname, 'r') as f:
+            js = json.load(f)
+        return
+
+    r = None
+    try:
+        r = requests.get(url, params=params, headers=headers)
+    except Exception:
+        print(f"error exception?? : failed to fetch")
+        return
+
+    tx = r.text
+    print(f"tx: {tx}")
+    js = text_to_dict(tx)
+
+    with open(fname, "w", encoding="utf-8") as f:
+        json.dump(js, f, ensure_ascii=False)
+
+
 def get_sumatome(tweet_id: str, is_second: bool = False) -> None:
     if not os.path.exists(TOKEN_FILENAME):
         get_auth_wrapper()
