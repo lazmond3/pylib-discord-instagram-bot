@@ -76,7 +76,7 @@ class DiscordMessageListener(discord.Client):
             await process_instagram(self, message, content)
 
         elif "https://twitter.com/" in content and "/status/" in content:
-            await process_twitter(self, channel, message, content)
+            await process_twitter(self, message, content)
 
         # 数字のみ: channel に保存されたインデックスの画像を投稿する。
         elif len(list(filter(lambda x: is_int(x), content.split(",")))) > 0 and (

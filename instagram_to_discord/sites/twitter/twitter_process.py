@@ -1,6 +1,7 @@
 
 from instagram_to_discord.sites.ask.ask import get_ask_html_text_from_url, process_question_and_answer_from_text
 from instagram_to_discord.util2.embed import create_ask_embed
+from instagram_to_discord.util2.types import DiscordMemoClient
 from ...const_value import IS_DEBUG
 from .twitter import send_twitter_images_from_cache_for_specified_index
 from ...boto3 import upload_video_file
@@ -20,7 +21,12 @@ logger.addHandler(handler)
 logger.propagate = False
 
 
-async def process_twitter(client: Any, channel, message, content):
+async def process_twitter(
+        client: DiscordMemoClient,
+        message: discord.Message,
+        content: str
+):
+    channel: discord.TextChannel = message.channel
     client.last_url_twitter[channel] = twitter_extract_tweet_url(content)
     client.is_twitter_last = True
 
