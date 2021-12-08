@@ -12,46 +12,15 @@ from discord.enums import ChannelType
 import pytest_mock
 import pytest
 
+from .util import make_settings
+
 
 @pytest.mark.asyncio
 async def test_process_instagram(mocker: pytest_mock.MockerFixture):
     mkdir_notexists(["dump_json_instagram"])
-    client = DiscordMemoClient(
-        last_url_instagram=dict(),
-        last_url_twitter=dict(),
-        is_twitter_last=False
-    )
+    client = mocker.patch("instagram_to_discord.util2.types.DiscordMemoClient")
 
-    data = dict({
-        "id": 1,
-        "type": ChannelType.text,
-        "name": "name",
-        "position": 0,
-        "attachments": [],
-        "embeds": [],
-        "edited_timestamp": None,
-        "pinned": False,
-        "mention_everyone": False,
-        "tts": None,
-        "content": "not true content: error",
-        "nonce": None,
-        "stickers": []
-    })
-    state = ConnectionState(
-        dispatch=None,
-        handlers=None,
-        hooks=None,
-        syncer=None,
-        http=None,
-        loop=None
-    )
-
-    channel = discord.TextChannel(state=state,
-                                  guild=discord.Guild(
-                                      data=data,
-                                      state=state
-                                  ),
-                                  data=data)
+    state, data, channel = make_settings()
 
     message = discord.Message(
         state=state,
