@@ -14,7 +14,7 @@ class Object(object):
 
 @pytest.mark.asyncio
 async def test_process_twitter_画像2枚目(mocker: pytest_mock.MockerFixture):
-    mkdir_notexists(["dump_json_twitter"])
+    mkdir_notexists(["dump_json_twitter", "dump_json"])
 
     client = mocker.patch("instagram_to_discord.util2.types.DiscordMemoClient")
     message = mocker.patch("discord.Message")
