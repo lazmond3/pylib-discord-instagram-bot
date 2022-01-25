@@ -42,5 +42,3 @@ def mkdir_notexists(dirs: List[str]):
         if not os.path.exists(dirpath):
             os.makedirs(dirpath)
             logger.info(f"[mkdir_noexists] mkdir {dirpath}")
-
-

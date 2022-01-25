@@ -1,16 +1,17 @@
-from logging import getLogger,StreamHandler,INFO
-logger = getLogger(__name__)    #以降、このファイルでログが出たということがはっきりする。
+from .const_value import IS_DEBUG, INSTA_MID, INSTA_SESSIONID
+import requests
+from logging import getLogger, StreamHandler, INFO
+logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()
 handler.setLevel(INFO)
 logger.setLevel(INFO)
 logger.addHandler(handler)
 logger.propagate = False
 
-import requests
-from .const_value import IS_DEBUG, INSTA_MID, INSTA_SESSIONID
 
 # クッキーの使い方がわかるファイル
 cookie = dict()
+
 
 def make_cookie(path):
     global cookie
@@ -34,6 +35,7 @@ def make_cookie(path):
 
 cookie["mid"] = INSTA_MID
 cookie["sessionid"] = INSTA_SESSIONID
+
 
 def requests_get_cookie(url, expire=1000):
     data = requests.get(url, cookies=cookie)

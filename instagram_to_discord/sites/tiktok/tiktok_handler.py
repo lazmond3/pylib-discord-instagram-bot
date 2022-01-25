@@ -61,7 +61,8 @@ def create_tiktok_video_embed(info_dict: Dict[str, Any], s3_url: Optional[str] =
         description = ""
     play_count_text = play_count_to_text(info_dict["view_count"])
     uploaded_at_text = uploaded_at_to_text(info_dict["upload_date"])
-    description += "\n".join(info_dict["description"].split("\n")[:5])  # キャプション作りたい
+    # キャプション作りたい
+    description += "\n".join(info_dict["description"].split("\n")[:5])
     description += "\n" + f"投稿日: {uploaded_at_text}"
     description += "\n" + f"再生🔁: {play_count_text}"
     description += "\n" + f"時間▶️: {minutes_text}"

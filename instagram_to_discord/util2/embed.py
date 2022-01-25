@@ -3,8 +3,9 @@ from instagram_to_discord.sites.instagram.converter_instagram_url import instagr
 from instagram_to_discord.sites.instagram.instagram_type import InstagramData
 from instagram_to_discord.string_util import sophisticate_string
 
+
 def create_ask_embed(
-    question: str, 
+    question: str,
     answer: str,
     url: str
 ):
@@ -22,7 +23,8 @@ def create_ask_embed(
     )
     return embed
 
-def create_instagram_pic_embed(obj: InstagramData, base_url: str):
+
+def create_instagram_pic_embed(obj: InstagramData, base_url: str) -> discord.Embed:
     description = sophisticate_string(obj.caption)
     embed = discord.Embed(
         title=obj.full_name,
@@ -38,10 +40,12 @@ def create_instagram_pic_embed(obj: InstagramData, base_url: str):
     )
     return embed
 
+
 def create_instagram_embed_image(image_url: str):
     embed = discord.Embed(color=discord.Color.red())
     embed.set_image(url=image_url)
     return embed
+
 
 def create_instagram_video_embed(obj: InstagramData, base_url: str):
     description = sophisticate_string(obj.caption)
@@ -57,6 +61,7 @@ def create_instagram_video_embed(obj: InstagramData, base_url: str):
         icon_url=obj.profile_url,
     )
     return embed
+
 
 def create_twitter_image_embed(image_url: str):
     embed = discord.Embed(color=discord.Color.blue())

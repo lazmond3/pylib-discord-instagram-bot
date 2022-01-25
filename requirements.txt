@@ -25,3 +25,7 @@ nest_asyncio
 Flask
 mypy
 beautifulsoup4
+pytest
+autopep8
+pytest-mock
+pytest-asyncio
