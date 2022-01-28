@@ -139,7 +139,10 @@ def convert_to_instagram_type_v2(oj) -> InstagramData:
     # else:
     #     caption = oj.graphql.shortcode_media.edge_media_to_caption.edges[0].node.text
 
-    caption = item.caption.text
+    if item.caption:
+        caption = item.caption.text
+    else:
+        caption = ""
     caption = convert_long_caption(caption)
 
     is_video = item.media_type == 2
