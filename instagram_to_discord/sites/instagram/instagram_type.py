@@ -294,6 +294,12 @@ def get_multiple_mediasV2_from_str(str_arg) -> List[InstagramInnerNode]:
     oj = Dict2Obj(dic_)
     return get_multiple_mediasV2(oj)
 
+def get_multiple_medias_v3_from_str(str_arg) -> List[InstagramInnerNode]:
+    dic_ = json.loads(str_arg)
+    oj = Dict2Obj(dic_)
+    is_carousel_media = hasattr(oj.items[0], ("carousel_media"))
+    return get_multiple_medias_v3(is_carousel_media, oj.items[0])
+
 
 def convert_json_str_to_obj(str_):
     dic_ = json.loads(str_)
