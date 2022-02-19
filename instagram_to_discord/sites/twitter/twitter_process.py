@@ -1,6 +1,6 @@
 
 from instagram_to_discord.sites.ask.ask import get_ask_html_text_from_url, process_question_and_answer_from_text
-from instagram_to_discord.util2.embed import create_ask_embed
+from instagram_to_discord.util2.embed import create_ask_embed, create_twitter_description_image
 from instagram_to_discord.util2.types import DiscordMemoClient
 from ...const_value import IS_DEBUG
 from .twitter import send_twitter_images_from_cache_for_specified_index
@@ -75,6 +75,12 @@ async def process_twitter(
             os.remove(fname_video)
 
     elif len(msg_list) > 1:
+
+        if msg_list[1] == "o":
+            embed = create_twitter_description_image(
+                tw, image_url=new_image_urls[0])
+            await message.channel.send(embed=embed)
+
         nums = msg_list[1].split(",")
         try:
             nums = map(lambda x: int(x), nums)
