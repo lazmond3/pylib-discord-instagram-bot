@@ -21,6 +21,23 @@ logger.addHandler(handler)
 logger.propagate = False
 
 
+async def process_twitter_o(
+        message: discord.Message,
+        twitter_url: str
+):
+    tweet_id = twitter_extract_tweet_id(twitter_url)
+    tw = get_twitter_object(tweet_id)
+    image_urls = tw.image_urls
+    new_image_urls = create_new_image_urls_with_downloading(
+        tweet_id,
+        image_urls
+    )
+    embed = create_twitter_description_image(
+        tw, image_url=new_image_urls[0]
+    )
+    await message.channel.send(embed=embed)
+
+
 async def process_twitter(
         client: DiscordMemoClient,
         message: discord.Message,
@@ -46,6 +63,7 @@ async def process_twitter(
         await message.channel.send(embed=embed)
 
     # 画像を取得する
+    # TODO: これ使ってないのでは？
     image_urls = tw.image_urls
     # TODO: もしキャッシュが存在していれば(KVS)、ダウンロードしないしアップロードもしない。
     new_image_urls = create_new_image_urls_with_downloading(
