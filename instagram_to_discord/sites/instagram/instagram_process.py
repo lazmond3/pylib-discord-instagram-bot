@@ -2,8 +2,8 @@ import pickle
 from instagram_to_discord.util2.types import DiscordMemoClient
 from ...video import trimming_video_to_8MB
 from .instagram_sender import get_instagram_id_from_url, send_instagram_images_for_specified_index
-from .instagram_type import (get_multiple_medias_from_str, get_multiple_mediasV2_from_str,
-                             instagram_parse_json_to_obj)
+from .instagram_type import (get_multiple_medias_from_str, get_multiple_medias_v3_from_str, get_multiple_mediasV2_from_str,
+                             instagram_parse_json_to_obj, instagram_parse_json_to_obj_v2)
 from ...cookie_requests import requests_get_cookie
 from .converter_instagram_url import (convert_instagram_url_to_a,
                                       instagram_extract_from_content)
@@ -63,8 +63,8 @@ async def process_instagram(
     add_instagram_json_to_dynamo_instagram_json(
         a_url, instagram_id, text_decoded)
 
-    insta_obj = instagram_parse_json_to_obj(text)
-    medias = get_multiple_mediasV2_from_str(text)
+    insta_obj = instagram_parse_json_to_obj_v2(text)
+    medias = get_multiple_medias_v3_from_str(text)
 
     instagram_id = get_instagram_id_from_url(a_url)
     new_uploaded_media_urls = []
@@ -127,7 +127,7 @@ async def process_instagram(
         if not IS_DEBUG:
             os.remove(fname_video)
     else:  # *** 画像の場合 ***
-        insta_obj = instagram_parse_json_to_obj(text)
+        insta_obj = instagram_parse_json_to_obj_v2(text)
 
         msg_list = content.split()
         nums = []

@@ -2,7 +2,7 @@ from .const_value import IS_DEBUG, DISCORD_TOKEN
 from .sites.twitter.twitter_process import process_twitter
 from .sites.twitter.twitter import send_twitter_images_from_cache_for_specified_index, twitter_line_to_image_urls
 from .sites.instagram.instagram_process import process_instagram
-from .sites.instagram.instagram_type import get_multiple_medias_from_str, get_multiple_mediasV2_from_str
+from .sites.instagram.instagram_type import get_multiple_medias_from_str, get_multiple_medias_v3_from_str, get_multiple_mediasV2_from_str
 from .sites.youtube.youtube_handler import handle_youtube_main
 from .sites.tiktok.tiktok_handler import handle_tiktok_main
 from .cookie_requests import requests_get_cookie
@@ -109,7 +109,7 @@ class DiscordMessageListener(discord.Client):
 
                 text = requests_get_cookie(
                     url=self.last_url_instagram[channel])
-                medias = get_multiple_mediasV2_from_str(text)
+                medias = get_multiple_medias_v3_from_str(text)
 
                 await send_instagram_images_from_cache_for_specified_index(
                     skip_one=False, medias=medias, nums=nums, message=message

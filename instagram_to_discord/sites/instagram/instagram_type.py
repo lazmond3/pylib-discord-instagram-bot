@@ -125,6 +125,58 @@ def convert_to_instagram_type(oj) -> InstagramData:
         medias=medias
     )
 
+def convert_to_instagram_type_v2(oj) -> InstagramData:
+    """
+    1/25 以降の `graphQL` がなくなったバージョン
+    """
+   
+    items = oj.items
+    item = items[0]
+    
+    # media = oj.graphql.shortcode_media.display_url
+    #     caption = ""
+    # if len(oj.graphql.shortcode_media.edge_media_to_caption.edges) == 0:
+    # else:
+    #     caption = oj.graphql.shortcode_media.edge_media_to_caption.edges[0].node.text
+
+    if item.caption:
+        caption = item.caption.text
+    else:
+        caption = ""
+    caption = convert_long_caption(caption)
+
+    is_video = item.media_type == 2
+    is_carousel_media = hasattr(item, ("carousel_media"))
+    # is_multi_carousel 
+    if is_carousel_media: # メインの画像
+        images = sorted(item.carousel_media[0].image_versions2.candidates, key=lambda x:-x.height)
+        media = images[0].url
+    else:
+        images = sorted(item.image_versions2.candidates, key=lambda x:-x.height)
+        media = images[0].url
+
+    profile_url = item.user.profile_pic_url
+    username = item.user.username
+    full_name = item.user.full_name
+
+    # 新規追加
+    medias: List[InstagramInnerNode] = get_multiple_medias_v3(is_carousel_media, item)
+
+    if is_video:
+        video_url = oj.graphql.shortcode_media.video_url
+    else:
+        video_url = None
+    return InstagramData(
+        media=media,
+        is_video=is_video,
+        caption=caption,
+        profile_url=profile_url,
+        username=username,
+        full_name=full_name,
+        video_url=video_url,
+        medias=medias
+    )
+
 
 def get_multiple_medias(oj) -> List[str]:
     medias = get_multiple_mediasV2(oj)
@@ -181,6 +233,58 @@ def get_multiple_mediasV2(oj) -> List[InstagramInnerNode]:
             # display_url=media
         )]
 
+def get_multiple_medias_v3(is_carousel_media: bool, item) -> List[InstagramInnerNode]:
+    """oj から それぞれのnodeが動画かどうか判定する"""
+    ans = []
+    if is_carousel_media:
+        print(f"item: {item}")
+        print(f"item: {item.id}")
+        print(f"carousel_media_count: {item.carousel_media_count}")
+        for node in item.carousel_media:
+            if node.media_type == 1: # 画像のとき
+                images = sorted(node.image_versions2.candidates, key=lambda x:-x.width)
+                max_image = images[0]
+            
+                inst_node = InstagramInnerNode(
+                    url= max_image.url,
+                    is_video=False,
+                    display_url= max_image.url
+                )
+            else: # 動画の時
+                images = sorted(node.image_versions2.candidates, key=lambda x:-x.width)
+                max_image = images[0]
+
+                max_resolution_video = sorted(
+                    node.video_versions, key=lambda x: -x.height)[0]
+                inst_node = InstagramInnerNode(
+                    url=max_resolution_video.url,
+                    display_url=max_image.url,
+                    is_video=True,
+                )
+            ans.append(inst_node)
+        return ans
+    else:
+        if item.media_type == 1: # 画像
+            images = sorted(item.image_versions2.candidates, key=lambda x:-x.width)
+            max_image = images[0]
+            inst_node = InstagramInnerNode(
+                url=max_image.url,
+                display_url=max_image.url,
+                is_video=False,
+            )
+            return [inst_node]            
+        else:
+            images = sorted(item.image_versions2.candidates, key=lambda x:-x.width)
+            max_image = images[0]
+
+            max_resolution_video = sorted(item.video_versions, key=lambda x: -x.height)[0]
+            inst_node = InstagramInnerNode(
+                url=max_resolution_video.url,
+                display_url=max_image.url,
+                is_video=True,
+            )
+            return [inst_node]
+
 
 def get_multiple_medias_from_str(str_arg) -> List[str]:
     dic_ = json.loads(str_arg)
@@ -192,6 +296,12 @@ def get_multiple_mediasV2_from_str(str_arg) -> List[InstagramInnerNode]:
     dic_ = json.loads(str_arg)
     oj = Dict2Obj(dic_)
     return get_multiple_mediasV2(oj)
+
+def get_multiple_medias_v3_from_str(str_arg) -> List[InstagramInnerNode]:
+    dic_ = json.loads(str_arg)
+    oj = Dict2Obj(dic_)
+    is_carousel_media = hasattr(oj.items[0], ("carousel_media"))
+    return get_multiple_medias_v3(is_carousel_media, oj.items[0])
 
 
 def convert_json_str_to_obj(str_):
@@ -206,6 +316,15 @@ def instagram_parse_json_to_obj(str):
     dic_ = json.loads(str)
     oj = Dict2Obj(dic_)
     return convert_to_instagram_type(oj)
+
+def instagram_parse_json_to_obj_v2(str):
+    """
+    1/25 以降の graphQLがなくなったバージョン
+    __a=1 の json レスポンスを InstagramData に変換する。
+    """
+    dic_ = json.loads(str)
+    oj = Dict2Obj(dic_)
+    return convert_to_instagram_type_v2(oj)
 
 
 if __name__ == "__main__":
