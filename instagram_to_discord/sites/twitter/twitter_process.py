@@ -78,7 +78,7 @@ async def process_twitter(
         nums = msg_list[1].split(",")
         try:
             nums = map(lambda x: int(x), nums)
-            nums = filter(lambda x: x != 1, nums)
+            # nums = filter(lambda x: x != 1, nums)
             nums = list(nums)
         except ValueError:
             logger.info(
