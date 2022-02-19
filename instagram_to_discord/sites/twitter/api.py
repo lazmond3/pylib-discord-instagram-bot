@@ -85,8 +85,7 @@ def _is_dummry_token(token_fname: str) -> bool:
 
 def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
     logger.debug(f"[get_one_tweet] tweet_id: {tweet_id}")
-    if not os.path.exists(TOKEN_FILENAME) or \
-        _is_dummry_token(TOKEN_FILENAME):
+    if not os.path.exists(TOKEN_FILENAME):
         get_auth_wrapper()
 
     with open(TOKEN_FILENAME) as f:
