@@ -21,7 +21,6 @@ class TwitterImage:
     text: str
     link: str
 
-
 # 入力は js_dict
 def convert_twitter(dic: Dict[str, Any]) -> TwitterImage:
     user_display_name = dic["user"]["name"]
