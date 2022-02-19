@@ -75,6 +75,11 @@ def twitter_fetch_content_return_image_urls(tweet_id: str) -> List[str]:
     tw = get_one_tweet(tweet_id)
     return tw.image_urls
 
+def twitter_fetch_content_return_obj(tweet_id: str) -> List[str]:
+    """get_one_tweet し、 image_urls を返す関数"""
+    tw = get_one_tweet(tweet_id)
+    return tw
+
 
 def get_twitter_object(tweet_id: str) -> TwitterImage:
     """get_one_tweet し、 TwitterImageにする関数"""
