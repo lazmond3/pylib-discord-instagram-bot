@@ -73,16 +73,6 @@ def text_to_dict(str_: str) -> Dict[str, Any]:
     js = json.loads(str_)
     return cast(Dict[str, Any], js)
 
-
-def _is_dummry_token(token_fname: str) -> bool:
-    with open(token_fname) as f:
-        token = f.read()
-    if "dummy" in token or "DUMMY" in token:
-        return True
-    else:
-        return False
-
-
 def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
     logger.debug(f"[get_one_tweet] tweet_id: {tweet_id}")
     if not os.path.exists(TOKEN_FILENAME):
