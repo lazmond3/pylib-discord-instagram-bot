@@ -88,16 +88,16 @@ def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
 
     # キャッシュを利用する.
     # TODO: もし正常に保存できてたら、という条件ができれば
-    if os.path.exists(f"dump_json/dump_one_{tweet_id}.json"):
-        with open(f"dump_json/dump_one_{tweet_id}.json", 'r') as f:
-            js = json.load(f)
+    # if os.path.exists(f"dump_json/dump_one_{tweet_id}.json"):
+    #     with open(f"dump_json/dump_one_{tweet_id}.json", 'r') as f:
+    #         js = json.load(f)
 
-        # print(f"js: {js}")
-        # TODO: logger を利用して出す
-        tw = convert_twitter(js)
-        logger.debug(
-            f"[cached] video: {tw.video_url} images: {' '.join(tw.image_urls)}")
-        return tw
+    #     # print(f"js: {js}")
+    #     # TODO: logger を利用して出す
+    #     tw = convert_twitter(js)
+    #     logger.debug(
+    #         f"[cached] video: {tw.video_url} images: {' '.join(tw.image_urls)}")
+    #     return tw
 
     try:
         r = requests.get(url, params=params, headers=headers)
