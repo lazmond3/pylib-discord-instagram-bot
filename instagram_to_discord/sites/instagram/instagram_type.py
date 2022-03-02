@@ -324,7 +324,7 @@ def instagram_parse_json_to_obj_v2(str):
     """
     dic_ = json.loads(str)
     oj = Dict2Obj(dic_)
-    return convert_to_instagram_type_v2(oj)
+    return convert_to_instagram_type(oj)
 
 
 if __name__ == "__main__":

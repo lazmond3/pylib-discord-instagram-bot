@@ -64,7 +64,8 @@ async def process_instagram(
         a_url, instagram_id, text_decoded)
 
     insta_obj = instagram_parse_json_to_obj_v2(text)
-    medias = get_multiple_medias_v3_from_str(text)
+    # medias = get_multiple_medias_v3_from_str(text)
+    medias = get_multiple_mediasV2_from_str(text)
 
     instagram_id = get_instagram_id_from_url(a_url)
     new_uploaded_media_urls = []

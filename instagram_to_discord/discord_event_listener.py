@@ -109,7 +109,8 @@ class DiscordMessageListener(discord.Client):
 
                 text = requests_get_cookie(
                     url=self.last_url_instagram[channel])
-                medias = get_multiple_medias_v3_from_str(text)
+                # medias = get_multiple_medias_v3_from_str(text)
+                medias = get_multiple_mediasV2_from_str(text)
 
                 await send_instagram_images_from_cache_for_specified_index(
                     skip_one=False, medias=medias, nums=nums, message=message
