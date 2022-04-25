@@ -61,9 +61,11 @@ async def test_process_twitter_画像1枚目_何もしない(mocker: pytest_mock
 
     with open("tests/data/twitter/dump_twitter_1466983215714168837.json") as f:
         text = f.read()
+    obj = Object()
+    obj.text = text
 
     new_urls = ["url1", "url2"]
-    mocker.patch("requests.get", return_value=text)
+    mocker.patch("requests.get", return_value=obj)
     mocker.patch.object(instagram_to_discord.sites.twitter.twitter_process, "create_new_image_urls_with_downloading", return_value=new_urls)  # nopep8
     mocker.patch.object(instagram_to_discord.sites.twitter.twitter_process, "send_twitter_images_from_cache_for_specified_index")  # nopep8
 
