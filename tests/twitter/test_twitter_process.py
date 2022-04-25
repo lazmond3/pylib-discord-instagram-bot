@@ -68,6 +68,7 @@ async def test_process_twitter_画像1枚目_何もしない(mocker: pytest_mock
     mocker.patch("requests.get", return_value=obj)
     mocker.patch.object(instagram_to_discord.sites.twitter.twitter_process, "create_new_image_urls_with_downloading", return_value=new_urls)  # nopep8
     mocker.patch.object(instagram_to_discord.sites.twitter.twitter_process, "send_twitter_images_from_cache_for_specified_index")  # nopep8
+    mocker.patch.object(instagram_to_discord.boto3, "add_json_to_dynamo_tweet_json")  # nopep8
 
     await process_twitter(
         client=client,
