@@ -1,6 +1,7 @@
 
 from instagram_to_discord.sites.ask.ask import get_ask_html_text_from_url, process_question_and_answer_from_text
-from instagram_to_discord.util2.embed import create_ask_embed
+from instagram_to_discord.sites.twitter.twitter_image import TwitterImage
+from instagram_to_discord.util2.embed import create_ask_embed, create_twitter_description_image
 from instagram_to_discord.util2.types import DiscordMemoClient
 from ...const_value import IS_DEBUG
 from .twitter import send_twitter_images_from_cache_for_specified_index
@@ -11,7 +12,7 @@ from .twitter import (create_new_image_urls_with_downloading, get_twitter_object
 from ...const_value import FSIZE_TARGET
 import os
 import discord
-from typing import Any
+from typing import Any, List
 from logging import getLogger, StreamHandler, INFO
 logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()
@@ -19,6 +20,26 @@ handler.setLevel(INFO)
 logger.setLevel(INFO)
 logger.addHandler(handler)
 logger.propagate = False
+
+
+async def process_twitter_open(
+        message: discord.Message,
+        twitter_url: str
+):
+    tweet_id = twitter_extract_tweet_id(twitter_url)
+    tw = get_twitter_object(tweet_id)
+    image_urls = tw.image_urls
+    new_image_urls = create_new_image_urls_with_downloading(
+        tweet_id,
+        image_urls
+    )
+    image_url = None
+    if len(image_urls) > 0:
+        image_url = new_image_urls[0]
+    embed = create_twitter_description_image(
+        tw, image_url=image_url
+    )
+    await message.channel.send(embed=embed)
 
 
 async def process_twitter(
@@ -46,6 +67,7 @@ async def process_twitter(
         await message.channel.send(embed=embed)
 
     # 画像を取得する
+    # TODO: これ使ってないのでは？
     image_urls = tw.image_urls
     # TODO: もしキャッシュが存在していれば(KVS)、ダウンロードしないしアップロードもしない。
     new_image_urls = create_new_image_urls_with_downloading(
@@ -75,10 +97,17 @@ async def process_twitter(
             os.remove(fname_video)
 
     elif len(msg_list) > 1:
+
+        if msg_list[1] == "o":
+            await process_twitter_open(
+                message=message,
+                twitter_url=client.last_url_twitter[channel]
+            )
+
         nums = msg_list[1].split(",")
         try:
             nums = map(lambda x: int(x), nums)
-            nums = filter(lambda x: x != 1, nums)
+            # nums = filter(lambda x: x != 1, nums)
             nums = list(nums)
         except ValueError:
             logger.info(

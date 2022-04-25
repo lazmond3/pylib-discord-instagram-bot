@@ -73,11 +73,11 @@ def text_to_dict(str_: str) -> Dict[str, Any]:
     js = json.loads(str_)
     return cast(Dict[str, Any], js)
 
-
 def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
     logger.debug(f"[get_one_tweet] tweet_id: {tweet_id}")
     if not os.path.exists(TOKEN_FILENAME):
         get_auth_wrapper()
+
     with open(TOKEN_FILENAME) as f:
         s = json.load(f)
         token = s["access_token"]
@@ -87,13 +87,17 @@ def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
     headers = {"Authorization": f"Bearer {token}"}
 
     # キャッシュを利用する.
-    if os.path.exists(f"dump_json/dump_one_{tweet_id}.json"):
-        with open(f"dump_json/dump_one_{tweet_id}.json", 'r') as f:
-            js = json.load(f)
-        tw = convert_twitter(js)
-        logger.debug(
-            f"[cached] video: {tw.video_url} images: {' '.join(tw.image_urls)}")
-        return tw
+    # TODO: もし正常に保存できてたら、という条件ができれば
+    # if os.path.exists(f"dump_json/dump_one_{tweet_id}.json"):
+    #     with open(f"dump_json/dump_one_{tweet_id}.json", 'r') as f:
+    #         js = json.load(f)
+
+    #     # print(f"js: {js}")
+    #     # TODO: logger を利用して出す
+    #     tw = convert_twitter(js)
+    #     logger.debug(
+    #         f"[cached] video: {tw.video_url} images: {' '.join(tw.image_urls)}")
+    #     return tw
 
     try:
         r = requests.get(url, params=params, headers=headers)
@@ -265,7 +269,8 @@ if __name__ == "__main__":
     # get_one_tweet("1372519422380797955")
     # https://twitter.com/Malong777888/status/1409827218948165632
     # tw = get_one_tweet("1409827218948165632") # video
-    tw = get_one_tweet("1407925711277486082")  # video
+    import sys
+    tw = get_one_tweet(sys.argv[1])  # video
     print(tw)
     # get_one_tweet("1373208627356442626")
     # with open("dump_one.json") as f:

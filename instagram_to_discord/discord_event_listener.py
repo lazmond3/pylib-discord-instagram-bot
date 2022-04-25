@@ -1,5 +1,5 @@
 from .const_value import IS_DEBUG, DISCORD_TOKEN
-from .sites.twitter.twitter_process import process_twitter
+from .sites.twitter.twitter_process import process_twitter, process_twitter_open
 from .sites.twitter.twitter import send_twitter_images_from_cache_for_specified_index, twitter_line_to_image_urls
 from .sites.instagram.instagram_process import process_instagram
 from .sites.instagram.instagram_type import get_multiple_medias_from_str, get_multiple_medias_v3_from_str, get_multiple_mediasV2_from_str
@@ -113,6 +113,12 @@ class DiscordMessageListener(discord.Client):
 
                 await send_instagram_images_from_cache_for_specified_index(
                     skip_one=False, medias=medias, nums=nums, message=message
+                )
+
+        elif content == "o":
+            if self.is_twitter_last:
+                await process_twitter_open(
+                    message=message, twitter_url=self.last_url_twitter[channel]
                 )
 
 
