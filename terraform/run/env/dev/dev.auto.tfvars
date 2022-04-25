@@ -14,7 +14,7 @@ ecr_name = "discord-instagram-bot"
 template_file_path = "../../../module/ecs/discord_pyhton.json.tpl" # main.tf からの相対パス
 
 container_repository = "554506578892.dkr.ecr.ap-northeast-1.amazonaws.com/discord-instagram-bot"
-container_tag        = "1.1.0-a3e494a"
+container_tag        = "1.1.0-6877e66"
 
 container_name = "discord-instagram-bot" # でいいのか？
 # container_name = "nginx" # でいいのか？
