@@ -1,16 +1,14 @@
 from typing import Optional
 import discord
-from instagram_to_discord.sites.instagram.converter_instagram_url import instagram_make_author_page
+from instagram_to_discord.sites.instagram.converter_instagram_url import (
+    instagram_make_author_page,
+)
 from instagram_to_discord.sites.instagram.instagram_type import InstagramData
 from instagram_to_discord.sites.twitter.twitter_image import TwitterImage
 from instagram_to_discord.string_util import sophisticate_string
 
 
-def create_ask_embed(
-    question: str,
-    answer: str,
-    url: str
-):
+def create_ask_embed(question: str, answer: str, url: str):
     description = f"""Q.{question}\n\nA. {answer}"""
     embed = discord.Embed(
         title=f"koba",
@@ -70,7 +68,10 @@ def create_twitter_image_embed(image_url: str):
     embed.set_image(url=image_url)
     return embed
 
-def create_twitter_description_image(tw: TwitterImage, image_url: Optional[str] = None ) -> discord.Embed:
+
+def create_twitter_description_image(
+    tw: TwitterImage, image_url: Optional[str] = None
+) -> discord.Embed:
     embed = discord.Embed(
         title=tw.user_display_name,
         description=tw.text,

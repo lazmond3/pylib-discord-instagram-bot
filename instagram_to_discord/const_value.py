@@ -1,5 +1,6 @@
 import os
-FSIZE_TARGET = 2 ** 23 - 100
+
+FSIZE_TARGET = 2**23 - 100
 
 
 DISCORD_TOKEN = os.getenv("TOKEN")

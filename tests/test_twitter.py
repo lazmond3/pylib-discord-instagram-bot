@@ -15,7 +15,7 @@ def test_base64():
     text = "original text"
     converted_base64 = base64_util.base64_encode_str(text)
     assert converted_base64 == "b3JpZ2luYWwgdGV4dA=="
-    decoded = base64_util. base64_decode_str(converted_base64)
+    decoded = base64_util.base64_decode_str(converted_base64)
     assert text == decoded
 
 

@@ -3,6 +3,7 @@ from typing import List
 import nest_asyncio
 import os
 from logging import getLogger, StreamHandler, INFO
+
 logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()
 handler.setLevel(INFO)
@@ -12,7 +13,7 @@ logger.propagate = False
 
 
 nest_asyncio.apply()
-FSIZE_TARGET = 2 ** 23 - 100
+FSIZE_TARGET = 2**23 - 100
 
 
 def env_check():

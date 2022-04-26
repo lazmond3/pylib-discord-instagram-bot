@@ -6,6 +6,7 @@ from typing import List
 from logging import getLogger, StreamHandler, INFO
 
 from instagram_to_discord.util2.embed import create_instagram_embed_image
+
 logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()
 handler.setLevel(INFO)

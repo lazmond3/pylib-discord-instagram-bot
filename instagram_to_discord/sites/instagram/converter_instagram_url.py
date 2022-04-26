@@ -8,8 +8,7 @@ def convert_instagram_url_to_a(url):
     if m:
         new_url = m.group(0) + "/?__a=1"
         return new_url
-    m = re.match(
-        r"^.*(https://www.instagram.com/([^/])+/(p|reel)/([^/?])+).*$", url)
+    m = re.match(r"^.*(https://www.instagram.com/([^/])+/(p|reel)/([^/?])+).*$", url)
     if m:
         new_url = m.group(0) + "/?__a=1"
         return new_url
@@ -25,13 +24,13 @@ def instagram_make_base_url(url):
 
 
 def extract_url(line: str):
-    m = re.match(
-        r"^.*(https://www.instagram.com/(p|reel)/([^/])+).*$", line, re.M)
+    m = re.match(r"^.*(https://www.instagram.com/(p|reel)/([^/])+).*$", line, re.M)
     if m:
         return m.group(1)
 
     m = re.match(
-        r"^.*(https://www.instagram.com/([^/])+/(p|reel)/([^/])+).*$", line, re.M)
+        r"^.*(https://www.instagram.com/([^/])+/(p|reel)/([^/])+).*$", line, re.M
+    )
     if m:
         return m.group(1)
 

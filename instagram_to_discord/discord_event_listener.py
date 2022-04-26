@@ -1,16 +1,26 @@
 from .const_value import IS_DEBUG, DISCORD_TOKEN
 from .sites.twitter.twitter_process import process_twitter, process_twitter_open
-from .sites.twitter.twitter import send_twitter_images_from_cache_for_specified_index, twitter_line_to_image_urls
+from .sites.twitter.twitter import (
+    send_twitter_images_from_cache_for_specified_index,
+    twitter_line_to_image_urls,
+)
 from .sites.instagram.instagram_process import process_instagram
-from .sites.instagram.instagram_type import get_multiple_medias_from_str, get_multiple_medias_v3_from_str, get_multiple_mediasV2_from_str
+from .sites.instagram.instagram_type import (
+    get_multiple_medias_from_str,
+    get_multiple_medias_v3_from_str,
+    get_multiple_mediasV2_from_str,
+)
 from .sites.youtube.youtube_handler import handle_youtube_main
 from .sites.tiktok.tiktok_handler import handle_tiktok_main
 from .cookie_requests import requests_get_cookie
-from instagram_to_discord.sites.instagram.instagram_sender import send_instagram_images_from_cache_for_specified_index
+from instagram_to_discord.sites.instagram.instagram_sender import (
+    send_instagram_images_from_cache_for_specified_index,
+)
 import discord
 from typing import Dict
 import os
 from logging import getLogger, StreamHandler, INFO
+
 logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()
 handler.setLevel(INFO)
@@ -91,8 +101,7 @@ class DiscordMessageListener(discord.Client):
                         filter(lambda x: is_int(x), content.split(",")),
                     )
                 )
-                image_urls = twitter_line_to_image_urls(
-                    self.last_url_twitter[channel])
+                image_urls = twitter_line_to_image_urls(self.last_url_twitter[channel])
                 await send_twitter_images_from_cache_for_specified_index(
                     skip_one=True, image_urls=image_urls, nums=nums, message=message
                 )  # 動画のサムネイル送信
@@ -107,8 +116,7 @@ class DiscordMessageListener(discord.Client):
                 )
                 nums = sorted(nums)
 
-                text = requests_get_cookie(
-                    url=self.last_url_instagram[channel])
+                text = requests_get_cookie(url=self.last_url_instagram[channel])
                 medias = get_multiple_medias_v3_from_str(text)
 
                 await send_instagram_images_from_cache_for_specified_index(

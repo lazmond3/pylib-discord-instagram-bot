@@ -13,12 +13,12 @@ def play_count_to_text(count: int) -> str:
     oku = 0
     man = 0
     res = 0
-    if count > 10 ** 8:  # 1億を超えてる
-        oku = count // 10 ** 8
-        count = count % 10 ** 8
-    if count > 10 ** 4:  # 1万を超えてる
-        man = count // 10 ** 4
-        count = count % 10 ** 4
+    if count > 10**8:  # 1億を超えてる
+        oku = count // 10**8
+        count = count % 10**8
+    if count > 10**4:  # 1万を超えてる
+        man = count // 10**4
+        count = count % 10**4
     res = count
 
     ans = ""

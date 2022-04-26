@@ -6,16 +6,16 @@ from setuptools import setup, find_packages
 import os
 
 
-with open('README.md') as f:
+with open("README.md") as f:
     readme = f.read()
 
-with open('LICENSE') as f:
+with open("LICENSE") as f:
     license = f.read()
 
 
 def take_package_name(name):
     if name.startswith("-e"):
-        return name[name.find("=")+1:name.rfind("-")]
+        return name[name.find("=") + 1 : name.rfind("-")]
     else:
         return name.strip()
 
@@ -26,22 +26,22 @@ def load_requires_from_file(filepath):
 
 
 setup(
-    name='lazmond3-pylib-instagram-to-discord',
-    version='1.1.0',
-    description='convert to image post for discord',
+    name="lazmond3-pylib-instagram-to-discord",
+    version="1.1.0",
+    description="convert to image post for discord",
     long_description=readme,
-    author='lazmond3',
-    author_email='moikilo00@gmail.com',
-    url='https://github.com/lazmond3/pylib-instagram-to-discord.git',
+    author="lazmond3",
+    author_email="moikilo00@gmail.com",
+    url="https://github.com/lazmond3/pylib-instagram-to-discord.git",
     install_requires=[
         "dict2obj",
         "redis-py-cluster",
         "youtube_dl",
         "ffmpeg",
         "nest_asyncio",
-        "discord.py"
+        "discord.py",
     ],
     license=license,
-    packages=find_packages(exclude=('tests', 'docs')),
-    test_suite='tests'
+    packages=find_packages(exclude=("tests", "docs")),
+    test_suite="tests",
 )

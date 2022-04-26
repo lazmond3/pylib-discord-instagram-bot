@@ -1,6 +1,7 @@
 from .const_value import IS_DEBUG, INSTA_MID, INSTA_SESSIONID
 import requests
 from logging import getLogger, StreamHandler, INFO
+
 logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()
 handler.setLevel(INFO)
