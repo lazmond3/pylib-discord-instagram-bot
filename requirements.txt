@@ -1,15 +1,6 @@
 dict2obj
-redis-py-cluster
 discord.py
 requests
-# -e git+https://github.com/lazmond3/pylib-debug.git@master#egg=lazmond3-pylib-debug # public package
-# -e git+https://github.com/lazmond3/pylib-instagram-type.git@master#egg=lazmond3-pylib-instagram-type # public package
-# -e git+https://github.com/lazmond3/pylib-twitter.git@master#egg=lazmond3-pylib-twitter # public package
-# https://stackoverflow.com/questions/8247605/configuring-so-that-pip-install-can-work-from-github
-
-# git+https://github.com/lazmond3/pylib-instagram-type.git@master#egg=lazmond3-pylib-instagram-type # public package
-# git+https://github.com/lazmond3/pylib-twitter.git@master#egg=lazmond3-pylib-twitter # public package
-git+https://github.com/lazmond3/pylib-debug.git@master#egg=lazmond3-pylib-debug # public package
 
 aws-lambda-typing == 1.0.3
 boto3
@@ -17,11 +8,11 @@ youtube_dl
 ffmpeg
 nest_asyncio
 
-# black
-# flake8
-# autopep8
-# isort
-# pycln
+black
+flake8
+autopep8
+isort
+
 Flask
 mypy
 beautifulsoup4
