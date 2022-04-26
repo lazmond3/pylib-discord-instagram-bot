@@ -12,7 +12,7 @@ from instagram_to_discord.string_util import sophisticate_string
 def create_ask_embed(question: str, answer: str, url: str):
     description = f"""Q.{question}\n\nA. {answer}"""
     embed = discord.Embed(
-        title=f"koba",
+        title="koba",
         description=description,
         url=url,
         color=discord.Color.green(),

@@ -42,5 +42,5 @@ if __name__ == "__main__":
     q_text = q_text[: q_text.find(" | ask.fm")]
     print(f"title: {q_text}")
     r = soup.select_one("div.streamItem_content")
-    print(f"r: ", r.text)
-    print(f"r: ", soup.select_one("meta[name='description']")["content"])
+    print("r: ", r.text)
+    print("r: ", soup.select_one("meta[name='description']")["content"])

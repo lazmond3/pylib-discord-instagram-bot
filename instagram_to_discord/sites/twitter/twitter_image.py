@@ -43,7 +43,7 @@ def convert_twitter(dic: Dict[str, Any]) -> TwitterImage:
     ):
         link = dic["entities"]["urls"][0]["expanded_url"]
 
-    if not "extended_entities" in dic:
+    if "extended_entities" not in dic:
         return TwitterImage(
             id_str=dic["id_str"],
             image_urls=image_urls,

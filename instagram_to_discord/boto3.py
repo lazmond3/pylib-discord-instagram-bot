@@ -62,7 +62,6 @@ def upload_image_file(fname: str, tweet_num: str, index: int):
     bucket_image.upload_file(
         fname, f"{tweet_num}/{index}.{ext}", ExtraArgs={"ContentType": content_type}
     )
-    basename = os.path.basename(fname)
 
     return f"https://discord-python-image.s3.ap-northeast-1.amazonaws.com/{tweet_num}/{index}.{ext}"
 

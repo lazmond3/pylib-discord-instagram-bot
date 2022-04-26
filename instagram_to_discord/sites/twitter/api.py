@@ -1,6 +1,6 @@
 import json
 import os
-from logging import DEBUG, INFO, LogRecord, StreamHandler, getLogger
+from logging import DEBUG, INFO, StreamHandler, getLogger
 from typing import Any, Dict, List, Optional, cast
 
 import requests
@@ -151,7 +151,7 @@ def get_tweets_of_user(
     headers = {"Authorization": f"Bearer {token}"}
 
     # キャッシュを利用する.
-    mkdir_notexists([f"dump_tweet_of_user"])
+    mkdir_notexists(["dump_tweet_of_user"])
     fname = f"dump_tweet_of_user/dump_user_{screen_name}.json"
     if os.path.exists(fname):
         with open(fname, "r") as f:
@@ -200,7 +200,7 @@ def get_following_list(screen_name: str, cursor: int = -1, count: int = 200):
     headers = {"Authorization": f"Bearer {token}"}
 
     # キャッシュを利用する.
-    mkdir_notexists([f"dump_following"])
+    mkdir_notexists(["dump_following"])
     fname = f"dump_following/following_{screen_name}_{cursor}.json"
     if os.path.exists(fname):
         with open(fname, "r") as f:
@@ -211,7 +211,7 @@ def get_following_list(screen_name: str, cursor: int = -1, count: int = 200):
     try:
         r = requests.get(url, params=params, headers=headers)
     except Exception:
-        print(f"error exception?? : failed to fetch")
+        print("error exception?? : failed to fetch")
         return
 
     tx = r.text

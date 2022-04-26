@@ -1,8 +1,6 @@
 from logging import INFO, StreamHandler, getLogger
 from typing import List
 
-import discord
-
 from instagram_to_discord.sites.instagram.instagram_type import \
     InstagramInnerNode
 from instagram_to_discord.sites.instagram.upload_video import \

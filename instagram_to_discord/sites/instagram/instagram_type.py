@@ -233,7 +233,6 @@ def get_multiple_mediasV2(oj) -> List[InstagramInnerNode]:
             ans.append(inst_node)
         return ans
     else:
-        media = oj.graphql.shortcode_media.display_url
         display_resources = oj.graphql.shortcode_media.display_resources
         max_resolution = sorted(display_resources, key=lambda x: -x.config_height)[0]
 

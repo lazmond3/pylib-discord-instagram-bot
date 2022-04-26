@@ -1,18 +1,16 @@
 import os
 from logging import INFO, StreamHandler, getLogger
-from typing import Any, List
 
 import discord
 
 from instagram_to_discord.sites.ask.ask import (
     get_ask_html_text_from_url, process_question_and_answer_from_text)
-from instagram_to_discord.sites.twitter.twitter_image import TwitterImage
 from instagram_to_discord.util2.embed import (create_ask_embed,
                                               create_twitter_description_image)
 from instagram_to_discord.util2.types import DiscordMemoClient
 
 from ...boto3 import upload_video_file
-from ...const_value import FSIZE_TARGET, IS_DEBUG
+from ...const_value import IS_DEBUG
 from ...download import download_file_to_path, make_twitter_mp4_filename
 from .twitter import (create_new_image_urls_with_downloading,
                       get_twitter_object,
@@ -76,7 +74,7 @@ async def process_twitter(
         download_file_to_path(video_url, fname_video)
 
         # ファイル送信
-        fsize = os.path.getsize(fname_video)
+        # fsize = os.path.getsize(fname_video)
         # if fsize > (FSIZE_TARGET):
 
         image_urls = tw.image_urls

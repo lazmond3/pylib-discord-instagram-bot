@@ -4,7 +4,7 @@ from typing import List
 
 import nest_asyncio
 
-from .discord_event_listener import main
+from .discord_event_listener import main  # noqa: F401
 
 logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()

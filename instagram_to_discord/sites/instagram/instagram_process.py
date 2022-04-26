@@ -1,8 +1,6 @@
 import json
 import os
-import pickle
 from logging import DEBUG, INFO, StreamHandler, getLogger
-from typing import Any
 
 import discord
 
@@ -21,11 +19,7 @@ from .converter_instagram_url import (convert_instagram_url_to_a,
                                       instagram_extract_from_content)
 from .instagram_sender import (get_instagram_id_from_url,
                                send_instagram_images_for_specified_index)
-from .instagram_type import (get_multiple_medias_from_str,
-                             get_multiple_medias_v3_from_str,
-                             get_multiple_mediasV2_from_str,
-                             instagram_parse_json_to_obj,
-                             instagram_parse_json_to_obj_v2)
+from .instagram_type import (get_multiple_medias_v3_from_str, instagram_parse_json_to_obj_v2)
 
 logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()
