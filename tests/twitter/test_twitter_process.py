@@ -32,9 +32,6 @@ async def test_process_twitter_画像2枚目(mocker: pytest_mock.MockerFixture):
         instagram_to_discord.sites.twitter.api, "get_auth_wrapper"
     )  # nopep8
     mocker.patch.object(
-        instagram_to_discord.sites.twitter.api, "add_json_to_dynamo_tweet_json"
-    )  # nopep8
-    mocker.patch.object(
         instagram_to_discord.sites.twitter.twitter_process,
         "create_new_image_urls_with_downloading",
         return_value=new_urls,
@@ -43,6 +40,9 @@ async def test_process_twitter_画像2枚目(mocker: pytest_mock.MockerFixture):
         instagram_to_discord.sites.twitter.twitter_process,
         "send_twitter_images_from_cache_for_specified_index",
     )  # nopep8
+
+    # TODO: mocker patch でなんとかならないか？ (aws の連携解除)
+    instagram_to_discord.sites.twitter.api.add_json_to_dynamo_tweet_json = lambda x, y: x
 
     if not os.path.exists(TOKEN_FILENAME):
         with open(TOKEN_FILENAME, "w") as f:

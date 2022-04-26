@@ -19,3 +19,4 @@ beautifulsoup4
 pytest
 pytest-mock
 pytest-asyncio
+pytest-env
