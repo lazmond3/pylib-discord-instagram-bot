@@ -1,6 +1,6 @@
-from typing import Any, Dict, List
 from dataclasses import dataclass
-from logging import getLogger, StreamHandler, INFO
+from logging import INFO, StreamHandler, getLogger
+from typing import Any, Dict, List
 
 logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()

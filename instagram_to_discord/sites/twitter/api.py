@@ -1,13 +1,14 @@
-from ...const_value import TW_CONSUMER_KEY, TW_CONSUMER_SECRET
-from ...boto3 import add_json_to_dynamo_tweet_json
-from .twitter_image import TwitterImage, convert_twitter
-from .base64_util import base64_encode_str
-from ...const_value import IS_DEBUG
-import requests
-from typing import Any, Dict, Optional, cast, List
-import os
 import json
-from logging import LogRecord, getLogger, StreamHandler, DEBUG, INFO
+import os
+from logging import DEBUG, INFO, LogRecord, StreamHandler, getLogger
+from typing import Any, Dict, List, Optional, cast
+
+import requests
+
+from ...boto3 import add_json_to_dynamo_tweet_json
+from ...const_value import IS_DEBUG, TW_CONSUMER_KEY, TW_CONSUMER_SECRET
+from .base64_util import base64_encode_str
+from .twitter_image import TwitterImage, convert_twitter
 
 logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()

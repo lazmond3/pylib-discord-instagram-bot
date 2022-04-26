@@ -2,9 +2,9 @@
 
 # Learn more: https://github.com/kennethreitz/setup.py
 
-from setuptools import setup, find_packages
 import os
 
+from setuptools import find_packages, setup
 
 with open("README.md") as f:
     readme = f.read()

@@ -1,16 +1,12 @@
 import discord
-from instagram_to_discord.sites.instagram.converter_instagram_url import (
-    instagram_make_author_page,
-)
+
+from instagram_to_discord.sites.instagram.converter_instagram_url import \
+    instagram_make_author_page
 from instagram_to_discord.sites.instagram.instagram_type import (
-    instagram_parse_json_to_obj,
-    instagram_parse_json_to_obj_v2,
-)
+    instagram_parse_json_to_obj, instagram_parse_json_to_obj_v2)
 from instagram_to_discord.string_util import sophisticate_string
-from instagram_to_discord.util2.embed import (
-    create_instagram_pic_embed,
-    create_instagram_video_embed,
-)
+from instagram_to_discord.util2.embed import (create_instagram_pic_embed,
+                                              create_instagram_video_embed)
 
 
 def test_embed_from_json_text():

@@ -1,7 +1,5 @@
 from instagram_to_discord.sites.instagram.instagram_type import (
-    convert_long_caption,
-    instagram_parse_json_to_obj,
-)
+    convert_long_caption, instagram_parse_json_to_obj)
 
 from .util import *
 

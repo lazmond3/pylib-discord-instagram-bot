@@ -1,18 +1,18 @@
-from instagram_to_discord import mkdir_notexists
+import discord
+import pytest
+import pytest_mock
+from discord.enums import ChannelType
+from discord.state import ConnectionState
+
 import instagram_to_discord.cookie_requests
-from instagram_to_discord.sites.instagram.converter_instagram_url import (
-    instagram_make_author_page,
-)
+from instagram_to_discord import mkdir_notexists
+from instagram_to_discord.sites.instagram.converter_instagram_url import \
+    instagram_make_author_page
+from instagram_to_discord.sites.instagram.instagram_process import \
+    process_instagram
 from instagram_to_discord.string_util import sophisticate_string
 from instagram_to_discord.util2.embed import create_instagram_pic_embed
 from instagram_to_discord.util2.types import DiscordMemoClient
-from instagram_to_discord.sites.instagram.instagram_process import process_instagram
-import instagram_to_discord.cookie_requests
-import discord
-from discord.state import ConnectionState
-from discord.enums import ChannelType
-import pytest_mock
-import pytest
 
 from .util import make_settings
 

@@ -1,8 +1,8 @@
 import json
+from dataclasses import dataclass
 from typing import List
 
 from dict2obj import Dict2Obj
-from dataclasses import dataclass
 
 
 @dataclass

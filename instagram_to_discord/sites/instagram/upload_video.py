@@ -1,10 +1,9 @@
 import os
+
 from instagram_to_discord.boto3 import upload_video_file
-from instagram_to_discord.download import (
-    download_file,
-    make_instagram_mp4_filename,
-    save_image,
-)
+from instagram_to_discord.download import (download_file,
+                                           make_instagram_mp4_filename,
+                                           save_image)
 
 
 def upload_instagram_video(video_url: str) -> str:

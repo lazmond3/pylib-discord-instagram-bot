@@ -5,8 +5,8 @@ from typing import Any, Dict, Optional
 import discord
 
 from ...boto3 import upload_video_file
-from .tiktok import download_tiktok_video, extract_tiktok_url
 from ...video import trimming_video_to_8MB
+from .tiktok import download_tiktok_video, extract_tiktok_url
 
 
 def play_count_to_text(count: int) -> str:

@@ -1,11 +1,12 @@
 import os
-from instagram_to_discord import mkdir_notexists
+
+import pytest
+import pytest_mock
+
 import instagram_to_discord.cookie_requests
+from instagram_to_discord import mkdir_notexists
 from instagram_to_discord.sites.twitter.api import TOKEN_FILENAME
 from instagram_to_discord.sites.twitter.twitter_process import process_twitter
-import instagram_to_discord.cookie_requests
-import pytest_mock
-import pytest
 
 
 class Object(object):

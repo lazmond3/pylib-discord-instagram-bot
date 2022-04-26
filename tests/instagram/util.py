@@ -1,6 +1,6 @@
+import discord
 from discord import ChannelType
 from discord.state import ConnectionState
-import discord
 
 
 def make_settings():
