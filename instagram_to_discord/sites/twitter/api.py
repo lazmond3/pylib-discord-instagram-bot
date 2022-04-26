@@ -1,13 +1,15 @@
-from ...const_value import TW_CONSUMER_KEY, TW_CONSUMER_SECRET
-from ...boto3 import add_json_to_dynamo_tweet_json
-from .twitter_image import TwitterImage, convert_twitter
-from .base64_util import base64_encode_str
-from ...const_value import IS_DEBUG
-import requests
-from typing import Any, Dict, Optional, cast, List
-import os
 import json
-from logging import LogRecord, getLogger, StreamHandler, DEBUG, INFO
+import os
+from logging import DEBUG, INFO, StreamHandler, getLogger
+from typing import Any, Dict, List, Optional, cast
+
+import requests
+
+from ...boto3 import add_json_to_dynamo_tweet_json
+from ...const_value import IS_DEBUG, TW_CONSUMER_KEY, TW_CONSUMER_SECRET
+from .base64_util import base64_encode_str
+from .twitter_image import TwitterImage, convert_twitter
+
 logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()
 handler.setLevel(DEBUG)
@@ -73,6 +75,7 @@ def text_to_dict(str_: str) -> Dict[str, Any]:
     js = json.loads(str_)
     return cast(Dict[str, Any], js)
 
+
 def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
     logger.debug(f"[get_one_tweet] tweet_id: {tweet_id}")
     if not os.path.exists(TOKEN_FILENAME):
@@ -118,16 +121,17 @@ def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
         txt_decoded = f.read()
         add_json_to_dynamo_tweet_json(tweet_id, txt_decoded)
 
+    print(f"js: {js}")
     tw = convert_twitter(js)
     logger.debug(f"video: {tw.video_url} images: {','.join(tw.image_urls)}, ")
     return tw
 
 
 def get_tweets_of_user(
-        screen_name: str,
-        since_id: Optional[str] = None,  # 最小の、この要素を含めないid。これより新しいツイートが検索される
-        max_id: Optional[str] = None,  # これを含めるかこれ以下の
-        is_second: bool = False
+    screen_name: str,
+    since_id: Optional[str] = None,  # 最小の、この要素を含めないid。これより新しいツイートが検索される
+    max_id: Optional[str] = None,  # これを含めるかこれ以下の
+    is_second: bool = False,
 ):
     logger.debug(f"[get_tweets_of_user] screen_name: {screen_name}")
     if not os.path.exists(TOKEN_FILENAME):
@@ -147,10 +151,10 @@ def get_tweets_of_user(
     headers = {"Authorization": f"Bearer {token}"}
 
     # キャッシュを利用する.
-    mkdir_notexists([f"dump_tweet_of_user"])
+    mkdir_notexists(["dump_tweet_of_user"])
     fname = f"dump_tweet_of_user/dump_user_{screen_name}.json"
     if os.path.exists(fname):
-        with open(fname, 'r') as f:
+        with open(fname, "r") as f:
             js = json.load(f)
         # tw = convert_twitter(js)
         return
@@ -175,18 +179,14 @@ def get_tweets_of_user(
         json.dump(js, f, ensure_ascii=False)
     # 直し方がよくわからないので、json の結果を利用させてもらう。
     # with open(fname) as f:
-        # txt_decoded = f.read()
+    # txt_decoded = f.read()
 
     # tw = convert_twitter(js)
     # logger.debug(f"video: {tw.video_url} images: {','.join(tw.image_urls)}, ")
     # return tw
 
 
-def get_following_list(
-        screen_name: str,
-        cursor: int = -1,
-        count: int = 200
-):
+def get_following_list(screen_name: str, cursor: int = -1, count: int = 200):
     logger.debug(f"[get_following_list] screen_name: {screen_name}")
     if not os.path.exists(TOKEN_FILENAME):
         get_auth_wrapper()
@@ -200,10 +200,10 @@ def get_following_list(
     headers = {"Authorization": f"Bearer {token}"}
 
     # キャッシュを利用する.
-    mkdir_notexists([f"dump_following"])
+    mkdir_notexists(["dump_following"])
     fname = f"dump_following/following_{screen_name}_{cursor}.json"
     if os.path.exists(fname):
-        with open(fname, 'r') as f:
+        with open(fname, "r") as f:
             js = json.load(f)
         return
 
@@ -211,7 +211,7 @@ def get_following_list(
     try:
         r = requests.get(url, params=params, headers=headers)
     except Exception:
-        print(f"error exception?? : failed to fetch")
+        print("error exception?? : failed to fetch")
         return
 
     tx = r.text
@@ -270,6 +270,7 @@ if __name__ == "__main__":
     # https://twitter.com/Malong777888/status/1409827218948165632
     # tw = get_one_tweet("1409827218948165632") # video
     import sys
+
     tw = get_one_tweet(sys.argv[1])  # video
     print(tw)
     # get_one_tweet("1373208627356442626")

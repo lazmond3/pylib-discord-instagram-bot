@@ -1,11 +1,14 @@
-import discord
-from instagram_to_discord.sites.instagram.instagram_type import InstagramInnerNode
-from instagram_to_discord.sites.instagram.upload_video import upload_instagram_video
-from ...const_value import IS_DEBUG
+from logging import INFO, StreamHandler, getLogger
 from typing import List
-from logging import getLogger, StreamHandler, INFO
 
+from instagram_to_discord.sites.instagram.instagram_type import \
+    InstagramInnerNode
+from instagram_to_discord.sites.instagram.upload_video import \
+    upload_instagram_video
 from instagram_to_discord.util2.embed import create_instagram_embed_image
+
+from ...const_value import IS_DEBUG
+
 logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()
 handler.setLevel(INFO)

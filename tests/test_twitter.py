@@ -3,19 +3,18 @@
 # from .context import use_hello
 
 
+import json
+
+from instagram_to_discord.sites.twitter import base64_util, twitter
 # from instagram_to_discord.sites.instagram.instagram_sender import convert_long_caption
 from instagram_to_discord.sites.twitter.twitter_image import convert_twitter
-from instagram_to_discord.sites.twitter import twitter
-from instagram_to_discord.sites.twitter import base64_util
-
-import json
 
 
 def test_base64():
     text = "original text"
     converted_base64 = base64_util.base64_encode_str(text)
     assert converted_base64 == "b3JpZ2luYWwgdGV4dA=="
-    decoded = base64_util. base64_decode_str(converted_base64)
+    decoded = base64_util.base64_decode_str(converted_base64)
     assert text == decoded
 
 

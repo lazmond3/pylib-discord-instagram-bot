@@ -1,8 +1,11 @@
-from .discord_event_listener import main
-from typing import List
-import nest_asyncio
 import os
-from logging import getLogger, StreamHandler, INFO
+from logging import INFO, StreamHandler, getLogger
+from typing import List
+
+import nest_asyncio
+
+from .discord_event_listener import main  # noqa: F401
+
 logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()
 handler.setLevel(INFO)
@@ -12,7 +15,7 @@ logger.propagate = False
 
 
 nest_asyncio.apply()
-FSIZE_TARGET = 2 ** 23 - 100
+FSIZE_TARGET = 2**23 - 100
 
 
 def env_check():

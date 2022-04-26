@@ -1,13 +1,12 @@
-from typing import List
 import os
-
-from instagram_to_discord.util2.embed import create_twitter_image_embed
-from ...boto3 import upload_image_file
-
-from ...download import download_file_to_path, make_twitter_image_filename, save_image
-from ...const_value import IS_DEBUG
 import re
 from typing import List
+
+from instagram_to_discord.util2.embed import create_twitter_image_embed
+
+from ...boto3 import upload_image_file
+from ...const_value import IS_DEBUG
+from ...download import (download_file_to_path, make_twitter_image_filename)
 from ..twitter.api import get_one_tweet
 from ..twitter.twitter_image import TwitterImage
 
@@ -21,8 +20,7 @@ def create_new_image_urls_with_downloading(tweet_id: str, image_urls: List[str])
     new_image_urls = []
     for idx, u in enumerate(image_urls):
         idx += 1
-        fname_image = make_twitter_image_filename(
-            "dump_images", tweet_id, idx, u)
+        fname_image = make_twitter_image_filename("dump_images", tweet_id, idx, u)
         # ファイルダウンロード
         download_file_to_path(u, fname_image)
         path = upload_image_file(fname_image, tweet_id, idx)
@@ -52,8 +50,7 @@ def twitter_extract_tweet_id(line: str) -> str:
     コンテンツ(メッセージ) の中にtwitterの URL が含まれていれば、それだけ抽出して、tweet_id を返す。
     """
     # sample: https://twitter.com/mmmlmmm2/status/1372519422380797955?s=09
-    m = re.match(
-        r"^.*https://twitter.com/([^/]+)/status/([0-9]+).*$", line, re.M)
+    m = re.match(r"^.*https://twitter.com/([^/]+)/status/([0-9]+).*$", line, re.M)
     if m:
         return m.group(2)
     else:
@@ -62,8 +59,7 @@ def twitter_extract_tweet_id(line: str) -> str:
 
 def twitter_extract_tweet_url(line: str) -> str:
     # sample: https://twitter.com/mmmlmmm2/status/1372519422380797955?s=09
-    m = re.match(
-        r"^.*(https://twitter.com/([^/]+)/status/([0-9]+)).*$", line, re.M)
+    m = re.match(r"^.*(https://twitter.com/([^/]+)/status/([0-9]+)).*$", line, re.M)
     if m:
         return m.group(1)
     else:
@@ -74,6 +70,7 @@ def twitter_fetch_content_return_image_urls(tweet_id: str) -> List[str]:
     """get_one_tweet し、 image_urls を返す関数"""
     tw = get_one_tweet(tweet_id)
     return tw.image_urls
+
 
 def twitter_fetch_content_return_obj(tweet_id: str) -> List[str]:
     """get_one_tweet し、 image_urls を返す関数"""

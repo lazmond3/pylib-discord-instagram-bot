@@ -16,7 +16,7 @@ my_config = Config(
 
 # boto3_client = boto3.client('kinesis', config=my_config)
 boto3_s3 = boto3.client("s3", config=my_config)
-dynamo = boto3.resource('dynamodb', region_name='ap-northeast-1')
+dynamo = boto3.resource("dynamodb", region_name="ap-northeast-1")
 tweet_json = dynamo.Table("tweet_json")
 instagram_json = dynamo.Table("instagram_json")
 
@@ -26,25 +26,17 @@ bucket_image = s3.Bucket("discord-python-image")
 
 
 def add_json_to_dynamo_tweet_json(tweet_id: str, data: str):
-    tweet_json.put_item(
-        Item={
-            'tweet_id': tweet_id,
-            'data': data
-        }
-    )
+    tweet_json.put_item(Item={"tweet_id": tweet_id, "data": data})
 
 
-def add_instagram_json_to_dynamo_instagram_json(instagram_url: str, instagram_id: str, data: str):
+def add_instagram_json_to_dynamo_instagram_json(
+    instagram_url: str, instagram_id: str, data: str
+):
     """
     sample url: https://www.instagram.com/p/CVNB-GNldga/
     """
 
-    instagram_json.put_item(
-        Item={
-            'instagram_id': instagram_id,
-            'data': data
-        }
-    )
+    instagram_json.put_item(Item={"instagram_id": instagram_id, "data": data})
 
 
 def upload_video_file(fname: str) -> str:
@@ -53,8 +45,7 @@ def upload_video_file(fname: str) -> str:
     """
     base_fname = os.path.basename(fname)
     # 第二引数はkey
-    bucket.upload_file(fname, base_fname, ExtraArgs={
-                       'ContentType': "video/mp4"})
+    bucket.upload_file(fname, base_fname, ExtraArgs={"ContentType": "video/mp4"})
     basename = os.path.basename(fname)
     return f"https://discord-python-video.s3.ap-northeast-1.amazonaws.com/{basename}"
 
@@ -69,8 +60,8 @@ def upload_image_file(fname: str, tweet_num: str, index: int):
     elif ext == "png":
         content_type = "image/png"
     bucket_image.upload_file(
-        fname, f"{tweet_num}/{index}.{ext}", ExtraArgs={'ContentType': content_type})
-    basename = os.path.basename(fname)
+        fname, f"{tweet_num}/{index}.{ext}", ExtraArgs={"ContentType": content_type}
+    )
 
     return f"https://discord-python-image.s3.ap-northeast-1.amazonaws.com/{tweet_num}/{index}.{ext}"
 
@@ -80,14 +71,13 @@ if __name__ == "__main__":
     # bucket.upload_file(fname, fname)
 
     # 読み込み
-    data = tweet_json.get_item(Key={
-        'tweet_id': "1459491452048740352"
-    })
+    data = tweet_json.get_item(Key={"tweet_id": "1459491452048740352"})
     print(f"data: {data} type: {type(data['Item'])}")
     print(f"data: {data['Item']['data']} type: {type(data['Item']['data'])}")
 
     import json
-    js = json.loads(data['Item']['data'])
+
+    js = json.loads(data["Item"]["data"])
     print(f"js: {js}")
 
     # 書き込み

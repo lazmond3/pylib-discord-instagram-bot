@@ -35,6 +35,7 @@ def make_twitter_mp4_filename(base_dir, num, url):
     fullpath = os.path.join(base_dir, filename)
     return fullpath
 
+
 # 画像のファイル名を決める
 
 
@@ -46,7 +47,9 @@ def make_twitter_image_filename(base_dir: str, tweet_num: str, index: int, url: 
     return fullpath
 
 
-def make_instagram_image_filename(base_dir: str, instagram_id: str, index: int, url: str):
+def make_instagram_image_filename(
+    base_dir: str, instagram_id: str, index: int, url: str
+):
     url = url.split("?")[0]
     ext = os.path.splitext(url)[1]  # 拡張子を取得
     filename = f"instagram_{instagram_id}_{index}{ext}"  # 番号に拡張子をつけてファイル名にする
@@ -77,4 +80,5 @@ if __name__ == "__main__":
     # save_image("sample.jpg", image_data )
     save_image(fname, image_data)
     from .boto3 import upload_image_file
+
     upload_image_file(fname, tweet_num, idx)

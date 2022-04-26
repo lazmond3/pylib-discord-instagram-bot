@@ -13,7 +13,7 @@ def process_question_and_answer_from_text(text: str):
     soup = BeautifulSoup(text, "html.parser")
     q = soup.select_one("title")
     q_text = q.text
-    q_text = q_text[:q_text.find(" | ask.fm")]
+    q_text = q_text[: q_text.find(" | ask.fm")]
 
     # こちらだと尻切れだった
     # ans =soup.select_one("meta[name='description']")["content"]
@@ -39,8 +39,8 @@ if __name__ == "__main__":
 
     q = soup.select_one("title")
     q_text = q.text
-    q_text = q_text[:q_text.find(" | ask.fm")]
+    q_text = q_text[: q_text.find(" | ask.fm")]
     print(f"title: {q_text}")
     r = soup.select_one("div.streamItem_content")
-    print(f"r: ", r.text)
-    print(f"r: ", soup.select_one("meta[name='description']")["content"])
+    print("r: ", r.text)
+    print("r: ", soup.select_one("meta[name='description']")["content"])
