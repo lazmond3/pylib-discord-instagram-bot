@@ -4,8 +4,6 @@
 import json
 import unittest
 
-from debug import DEBUG
-
 from instagram_to_discord.sites.instagram.instagram_type import convert_long_caption
 from instagram_to_discord.sites.twitter.twitter_image import convert_twitter
 from instagram_to_discord.download import make_instagram_mp4_filename
