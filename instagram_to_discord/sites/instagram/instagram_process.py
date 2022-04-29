@@ -53,7 +53,13 @@ async def process_instagram(
     elif "/reel/" in a_url:
         instagram_id = a_url.split("/reel/")[1].split("/")[0]
 
-    js = json.loads(text)
+    try:
+        js = json.loads(text)
+    except json.decoder.JSONDecodeError:
+        print("[instagram_process] ERROR!!! instagram: Failed to parse response text.")
+        print("---------------------------------------------")
+        return
+
     with open(f"dump_json_instagram/dump_instagram_{instagram_id}.json", "w") as f:
         json.dump(js, f, ensure_ascii=False)
 
