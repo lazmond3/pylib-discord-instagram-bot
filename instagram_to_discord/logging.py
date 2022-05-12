@@ -31,21 +31,21 @@ class Log:
     def __init__(self, logger):
         self.logger = logger
 
-    def debug(self, x):
+    def debug(self, *x):
         self.logger.debug(x)
-        print(f"[debug] {x}")
+        print(f"[debug] ", x)
 
-    def info(self, x):
+    def info(self, *x):
         self.logger.info(x)
-        print(f"[info] {x}")
+        print(f"[info] ", x)
 
-    def warning(self, x):
+    def warning(self, *x):
         self.logger.warning(x)
-        print(f"[warning] {x}")
+        print(f"[warning] ", x)
 
-    def error(self, x):
+    def error(self, *x):
         self.logger.error(x)
-        print(f"[error] {x}")
+        print(f"[error] ", x)
 
 
 if ENV == "local":
