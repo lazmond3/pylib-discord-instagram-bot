@@ -33,19 +33,19 @@
       },
       {
         "name": "ES_HOST",
-        "valueFrom": "${ES_HOST}"
+        "valueFrom": "${aws_secret_es_host}"
       },
       {
         "name": "ES_USER_NAME",
-        "valueFrom": "${ES_USER_NAME}"
+        "valueFrom": "${aws_secret_es_user_name}"
       },
       {
         "name": "ES_PASSWORD",
-        "valueFrom": "${ES_PASSWORD}"
+        "valueFrom": "${aws_secret_es_password}"
       },
       {
         "name": "ENV",
-        "valueFrom": "${ENV}"
+        "valueFrom": "${env}"
       }
     ],
     "environment": [

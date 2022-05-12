@@ -33,6 +33,9 @@ variable "container_repository" {
 variable "container_tag" {
   type = string
 }
+variable "env" {
+  type = string
+}
 
 # ECS の秘密パラメータ
 variable "aws_ssm_parameter_token_arn" {
@@ -54,6 +57,15 @@ variable "aws_ssm_parameter_aws_access_key_id_arn" {
   type = string
 }
 variable "aws_ssm_parameter_aws_secret_access_key_arn" {
+  type = string
+}
+variable "aws_ssm_parameter_es_host" {
+  type = string
+}
+variable "aws_ssm_parameter_es_user_name" {
+  type = string
+}
+variable "aws_ssm_parameter_es_password" {
   type = string
 }
 
