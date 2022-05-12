@@ -1,17 +1,18 @@
 import os
 from logging import INFO, StreamHandler, getLogger
+from .logging import log as logger
 from typing import List
 
 import nest_asyncio
 
 from .discord_event_listener import main  # noqa: F401
 
-logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
-handler = StreamHandler()
-handler.setLevel(INFO)
-logger.setLevel(INFO)
-logger.addHandler(handler)
-logger.propagate = False
+# logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
+# handler = StreamHandler()
+# handler.setLevel(INFO)
+# logger.setLevel(INFO)
+# logger.addHandler(handler)
+# logger.propagate = False
 
 
 nest_asyncio.apply()
@@ -28,7 +29,7 @@ def env_check():
             os.getenv("SESSIONID"),
         ]
     ):
-        logger.error("all environment variables are set.")
+        logger.info("all environment variables are set.")
     else:
         logger.error("some of required variables are not set.")
         exit(1)

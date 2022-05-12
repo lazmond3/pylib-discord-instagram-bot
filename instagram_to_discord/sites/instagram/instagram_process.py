@@ -1,6 +1,7 @@
 import json
 import os
-from logging import DEBUG, INFO, StreamHandler, getLogger
+# from logging import DEBUG, INFO, StreamHandler, getLogger
+from ...logging import log as logger
 
 import discord
 
@@ -37,15 +38,15 @@ from .instagram_type import (
     instagram_parse_json_to_obj_v2,
 )
 
-logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
-handler = StreamHandler()
-handler.setLevel(INFO)
-logger.setLevel(INFO)
-logger.addHandler(handler)
-logger.propagate = False
+# logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
+# handler = StreamHandler()
+# handler.setLevel(INFO)
+# logger.setLevel(INFO)
+# logger.addHandler(handler)
+# logger.propagate = False
 
-if IS_DEBUG:
-    logger.setLevel(DEBUG)
+# if IS_DEBUG:
+#     logger.setLevel(DEBUG)
 
 
 async def process_instagram(
@@ -72,8 +73,7 @@ async def process_instagram(
     try:
         js = json.loads(text)
     except json.decoder.JSONDecodeError:
-        print("[instagram_process] ERROR!!! instagram: Failed to parse response text.")
-        print("---------------------------------------------")
+        logger.error("[instagram_process] ERROR!!! instagram: Failed to parse response text.")
         return
 
     with open(f"dump_json_instagram/dump_instagram_{instagram_id}.json", "w") as f:

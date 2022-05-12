@@ -1,6 +1,7 @@
 import json
 from dataclasses import dataclass
 from typing import List
+from ...logging import log as logger
 
 from dict2obj import Dict2Obj
 
@@ -251,9 +252,8 @@ def get_multiple_medias_v3(is_carousel_media: bool, item) -> List[InstagramInner
     """oj から それぞれのnodeが動画かどうか判定する"""
     ans = []
     if is_carousel_media:
-        print(f"item: {item}")
-        print(f"item: {item.id}")
-        print(f"carousel_media_count: {item.carousel_media_count}")
+        logger.info(f"item: {item} id: {item.id}")
+        logger.info(f"carousel_media_count: {item.carousel_media_count}")
         for node in item.carousel_media:
             if node.media_type == 1:  # 画像のとき
                 images = sorted(node.image_versions2.candidates, key=lambda x: -x.width)
@@ -350,7 +350,6 @@ if __name__ == "__main__":
     # with open("instagram_multi_img.json") as f:
     #     str_ = f.read()
     oj = Dict2Obj(dic_)
-    # print(f"oj: {oj}")
     inObj = convert_to_instagram_type(oj)
     print(f"inObj: {inObj}")
     # import json

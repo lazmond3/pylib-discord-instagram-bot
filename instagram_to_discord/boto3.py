@@ -2,6 +2,7 @@ import os
 
 import boto3
 from botocore.config import Config
+from .logging import log as logger
 
 proxy_definitions = {
     "http": "http://proxy.amazon.com:6502",
@@ -72,6 +73,7 @@ if __name__ == "__main__":
 
     # 読み込み
     data = tweet_json.get_item(Key={"tweet_id": "1459491452048740352"})
+    # main モジュール のデータは 手元でしか確認しない (そうしたら、 local もそうなのでは？)
     print(f"data: {data} type: {type(data['Item'])}")
     print(f"data: {data['Item']['data']} type: {type(data['Item']['data'])}")
 

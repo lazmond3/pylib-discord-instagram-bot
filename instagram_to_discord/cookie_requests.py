@@ -1,15 +1,16 @@
-from logging import INFO, StreamHandler, getLogger
+# from logging import INFO, StreamHandler, getLogger
+from .logging import log as logger
 
 import requests
 
 from .const_value import INSTA_MID, INSTA_SESSIONID, IS_DEBUG
 
-logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
-handler = StreamHandler()
-handler.setLevel(INFO)
-logger.setLevel(INFO)
-logger.addHandler(handler)
-logger.propagate = False
+# logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
+# handler = StreamHandler()
+# handler.setLevel(INFO)
+# logger.setLevel(INFO)
+# logger.addHandler(handler)
+# logger.propagate = False
 
 
 # クッキーの使い方がわかるファイル

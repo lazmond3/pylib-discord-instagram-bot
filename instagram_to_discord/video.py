@@ -1,6 +1,6 @@
 import os
 import subprocess
-
+from .logging import log as logger
 from .const_value import FSIZE_TARGET
 
 
@@ -26,7 +26,9 @@ def trimming_video_to_8MB(fname: str) -> str:
             stderr=subprocess.STDOUT,
         )
         current_duration: int = int(float(result.stdout.decode("utf-8").strip()))
-        print("current duration: ", current_duration)
+
+        # TODO: これをなしにして、とりあえず全部アップロードのみしたい。
+        logger.info("[trimming_video_to_8MB] current duration: ", current_duration)
 
         target_duration_f: float = float(FSIZE_TARGET) / fsize * current_duration
         target_duration: int = int(target_duration_f)
