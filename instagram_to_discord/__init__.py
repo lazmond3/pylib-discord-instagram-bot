@@ -1,21 +1,10 @@
 import os
-from logging import INFO, StreamHandler, getLogger
 from .logging import log as logger
 from typing import List
 
-import nest_asyncio
-
+# これなんで入れてるんだっけ
 from .discord_event_listener import main  # noqa: F401
 
-# logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
-# handler = StreamHandler()
-# handler.setLevel(INFO)
-# logger.setLevel(INFO)
-# logger.addHandler(handler)
-# logger.propagate = False
-
-
-nest_asyncio.apply()
 FSIZE_TARGET = 2**23 - 100
 
 
@@ -27,6 +16,10 @@ def env_check():
             os.getenv("CONSUMER_SECRET"),
             os.getenv("MID"),
             os.getenv("SESSIONID"),
+            os.getenv("ENV"),
+            os.getenv("ES_HOST"),
+            os.getenv("ES_USER_NAME"),
+            os.getenv("ES_PASSWORD"),
         ]
     ):
         logger.info("all environment variables are set.")
