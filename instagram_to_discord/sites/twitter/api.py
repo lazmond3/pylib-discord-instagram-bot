@@ -11,12 +11,12 @@ from .twitter_image import TwitterImage, convert_twitter
 from ...logging import log as logger
 
 
-
 def mkdir_notexists(dirs: List[str]):
     for dirpath in dirs:
         if not os.path.exists(dirpath):
             os.makedirs(dirpath)
             logger.info(f"[mkdir_noexists] mkdir {dirpath}")
+
 
 # const
 TOKEN_FILENAME: str = ".token.json"
@@ -154,6 +154,7 @@ def get_tweets_of_user(
     with open(fname, "w", encoding="utf-8") as f:
         json.dump(js, f, ensure_ascii=False)
     # 直し方がよくわからないので、json の結果を利用させてもらう。
+
 
 def get_following_list(screen_name: str, cursor: int = -1, count: int = 200):
     logger.debug(f"[get_following_list] screen_name: {screen_name}")

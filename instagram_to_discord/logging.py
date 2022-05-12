@@ -4,7 +4,7 @@ from cmreslogging.handlers import CMRESHandler
 
 ES_HOST = os.getenv("ES_HOST")
 ES_USER_NAME = os.getenv("ES_USER_NAME")
-ES_PASSWORD  = os.getenv("ES_PASSWORD")
+ES_PASSWORD = os.getenv("ES_PASSWORD")
 ENV = os.getenv("ENV")
 
 
@@ -26,21 +26,27 @@ logger = logging.getLogger("GlobalLogger")
 logger.setLevel(logging.DEBUG)
 logger.addHandler(handler)
 
+
 class Log:
     def __init__(self, logger):
         self.logger = logger
+
     def debug(self, x):
         self.logger.debug(x)
         print(f"[debug] {x}")
+
     def info(self, x):
         self.logger.info(x)
         print(f"[info] {x}")
+
     def warning(self, x):
         self.logger.warning(x)
         print(f"[warning] {x}")
+
     def error(self, x):
         self.logger.error(x)
         print(f"[error] {x}")
+
 
 if ENV == "local":
     log = Log(logger)

@@ -37,6 +37,7 @@ from .instagram_type import (
     instagram_parse_json_to_obj_v2,
 )
 
+
 async def process_instagram(
     client: DiscordMemoClient, message: discord.Message, content: str
 ):
@@ -61,7 +62,9 @@ async def process_instagram(
     try:
         js = json.loads(text)
     except json.decoder.JSONDecodeError:
-        logger.error("[instagram_process] ERROR!!! instagram: Failed to parse response text.")
+        logger.error(
+            "[instagram_process] ERROR!!! instagram: Failed to parse response text."
+        )
         return
 
     with open(f"dump_json_instagram/dump_instagram_{instagram_id}.json", "w") as f:

@@ -2,7 +2,6 @@ import os
 
 import boto3
 from botocore.config import Config
-from .logging import log as logger
 
 proxy_definitions = {
     "http": "http://proxy.amazon.com:6502",

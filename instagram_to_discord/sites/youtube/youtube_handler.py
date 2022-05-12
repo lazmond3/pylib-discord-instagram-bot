@@ -7,6 +7,7 @@ from ...boto3 import upload_video_file
 from .youtube import download_youtube_video, extract_youtube_url
 from ...logging import log as logger
 
+
 def play_count_to_text(count: int) -> str:
     oku = 0
     man = 0

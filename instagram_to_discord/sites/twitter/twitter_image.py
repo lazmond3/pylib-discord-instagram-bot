@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, List
 from ...logging import log as logger
 
+
 @dataclass
 class TwitterImage:
     id_str: str
