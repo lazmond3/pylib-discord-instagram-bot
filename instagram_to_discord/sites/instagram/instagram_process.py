@@ -4,22 +4,38 @@ from logging import DEBUG, INFO, StreamHandler, getLogger
 
 import discord
 
-from instagram_to_discord.util2.embed import (create_instagram_pic_embed,
-                                              create_instagram_video_embed)
+from instagram_to_discord.util2.embed import (
+    create_instagram_pic_embed,
+    create_instagram_video_embed,
+)
 from instagram_to_discord.util2.types import DiscordMemoClient
 
-from ...boto3 import (add_instagram_json_to_dynamo_instagram_json,
-                      upload_image_file, upload_video_file)
+from ...boto3 import (
+    add_instagram_json_to_dynamo_instagram_json,
+    upload_image_file,
+    upload_video_file,
+)
 from ...const_value import FSIZE_TARGET, IS_DEBUG
 from ...cookie_requests import requests_get_cookie
-from ...download import (download_file, make_instagram_image_filename,
-                         make_instagram_mp4_filename, save_image)
+from ...download import (
+    download_file,
+    make_instagram_image_filename,
+    make_instagram_mp4_filename,
+    save_image,
+)
 from ...video import trimming_video_to_8MB
-from .converter_instagram_url import (convert_instagram_url_to_a,
-                                      instagram_extract_from_content)
-from .instagram_sender import (get_instagram_id_from_url,
-                               send_instagram_images_for_specified_index)
-from .instagram_type import (get_multiple_medias_v3_from_str, instagram_parse_json_to_obj_v2)
+from .converter_instagram_url import (
+    convert_instagram_url_to_a,
+    instagram_extract_from_content,
+)
+from .instagram_sender import (
+    get_instagram_id_from_url,
+    send_instagram_images_for_specified_index,
+)
+from .instagram_type import (
+    get_multiple_medias_v3_from_str,
+    instagram_parse_json_to_obj_v2,
+)
 
 logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()

@@ -4,18 +4,25 @@ from logging import INFO, StreamHandler, getLogger
 import discord
 
 from instagram_to_discord.sites.ask.ask import (
-    get_ask_html_text_from_url, process_question_and_answer_from_text)
-from instagram_to_discord.util2.embed import (create_ask_embed,
-                                              create_twitter_description_image)
+    get_ask_html_text_from_url,
+    process_question_and_answer_from_text,
+)
+from instagram_to_discord.util2.embed import (
+    create_ask_embed,
+    create_twitter_description_image,
+)
 from instagram_to_discord.util2.types import DiscordMemoClient
 
 from ...boto3 import upload_video_file
 from ...const_value import IS_DEBUG
 from ...download import download_file_to_path, make_twitter_mp4_filename
-from .twitter import (create_new_image_urls_with_downloading,
-                      get_twitter_object,
-                      send_twitter_images_from_cache_for_specified_index,
-                      twitter_extract_tweet_id, twitter_extract_tweet_url)
+from .twitter import (
+    create_new_image_urls_with_downloading,
+    get_twitter_object,
+    send_twitter_images_from_cache_for_specified_index,
+    twitter_extract_tweet_id,
+    twitter_extract_tweet_url,
+)
 
 logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
 handler = StreamHandler()
