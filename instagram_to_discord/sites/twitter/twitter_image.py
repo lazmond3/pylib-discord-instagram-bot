@@ -1,15 +1,6 @@
 from dataclasses import dataclass
-from logging import INFO, StreamHandler, getLogger
 from typing import Any, Dict, List
 from ...logging import log as logger
-
-# logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
-# handler = StreamHandler()
-# handler.setLevel(INFO)
-# logger.setLevel(INFO)
-# logger.addHandler(handler)
-# logger.propagate = False
-
 
 @dataclass
 class TwitterImage:

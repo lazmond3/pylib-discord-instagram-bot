@@ -1,5 +1,4 @@
 import os
-from logging import INFO, StreamHandler, getLogger
 from ...logging import log as logger
 import discord
 
@@ -23,13 +22,6 @@ from .twitter import (
     twitter_extract_tweet_id,
     twitter_extract_tweet_url,
 )
-
-# logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
-# handler = StreamHandler()
-# handler.setLevel(INFO)
-# logger.setLevel(INFO)
-# logger.addHandler(handler)
-# logger.propagate = False
 
 
 async def process_twitter_open(message: discord.Message, twitter_url: str):

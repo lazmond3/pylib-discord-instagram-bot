@@ -1,6 +1,5 @@
 import json
 import os
-from logging import DEBUG, INFO, StreamHandler, getLogger
 from typing import Any, Dict, List, Optional, cast
 
 import requests
@@ -11,12 +10,6 @@ from .base64_util import base64_encode_str
 from .twitter_image import TwitterImage, convert_twitter
 from ...logging import log as logger
 
-# logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
-# handler = StreamHandler()
-# handler.setLevel(DEBUG)
-# logger.setLevel(DEBUG)
-# logger.addHandler(handler)
-# logger.propagate = False
 
 
 def mkdir_notexists(dirs: List[str]):
@@ -161,13 +154,6 @@ def get_tweets_of_user(
     with open(fname, "w", encoding="utf-8") as f:
         json.dump(js, f, ensure_ascii=False)
     # 直し方がよくわからないので、json の結果を利用させてもらう。
-    # with open(fname) as f:
-    # txt_decoded = f.read()
-
-    # tw = convert_twitter(js)
-    # logger.debug(f"video: {tw.video_url} images: {','.join(tw.image_urls)}, ")
-    # return tw
-
 
 def get_following_list(screen_name: str, cursor: int = -1, count: int = 200):
     logger.debug(f"[get_following_list] screen_name: {screen_name}")

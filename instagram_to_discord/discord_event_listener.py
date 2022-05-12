@@ -1,4 +1,3 @@
-from logging import INFO, StreamHandler, getLogger
 from typing import Dict
 
 import discord
@@ -19,14 +18,6 @@ from .sites.twitter.twitter import (
 from .sites.twitter.twitter_process import process_twitter, process_twitter_open
 from .sites.youtube.youtube_handler import handle_youtube_main
 from .logging import log as logger
-
-# logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
-# handler = StreamHandler()
-# handler.setLevel(INFO)
-# logger.setLevel(INFO)
-# logger.addHandler(handler)
-# logger.propagate = False
-
 
 def is_int(s):
     try:

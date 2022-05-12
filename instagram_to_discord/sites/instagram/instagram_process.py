@@ -1,6 +1,5 @@
 import json
 import os
-# from logging import DEBUG, INFO, StreamHandler, getLogger
 from ...logging import log as logger
 
 import discord
@@ -37,17 +36,6 @@ from .instagram_type import (
     get_multiple_medias_v3_from_str,
     instagram_parse_json_to_obj_v2,
 )
-
-# logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
-# handler = StreamHandler()
-# handler.setLevel(INFO)
-# logger.setLevel(INFO)
-# logger.addHandler(handler)
-# logger.propagate = False
-
-# if IS_DEBUG:
-#     logger.setLevel(DEBUG)
-
 
 async def process_instagram(
     client: DiscordMemoClient, message: discord.Message, content: str
