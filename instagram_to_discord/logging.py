@@ -32,20 +32,20 @@ class Log:
         self.logger = logger
 
     def debug(self, *x):
-        self.logger.debug(x)
-        print(f"[debug] ", *x)
+        self.logger.debug(*x)
+        print("[debug] ", *x)
 
     def info(self, *x):
-        self.logger.info(x)
-        print(f"[info] ", *x)
+        self.logger.info(*x)
+        print("[info] ", *x)
 
     def warning(self, *x):
-        self.logger.warning(x)
-        print(f"[warning] ", *x)
+        self.logger.warning(*x)
+        print("[warning] ", *x)
 
     def error(self, *x):
-        self.logger.error(x)
-        print(f"[error] ", *x)
+        self.logger.error(*x)
+        print("[error] ", *x)
 
 
 if ENV == "local":

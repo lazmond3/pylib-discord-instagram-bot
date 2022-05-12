@@ -37,7 +37,7 @@ class DiscordMessageListener(discord.Client):
         super().__init__()
 
     async def on_ready(self):
-        logger.info("Logged on as {0}!".format(self.user))
+        logger.info(f"Logged on as {self.user}!")
 
     async def on_message(self, message):
         logger.info(
@@ -62,11 +62,11 @@ class DiscordMessageListener(discord.Client):
             or "https://youtube.com" in content
         ):
 
-            logger.info("[youtube] channel: ", channel.id)
+            logger.info("[youtube] channel: " + channel.id)
             await handle_youtube_main(self, channel_id=channel.id, content=content)
 
         elif "https://" in content and "tiktok.com" in content:
-            logger.info("[tiktok] -> " + content, channel.id)
+            logger.info(f"[tiktok] -> {content} chanid: {channel.id}")
             await handle_tiktok_main(self, channel_id=channel.id, content=content)
             # 今後SQSに投げて functions で処理していく
 

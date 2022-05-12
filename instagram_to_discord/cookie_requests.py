@@ -19,7 +19,7 @@ def make_cookie(path):
         splited = text.split("; ")
         for each in splited:
             if IS_DEBUG:
-                logger.debug("split: ", each.split("="))
+                logger.debug("split: " + each.split("="))
             key, v = each.split("=")[0], "".join(each.split("=")[1:])
             cookie2[key] = v
     for k in cookie2.keys():

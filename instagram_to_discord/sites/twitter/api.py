@@ -99,7 +99,8 @@ def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
 
     logger.debug(f"js: {js}")
     tw = convert_twitter(js)
-    logger.debug(f"video: {tw.video_url} images: {','.join(tw.image_urls)}, ")
+    logger.debug(f"video: {tw.video_url}")
+    logger.debug("images: " + ",".join(tw.image_urls))
     return tw
 
 

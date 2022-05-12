@@ -28,7 +28,7 @@ def trimming_video_to_8MB(fname: str) -> str:
         current_duration: int = int(float(result.stdout.decode("utf-8").strip()))
 
         # TODO: これをなしにして、とりあえず全部アップロードのみしたい。
-        logger.info("[trimming_video_to_8MB] current duration: ", current_duration)
+        logger.info("[trimming_video_to_8MB] current duration: " + current_duration)
 
         target_duration_f: float = float(FSIZE_TARGET) / fsize * current_duration
         target_duration: int = int(target_duration_f)

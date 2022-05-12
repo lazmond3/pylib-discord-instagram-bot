@@ -42,11 +42,11 @@ async def process_instagram(
     client: DiscordMemoClient, message: discord.Message, content: str
 ):
     channel: discord.TextChannel = message.channel
-    logger.debug("[log] channel name: ", channel.name)
+    logger.debug("[log] channel name: %" + channel.name)
 
     extracted_base_url = instagram_extract_from_content(content)
     if not extracted_base_url:
-        logger.error("[error] failed to parse base_url for : ", content)
+        logger.error("[error] failed to parse base_url for : " + content)
         return
     a_url = convert_instagram_url_to_a(extracted_base_url)
     client.last_url_instagram[channel] = a_url
@@ -115,7 +115,7 @@ async def process_instagram(
         save_image(fname_video, video_content)
         fsize = os.path.getsize(fname_video)
         if fsize > FSIZE_TARGET:
-            logger.info("[insta-video] inner fsize is larger!: than ", FSIZE_TARGET)
+            logger.info("[insta-video] inner fsize is larger!: than " + FSIZE_TARGET)
 
             video_s3_url = upload_video_file(fname_video)
             insta_obj.caption = video_s3_url + "\n" + insta_obj.caption
@@ -130,7 +130,7 @@ async def process_instagram(
                 await message.channel.send(embed=embed)
                 await message.channel.send(file=discord.File(fname_video))
             except Exception as e:
-                logger.error("[instagram video upload] file send error!  : ", e)
+                logger.error(f"[instagram video upload] file send error!  : {e}")
         if not IS_DEBUG:
             os.remove(fname_video)
     else:  # *** 画像の場合 ***

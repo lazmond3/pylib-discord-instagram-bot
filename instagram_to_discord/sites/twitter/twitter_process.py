@@ -40,7 +40,8 @@ async def process_twitter(
     client: DiscordMemoClient, message: discord.Message, content: str
 ):
     channel: discord.TextChannel = message.channel
-    logger.info(f"channel : {channel}, mes: {message}")
+    logger.info(f"channel : {channel}, text: {content}")
+    logger.debug(f"message: {message}")
     client.last_url_twitter[channel] = twitter_extract_tweet_url(content)
     client.is_twitter_last = True
 
