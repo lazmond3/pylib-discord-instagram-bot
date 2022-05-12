@@ -6,7 +6,7 @@ aws-lambda-typing == 1.0.3
 boto3
 youtube_dl
 ffmpeg
-nest_asyncio
+# nest_asyncio
 
 black
 flake8
