@@ -113,3 +113,17 @@ variable "aws_access_key_id" {
 variable "aws_secret_access_key" {
   type = string
 }
+
+# es
+variable "es_host" {
+  type = string
+}
+variable "es_user_name" {
+  type = string
+}
+variable "es_password" {
+  type = string
+}
+variable "env" {
+  type = string
+}
