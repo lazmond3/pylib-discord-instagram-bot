@@ -20,4 +20,6 @@ pytest
 pytest-mock
 pytest-asyncio
 pytest-env
+
+elasticsearch==7.13.4
 CMRESHandler
