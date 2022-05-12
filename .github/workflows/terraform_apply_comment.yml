@@ -95,6 +95,7 @@ jobs:
           TF_VAR_ES_HOST: ${{ secrets.ES_HOST }}
           TF_VAR_ES_USER_NAME: ${{ secrets.ES_USER_NAME }}
           TF_VAR_ES_PASSWORD: ${{ secrets.ES_PASSWORD }}
+          TF_VAR_ENV: ${{ secrets.ENV }}
         continue-on-error: true
 
       - name: Terraform Plan Status
@@ -115,6 +116,7 @@ jobs:
           TF_VAR_ES_HOST: ${{ secrets.ES_HOST }}
           TF_VAR_ES_USER_NAME: ${{ secrets.ES_USER_NAME }}
           TF_VAR_ES_PASSWORD: ${{ secrets.ES_PASSWORD }}
+          TF_VAR_ENV: ${{ secrets.ENV }}
         continue-on-error: true
 
       - uses: actions/github-script@0.9.0
