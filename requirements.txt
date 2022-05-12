@@ -20,3 +20,4 @@ pytest
 pytest-mock
 pytest-asyncio
 pytest-env
+CMRESHandler
