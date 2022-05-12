@@ -87,6 +87,10 @@ module "ecs" {
   aws_ssm_parameter_aws_access_key_id_arn     = module.ssm.aws_ssm_parameter_aws_access_key_id_arn
   aws_ssm_parameter_aws_secret_access_key_arn = module.ssm.aws_ssm_parameter_aws_secret_access_key_arn
 
+  aws_ssm_parameter_es_host                   = module.ssm.aws_ssm_parameter_es_host_arn
+  aws_ssm_parameter_es_user_name              = module.ssm.aws_ssm_parameter_es_user_name_arn
+  aws_ssm_parameter_es_password               = module.ssm.aws_ssm_parameter_es_password_arn
+  env                                         = var.env
   # token = var.token
   # consumer_key = var.consumer_key
   # consumer_secret = var.consumer_secret
@@ -131,6 +135,10 @@ module "ssm" {
   sessionid             = var.sessionid
   aws_access_key_id     = var.aws_access_key_id
   aws_secret_access_key = var.aws_secret_access_key
+
+  es_host               = var.es_host
+  es_user_name          = var.es_user_name
+  es_password           = var.es_password
 }
 
 
