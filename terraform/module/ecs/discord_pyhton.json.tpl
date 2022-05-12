@@ -30,6 +30,22 @@
       {
         "name": "AWS_SECRET_ACCESS_KEY",
         "valueFrom": "${aws_secret_access_key_arn}"
+      },
+      {
+        "name": "ES_HOST",
+        "valueFrom": "${ES_HOST}"
+      },
+      {
+        "name": "ES_USER_NAME",
+        "valueFrom": "${ES_USER_NAME}"
+      },
+      {
+        "name": "ES_PASSWORD",
+        "valueFrom": "${ES_PASSWORD}"
+      },
+      {
+        "name": "ENV",
+        "valueFrom": "${ENV}"
       }
     ],
     "environment": [
