@@ -59,13 +59,13 @@ variable "aws_ssm_parameter_aws_access_key_id_arn" {
 variable "aws_ssm_parameter_aws_secret_access_key_arn" {
   type = string
 }
-variable "aws_ssm_parameter_es_host" {
+variable "aws_ssm_parameter_es_host_arn" {
   type = string
 }
-variable "aws_ssm_parameter_es_user_name" {
+variable "aws_ssm_parameter_es_user_name_arn" {
   type = string
 }
-variable "aws_ssm_parameter_es_password" {
+variable "aws_ssm_parameter_es_password_arn" {
   type = string
 }
 
