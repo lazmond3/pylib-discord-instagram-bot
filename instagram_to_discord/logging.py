@@ -31,20 +31,20 @@ class Log:
     def __init__(self, logger):
         self.logger = logger
 
-    def debug(self, *x):
-        self.logger.debug(*x)
+    def debug(self, *x, **args):
+        self.logger.debug(*x, **args)
         print("[debug] ", *x)
 
-    def info(self, *x):
-        self.logger.info(*x)
+    def info(self, *x, **args):
+        self.logger.info(*x, **args)
         print("[info] ", *x)
 
-    def warning(self, *x):
-        self.logger.warning(*x)
+    def warning(self, *x, **args):
+        self.logger.warning(*x, **args)
         print("[warning] ", *x)
 
-    def error(self, *x):
-        self.logger.error(*x)
+    def error(self, *x, **args):
+        self.logger.error(*x, **args)
         print("[error] ", *x)
 
 
