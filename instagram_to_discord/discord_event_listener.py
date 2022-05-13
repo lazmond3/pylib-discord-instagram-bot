@@ -43,7 +43,12 @@ class DiscordMessageListener(discord.Client):
         logger.info(
             "Message from {0.author.display_name} in ({0.channel}): {0.content}".format(
                 message
-            )
+            ),
+            extra={
+                "channel": message.channel,
+                "content": message.content,
+                "author": message.author.display_name,
+            }
         )
         content: str = message.content
         channel: discord.TextChannel = message.channel
