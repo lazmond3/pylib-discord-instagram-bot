@@ -1,46 +1,52 @@
 import json
 import os
-from logging import DEBUG, INFO, StreamHandler, getLogger
+from ...logging import log as logger
 
 import discord
 
-from instagram_to_discord.util2.embed import (create_instagram_pic_embed,
-                                              create_instagram_video_embed)
+from instagram_to_discord.util2.embed import (
+    create_instagram_pic_embed,
+    create_instagram_video_embed,
+)
 from instagram_to_discord.util2.types import DiscordMemoClient
 
-from ...boto3 import (add_instagram_json_to_dynamo_instagram_json,
-                      upload_image_file, upload_video_file)
+from ...boto3 import (
+    add_instagram_json_to_dynamo_instagram_json,
+    upload_image_file,
+    upload_video_file,
+)
 from ...const_value import FSIZE_TARGET, IS_DEBUG
 from ...cookie_requests import requests_get_cookie
-from ...download import (download_file, make_instagram_image_filename,
-                         make_instagram_mp4_filename, save_image)
+from ...download import (
+    download_file,
+    make_instagram_image_filename,
+    make_instagram_mp4_filename,
+    save_image,
+)
 from ...video import trimming_video_to_8MB
-from .converter_instagram_url import (convert_instagram_url_to_a,
-                                      instagram_extract_from_content)
-from .instagram_sender import (get_instagram_id_from_url,
-                               send_instagram_images_for_specified_index)
-from .instagram_type import (get_multiple_medias_v3_from_str, instagram_parse_json_to_obj_v2)
-
-logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
-handler = StreamHandler()
-handler.setLevel(INFO)
-logger.setLevel(INFO)
-logger.addHandler(handler)
-logger.propagate = False
-
-if IS_DEBUG:
-    logger.setLevel(DEBUG)
+from .converter_instagram_url import (
+    convert_instagram_url_to_a,
+    instagram_extract_from_content,
+)
+from .instagram_sender import (
+    get_instagram_id_from_url,
+    send_instagram_images_for_specified_index,
+)
+from .instagram_type import (
+    get_multiple_medias_v3_from_str,
+    instagram_parse_json_to_obj_v2,
+)
 
 
 async def process_instagram(
     client: DiscordMemoClient, message: discord.Message, content: str
 ):
     channel: discord.TextChannel = message.channel
-    logger.debug("[log] channel name: ", channel.name)
+    logger.debug("[log] channel name: %" + channel.name)
 
     extracted_base_url = instagram_extract_from_content(content)
     if not extracted_base_url:
-        logger.error("[error] failed to parse base_url for : ", content)
+        logger.error("[error] failed to parse base_url for : " + content)
         return
     a_url = convert_instagram_url_to_a(extracted_base_url)
     client.last_url_instagram[channel] = a_url
@@ -56,8 +62,9 @@ async def process_instagram(
     try:
         js = json.loads(text)
     except json.decoder.JSONDecodeError:
-        print("[instagram_process] ERROR!!! instagram: Failed to parse response text.")
-        print("---------------------------------------------")
+        logger.error(
+            "[instagram_process] ERROR!!! instagram: Failed to parse response text."
+        )
         return
 
     with open(f"dump_json_instagram/dump_instagram_{instagram_id}.json", "w") as f:
@@ -108,7 +115,7 @@ async def process_instagram(
         save_image(fname_video, video_content)
         fsize = os.path.getsize(fname_video)
         if fsize > FSIZE_TARGET:
-            logger.info("[insta-video] inner fsize is larger!: than ", FSIZE_TARGET)
+            logger.info("[insta-video] inner fsize is larger!: than " + FSIZE_TARGET)
 
             video_s3_url = upload_video_file(fname_video)
             insta_obj.caption = video_s3_url + "\n" + insta_obj.caption
@@ -123,7 +130,7 @@ async def process_instagram(
                 await message.channel.send(embed=embed)
                 await message.channel.send(file=discord.File(fname_video))
             except Exception as e:
-                logger.error("[instagram video upload] file send error!  : ", e)
+                logger.error(f"[instagram video upload] file send error!  : {e}")
         if not IS_DEBUG:
             os.remove(fname_video)
     else:  # *** 画像の場合 ***

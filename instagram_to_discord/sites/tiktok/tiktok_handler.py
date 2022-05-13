@@ -1,7 +1,7 @@
 import os
 import re
 from typing import Any, Dict, Optional
-
+from ...logging import log as logger
 import discord
 
 from ...boto3 import upload_video_file
@@ -102,7 +102,7 @@ async def handle_tiktok_main(client: discord.Client, channel_id: int, content: s
         await channel.send(embed=embed)
         await channel.send(file=discord.File(fname))
 
-    print("[handle_tiktok_main] メッセージ送信終了したので、プロセスexitします: " + info_dict["title"])
+    logger.info("[handle_tiktok_main] メッセージ送信終了したので、プロセスexitします: " + info_dict["title"])
     # await client.close()
 
 

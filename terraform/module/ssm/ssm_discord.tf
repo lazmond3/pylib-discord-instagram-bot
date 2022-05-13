@@ -35,3 +35,19 @@ resource "aws_ssm_parameter" "v_aws_secret_access_key" {
   type  = "String"
   value = var.aws_secret_access_key
 }
+
+resource "aws_ssm_parameter" "es_host" {
+  name  = "es_host"
+  type  = "String"
+  value = var.es_host
+}
+resource "aws_ssm_parameter" "es_user_name" {
+  name  = "es_user_name"
+  type  = "String"
+  value = var.es_user_name
+}
+resource "aws_ssm_parameter" "es_password" {
+  name  = "es_password"
+  type  = "String"
+  value = var.es_password
+}

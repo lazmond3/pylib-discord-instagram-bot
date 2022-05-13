@@ -1,4 +1,3 @@
-from logging import INFO, StreamHandler, getLogger
 from typing import Dict
 
 import discord
@@ -18,13 +17,7 @@ from .sites.twitter.twitter import (
 )
 from .sites.twitter.twitter_process import process_twitter, process_twitter_open
 from .sites.youtube.youtube_handler import handle_youtube_main
-
-logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
-handler = StreamHandler()
-handler.setLevel(INFO)
-logger.setLevel(INFO)
-logger.addHandler(handler)
-logger.propagate = False
+from .logging import log as logger
 
 
 def is_int(s):
@@ -44,7 +37,7 @@ class DiscordMessageListener(discord.Client):
         super().__init__()
 
     async def on_ready(self):
-        logger.info("Logged on as {0}!".format(self.user))
+        logger.info(f"Logged on as {self.user}!")
 
     async def on_message(self, message):
         logger.info(
@@ -69,11 +62,11 @@ class DiscordMessageListener(discord.Client):
             or "https://youtube.com" in content
         ):
 
-            logger.info("[youtube] channel: ", channel.id)
+            logger.info("[youtube] channel: " + channel.id)
             await handle_youtube_main(self, channel_id=channel.id, content=content)
 
         elif "https://" in content and "tiktok.com" in content:
-            logger.info("[tiktok] -> " + content, channel.id)
+            logger.info(f"[tiktok] -> {content} chanid: {channel.id}")
             await handle_tiktok_main(self, channel_id=channel.id, content=content)
             # 今後SQSに投げて functions で処理していく
 

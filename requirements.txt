@@ -6,7 +6,7 @@ aws-lambda-typing == 1.0.3
 boto3
 youtube_dl
 ffmpeg
-nest_asyncio
+# nest_asyncio
 
 black
 flake8
@@ -20,3 +20,6 @@ pytest
 pytest-mock
 pytest-asyncio
 pytest-env
+
+elasticsearch==7.13.4
+CMRESHandler

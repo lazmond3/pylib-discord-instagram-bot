@@ -30,6 +30,18 @@
       {
         "name": "AWS_SECRET_ACCESS_KEY",
         "valueFrom": "${aws_secret_access_key_arn}"
+      },
+      {
+        "name": "ES_HOST",
+        "valueFrom": "${aws_secret_es_host_arn}"
+      },
+      {
+        "name": "ES_USER_NAME",
+        "valueFrom": "${aws_secret_es_user_name_arn}"
+      },
+      {
+        "name": "ES_PASSWORD",
+        "valueFrom": "${aws_secret_es_password_arn}"
       }
     ],
     "environment": [
@@ -40,6 +52,10 @@
       {
         "name": "DEBUG",
         "value": "1"
+      },
+      {
+        "name": "ENV",
+        "value": "${env}"
       }
     ],
     "logConfiguration": {

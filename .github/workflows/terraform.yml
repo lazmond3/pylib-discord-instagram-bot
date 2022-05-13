@@ -53,6 +53,10 @@ jobs:
           TF_VAR_sessionid: ${{ secrets.TF_VAR_sessionid }}
           TF_VAR_aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           TF_VAR_aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_es_host: ${{ secrets.ES_HOST }}
+          TF_VAR_es_user_name: ${{ secrets.ES_USER_NAME }}
+          TF_VAR_es_password: ${{ secrets.ES_PASSWORD }}
+          TF_VAR_env: ${{ secrets.ENV }}
         continue-on-error: true
 
       - uses: actions/github-script@0.9.0
@@ -112,3 +116,7 @@ jobs:
           TF_VAR_sessionid: ${{ secrets.TF_VAR_sessionid }}
           TF_VAR_aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           TF_VAR_aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_es_host: ${{ secrets.ES_HOST }}
+          TF_VAR_es_user_name: ${{ secrets.ES_USER_NAME }}
+          TF_VAR_es_password: ${{ secrets.ES_PASSWORD }}
+          TF_VAR_env: ${{ secrets.ENV }}

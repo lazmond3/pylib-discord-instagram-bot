@@ -1,6 +1,5 @@
 import json
 import os
-from logging import DEBUG, INFO, StreamHandler, getLogger
 from typing import Any, Dict, List, Optional, cast
 
 import requests
@@ -9,13 +8,7 @@ from ...boto3 import add_json_to_dynamo_tweet_json
 from ...const_value import IS_DEBUG, TW_CONSUMER_KEY, TW_CONSUMER_SECRET
 from .base64_util import base64_encode_str
 from .twitter_image import TwitterImage, convert_twitter
-
-logger = getLogger(__name__)  # 以降、このファイルでログが出たということがはっきりする。
-handler = StreamHandler()
-handler.setLevel(DEBUG)
-logger.setLevel(DEBUG)
-logger.addHandler(handler)
-logger.propagate = False
+from ...logging import log as logger
 
 
 def mkdir_notexists(dirs: List[str]):
@@ -23,10 +16,6 @@ def mkdir_notexists(dirs: List[str]):
         if not os.path.exists(dirpath):
             os.makedirs(dirpath)
             logger.info(f"[mkdir_noexists] mkdir {dirpath}")
-
-
-if not IS_DEBUG:
-    logger.setLevel(INFO)
 
 
 # const
@@ -60,7 +49,7 @@ def get_auth_wrapper() -> None:
     twitter API の access token を取得する __wrapper__
     """
     if not all([TW_CONSUMER_KEY, TW_CONSUMER_SECRET]):
-        print("specify consumer key/secret")
+        logger.error("specify consumer key/secret")
         exit(1)
     assert TW_CONSUMER_KEY
     assert TW_CONSUMER_SECRET
@@ -108,9 +97,10 @@ def get_one_tweet(tweet_id: str, is_second: bool = False) -> TwitterImage:
         txt_decoded = f.read()
         add_json_to_dynamo_tweet_json(tweet_id, txt_decoded)
 
-    print(f"js: {js}")
+    logger.debug(f"js: {js}")
     tw = convert_twitter(js)
-    logger.debug(f"video: {tw.video_url} images: {','.join(tw.image_urls)}, ")
+    logger.debug(f"video: {tw.video_url}")
+    logger.debug("images: " + ",".join(tw.image_urls))
     return tw
 
 
@@ -151,7 +141,7 @@ def get_tweets_of_user(
     try:
         r = requests.get(url, params=params, headers=headers)
     except Exception:
-        print(f"error exception?? : {r.status_code}")
+        logger.error(f"error exception?? : {r.status_code}")
         if not is_second:
             os.remove(TOKEN_FILENAME)
             get_auth_wrapper()
@@ -159,18 +149,12 @@ def get_tweets_of_user(
             get_tweets_of_user(screen_name, since_id, max_id, True)
 
     tx = r.text
-    print(f"tx: {tx}")
+    logger.debug(f"tx: {tx}")
     js = text_to_dict(tx)
 
     with open(fname, "w", encoding="utf-8") as f:
         json.dump(js, f, ensure_ascii=False)
     # 直し方がよくわからないので、json の結果を利用させてもらう。
-    # with open(fname) as f:
-    # txt_decoded = f.read()
-
-    # tw = convert_twitter(js)
-    # logger.debug(f"video: {tw.video_url} images: {','.join(tw.image_urls)}, ")
-    # return tw
 
 
 def get_following_list(screen_name: str, cursor: int = -1, count: int = 200):
@@ -198,11 +182,11 @@ def get_following_list(screen_name: str, cursor: int = -1, count: int = 200):
     try:
         r = requests.get(url, params=params, headers=headers)
     except Exception:
-        print("error exception?? : failed to fetch")
+        logger.error("error exception?? : failed to fetch")
         return
 
     tx = r.text
-    print(f"tx: {tx}")
+    logger.debug(f"tx: {tx}")
     js = text_to_dict(tx)
 
     with open(fname, "w", encoding="utf-8") as f:

@@ -19,3 +19,12 @@ output "aws_ssm_parameter_aws_access_key_id_arn" {
 output "aws_ssm_parameter_aws_secret_access_key_arn" {
   value = aws_ssm_parameter.v_aws_secret_access_key.arn
 }
+output "aws_ssm_parameter_es_host_arn" {
+  value = aws_ssm_parameter.es_host.arn
+}
+output "aws_ssm_parameter_es_user_name_arn" {
+  value = aws_ssm_parameter.es_user_name.arn
+}
+output "aws_ssm_parameter_es_password_arn" {
+  value = aws_ssm_parameter.es_password.arn
+}
