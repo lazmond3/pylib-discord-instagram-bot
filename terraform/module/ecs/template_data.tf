@@ -22,9 +22,9 @@ data "template_file" "container_definitions" {
     aws_access_key_id_arn     = var.aws_ssm_parameter_aws_access_key_id_arn
     aws_secret_access_key_arn = var.aws_ssm_parameter_aws_secret_access_key_arn
 
-    es_host_arn      = var.aws_ssm_parameter_es_host_arn
-    es_user_name_arn = var.aws_ssm_parameter_es_user_name_arn
-    es_password_arn  = var.aws_ssm_parameter_es_password_arn
+    aws_secret_es_host_arn      = var.aws_ssm_parameter_es_host_arn
+    aws_secret_es_user_name_arn = var.aws_ssm_parameter_es_user_name_arn
+    aws_secret_es_password_arn  = var.aws_ssm_parameter_es_password_arn
     env              = var.env
 
     log_group = var.aws_cloudwatch_log_group_main_name
