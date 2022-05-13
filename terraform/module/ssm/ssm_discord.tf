@@ -44,7 +44,7 @@ resource "aws_ssm_parameter" "es_host" {
 resource "aws_ssm_parameter" "es_user_name" {
   name  = "es_user_name"
   type  = "String"
-  value = var.es_host
+  value = var.es_user_name
 }
 resource "aws_ssm_parameter" "es_password" {
   name  = "es_password"
