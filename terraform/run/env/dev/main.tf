@@ -90,7 +90,7 @@ module "ecs" {
   aws_ssm_parameter_es_host_arn      = module.ssm.aws_ssm_parameter_es_host_arn
   aws_ssm_parameter_es_user_name_arn = module.ssm.aws_ssm_parameter_es_user_name_arn
   aws_ssm_parameter_es_password_arn  = module.ssm.aws_ssm_parameter_es_password_arn
-  env                            = var.env
+  env                                = var.env
   # token = var.token
   # consumer_key = var.consumer_key
   # consumer_secret = var.consumer_secret
