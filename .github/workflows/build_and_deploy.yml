@@ -171,7 +171,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color -var-file dev.auto.tfvars -input=false
+        run: terraform plan -input=false -no-color -var-file dev.auto.tfvars
         env:
           TF_VAR_token: ${{ secrets.TF_VAR_token }}
           TF_VAR_consumer_key: ${{ secrets.TF_VAR_consumer_key }}
