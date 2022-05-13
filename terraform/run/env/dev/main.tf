@@ -122,7 +122,10 @@ module "iam" {
     module.ssm.aws_ssm_parameter_mid_arn,
     module.ssm.aws_ssm_parameter_sessionid_arn,
     module.ssm.aws_ssm_parameter_aws_access_key_id_arn,
-    module.ssm.aws_ssm_parameter_aws_secret_access_key_arn
+    module.ssm.aws_ssm_parameter_aws_secret_access_key_arn,
+    module.ssm.aws_ssm_parameter_es_host_arn,
+    module.ssm.aws_ssm_parameter_es_user_name_arn,
+    module.ssm.aws_ssm_parameter_es_password_arn
   ]
 }
 
