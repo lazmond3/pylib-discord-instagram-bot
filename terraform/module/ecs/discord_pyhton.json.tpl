@@ -42,10 +42,6 @@
       {
         "name": "ES_PASSWORD",
         "valueFrom": "${aws_secret_es_password_arn}"
-      },
-      {
-        "name": "ENV",
-        "value": "${env}"
       }
     ],
     "environment": [
@@ -56,6 +52,10 @@
       {
         "name": "DEBUG",
         "value": "1"
+      },
+      {
+        "name": "ENV",
+        "value": "${env}"
       }
     ],
     "logConfiguration": {
