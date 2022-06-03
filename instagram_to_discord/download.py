@@ -7,7 +7,7 @@ import requests
 def download_file(url, timeout=10):
     response = requests.get(url, allow_redirects=False, timeout=timeout)
     if response.status_code != 200:
-        e = Exception("HTTP status: " + response.status_code)
+        e = Exception(f"HTTP status: {response.status_code}")
         raise e
     return response.content
 

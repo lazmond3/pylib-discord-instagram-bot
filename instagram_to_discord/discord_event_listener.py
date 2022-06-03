@@ -62,7 +62,7 @@ class DiscordMessageListener(discord.Client):
             or "https://youtube.com" in content
         ):
 
-            logger.info("[youtube] channel: " + channel.id)
+            logger.info(f"[youtube] channel: {channel.id}")
             await handle_youtube_main(self, channel_id=channel.id, content=content)
 
         elif "https://" in content and "tiktok.com" in content:
