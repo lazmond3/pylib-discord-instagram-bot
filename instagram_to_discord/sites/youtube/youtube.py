@@ -6,6 +6,7 @@ from typing import Any, Dict, Tuple
 import youtube_dl
 
 from ...video import trimming_video_to_8MB
+from ...boto3 import upload_video_file
 
 
 # TODO: shorts の場合に対応

@@ -85,18 +85,18 @@ async def handle_youtube_main(client: discord.Client, channel_id: int, content: 
     fname, over_8mb, info_dict = download_youtube_video(extracted_url)
 
     channel = client.get_channel(id=channel_id)
-    if over_8mb:
-        video_s3_url = upload_video_file(fname)
-        # small_filesize_fname: str = trimming_video_to_8MB(fname)
-        # await channel.send(file=discord.File(small_filesize_fname))
-        # url を貼るだけで discord の中でみられる。
-        # embed = create_youtube_video_embed(extracted_url, info_dict, video_s3_url)
-        # await channel.send(embed=embed)
-        await channel.send(video_s3_url)
-    else:
-        # embed = create_youtube_video_embed(extracted_url, info_dict, None)
-        # await channel.send(embed=embed)
-        await channel.send(file=discord.File(fname))
+    video_s3_url = upload_video_file(fname)
+    await channel.send(video_s3_url)
+    # if over_8mb:
+    #     # small_filesize_fname: str = trimming_video_to_8MB(fname)
+    #     # await channel.send(file=discord.File(small_filesize_fname))
+    #     # url を貼るだけで discord の中でみられる。
+    #     # embed = create_youtube_video_embed(extracted_url, info_dict, video_s3_url)
+    #     # await channel.send(embed=embed)
+    # else:
+    #     # embed = create_youtube_video_embed(extracted_url, info_dict, None)
+    #     # await channel.send(embed=embed)
+    #     await channel.send(file=discord.File(fname))
 
     logger.info("[handle_youtube] メッセージ送信終了したので、プロセスexitします: " + info_dict["title"])
 
