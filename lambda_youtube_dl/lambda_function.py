@@ -23,14 +23,14 @@ def upload_video_file(fname: str) -> str:
 def lambda_handler(event, context):
     res = requests.get("http://www.yahoo.co.jp/")
 
-    webhook_url = event["url"]
+    url = event["url"]
     ydlmp4 = youtube_dl.YoutubeDL(
         {
             "outtmpl": "/tmp/%(id)s" + ".mp4",
             "format": "18",
         }
     )
-    info_dict = ydlmp4.extract_info(webhook_url, download=True)
+    info_dict = ydlmp4.extract_info(url, download=True)
     id_name = info_dict["id"]
     old_fname = "/tmp/" + id_name + ".mp4"
     replaced_title = (
@@ -49,7 +49,7 @@ def lambda_handler(event, context):
 
 
     headers = {'content-type': 'application/json'}
-    payload = {'content': f'[youtube-dl finished] {info_dict["title"]} {uploaded_url}'}
+    payload = {'content': f'[FINISHED] {url} {info_dict["title"]} {uploaded_url}'}
 
     requests.post(WEBHOOK_URL, data=json.dumps(payload), headers=headers)
 
