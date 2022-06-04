@@ -61,6 +61,8 @@ class DiscordMessageListener(discord.Client):
             or "https://youtu.be" in content
             or "https://youtube.com" in content
         ):
+            if "youtube-log" in channel.name:
+                return
 
             logger.info(f"[youtube] channel: {channel.id}")
             await handle_youtube_main(self, channel_id=channel.id, content=content)

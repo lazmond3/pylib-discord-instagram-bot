@@ -97,15 +97,15 @@ async def handle_youtube_main(client: discord.Client, channel_id: int, content: 
         Payload=payload
     )
     logger.info("[handle_youtube] python-youtube-dl を invoke しました。 " + info_dict["title"])
-    return
 
     # 以降コメントアウト
 
-    fname, over_8mb, info_dict = download_youtube_video(extracted_url)
+    # fname, over_8mb, info_dict = download_youtube_video(extracted_url)
 
-    channel = client.get_channel(id=channel_id)
-    video_s3_url = upload_video_file(fname)
-    await channel.send(video_s3_url)
+    # channel = client.get_channel(id=channel_id)
+    # video_s3_url = upload_video_file(fname)
+    # await channel.send(video_s3_url)
+
     # if over_8mb:
     #     # small_filesize_fname: str = trimming_video_to_8MB(fname)
     #     # await channel.send(file=discord.File(small_filesize_fname))
