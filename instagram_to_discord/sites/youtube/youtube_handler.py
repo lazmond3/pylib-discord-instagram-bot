@@ -6,6 +6,8 @@ import discord
 from ...boto3 import upload_video_file
 from .youtube import download_youtube_video, extract_youtube_url
 from ...logging import log as logger
+import boto3
+import json
 
 
 def play_count_to_text(count: int) -> str:
@@ -82,6 +84,23 @@ async def handle_youtube_main(client: discord.Client, channel_id: int, content: 
     extracted_url: str = extract_youtube_url(
         content
     )  # is like "https://www.youtube.com/watch?v=Yp6Hc8yN_rs"
+
+    input_event = dict(
+            {
+                "url": extracted_url,
+            }
+        )
+    payload = json.dumps(input_event)
+    client = boto3.client('lambda').invoke(
+        FunctionName='python-youtube-dl',
+        InvocationType='RequestResponse', # Event or RequestResponse
+        Payload=payload
+    )
+    logger.info("[handle_youtube] python-youtube-dl を invoke しました。 " + info_dict["title"])
+    return
+
+    # 以降コメントアウト
+
     fname, over_8mb, info_dict = download_youtube_video(extracted_url)
 
     channel = client.get_channel(id=channel_id)
