@@ -4,6 +4,7 @@ import requests
 import boto3
 import youtube_dl
 
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")
 s3 = boto3.resource("s3")
 bucket = s3.Bucket("discord-python-video")
 
@@ -20,17 +21,16 @@ def upload_video_file(fname: str) -> str:
 
 
 def lambda_handler(event, context):
-    # TODO implement
     res = requests.get("http://www.yahoo.co.jp/")
 
-    url = event["url"]
+    webhook_url = event["url"]
     ydlmp4 = youtube_dl.YoutubeDL(
         {
             "outtmpl": "/tmp/%(id)s" + ".mp4",
             "format": "18",
         }
     )
-    info_dict = ydlmp4.extract_info(url, download=True)
+    info_dict = ydlmp4.extract_info(webhook_url, download=True)
     id_name = info_dict["id"]
     old_fname = "/tmp/" + id_name + ".mp4"
     replaced_title = (
@@ -45,7 +45,14 @@ def lambda_handler(event, context):
         assert os.path.exists(old_fname)
         os.rename(old_fname, fname)
 
-    upload_video_file(fname)
+    uploaded_url = upload_video_file(fname)
+
+
+    headers = {'content-type': 'application/json'}
+    payload = {'content': f'[youtube-dl finished] {info_dict["title"]} {uploaded_url}'}
+
+    requests.post(WEBHOOK_URL, data=json.dumps(payload), headers=headers)
+
     return {
         'statusCode': 200,
         'myStatusCode': res.status_code,
