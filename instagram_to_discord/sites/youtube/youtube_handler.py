@@ -96,7 +96,7 @@ async def handle_youtube_main(client: discord.Client, channel_id: int, content: 
         InvocationType='RequestResponse', # Event or RequestResponse
         Payload=payload
     )
-    logger.info("[handle_youtube] python-youtube-dl を invoke しました。 " + info_dict["title"])
+    logger.info("[handle_youtube] python-youtube-dl を invoke しました。 ")
 
     # 以降コメントアウト
 
