@@ -117,7 +117,7 @@ async def handle_youtube_main(client: discord.Client, channel_id: int, content: 
     #     # await channel.send(embed=embed)
     #     await channel.send(file=discord.File(fname))
 
-    logger.info("[handle_youtube] メッセージ送信終了したので、プロセスexitします: " + info_dict["title"])
+    # logger.info("[handle_youtube] メッセージ送信終了したので、プロセスexitします: " + info_dict["title"])
 
 
 def handle_youtube(channel_id: int, content: str):
