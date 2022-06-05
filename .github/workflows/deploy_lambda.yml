@@ -79,7 +79,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const commitHash = `${{ fromJSON(steps.get-pr2nd.outputs.result).head.sha }}`;
+            const commitHash = `${{ fromJSON(steps.get-pr.outputs.result).head.sha }}`;
             const substrCommitHash = commitHash.substr(0,7);
             const output = `#### .deplam の結果を表示する。 ${substrCommitHash}
             #### Deploy Lambda 📖\`${{ steps.upload.outcome }}\`
