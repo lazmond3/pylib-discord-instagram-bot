@@ -1,0 +1,75 @@
+name: "Python flake8"
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+
+
+jobs:
+  python_test:
+    name: "Python flake8"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # pip install flake8 pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: flake8
+        id: flake8
+        run: |
+          flake8 instagram_to_discord/
+ 
+      - name: black
+        id: black
+        run: |
+          black instagram_to_discord/
+ 
+      - uses: actions/github-script@0.9.0
+        env:
+          FLAKE: ${{ steps.flake8.outputs.stdout }}
+          BLACK: ${{ steps.black.outputs.stdout }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const commitHash = `${GITHUB_SHA}`;
+            const substrCommitHash = commitHash.substr(0,7);
+            const output = `#### フォーマット の結果を表示する。 ${substrCommitHash}
+
+            <details><summary>Show Format Result</summary>
+
+            ### FLAKE
+            \`\`\`
+            ${process.env.FLAKE}
+            \`\`\`
+
+            ### BLACK
+            \`\`\`
+            ${process.env.FLAKE}
+            \`\`\`
+
+            </details>
+            
+
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+      - name: Terraform black Status
+        if: steps.black.outcome == 'failure'
+        run: exit 1
