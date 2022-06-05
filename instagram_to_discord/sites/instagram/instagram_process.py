@@ -115,7 +115,7 @@ async def process_instagram(
         save_image(fname_video, video_content)
         fsize = os.path.getsize(fname_video)
         if fsize > FSIZE_TARGET:
-            logger.info("[insta-video] inner fsize is larger!: than " + FSIZE_TARGET)
+            logger.info(f"[insta-video] inner fsize is larger!: than {FSIZE_TARGET}")
 
             video_s3_url = upload_video_file(fname_video)
             insta_obj.caption = video_s3_url + "\n" + insta_obj.caption

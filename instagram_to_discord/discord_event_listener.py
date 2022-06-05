@@ -52,6 +52,8 @@ class DiscordMessageListener(discord.Client):
             return
         if not IS_DEBUG and "debug" in channel.name:
             return
+        if "youtube-log" in channel.name:
+            return
 
         if "instagram-support" in message.author.display_name:
             return
@@ -62,7 +64,7 @@ class DiscordMessageListener(discord.Client):
             or "https://youtube.com" in content
         ):
 
-            logger.info("[youtube] channel: " + channel.id)
+            logger.info(f"[youtube] channel: {channel.id}")
             await handle_youtube_main(self, channel_id=channel.id, content=content)
 
         elif "https://" in content and "tiktok.com" in content:
