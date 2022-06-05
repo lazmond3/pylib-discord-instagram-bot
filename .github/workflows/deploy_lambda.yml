@@ -64,9 +64,47 @@ jobs:
         run: |
           zip -r upload.zip *
       - name: upload zip
+        id: upload
         run: |
           aws lambda update-function-code --function-name python-youtube-dl --zip-file fileb://${GITHUB_WORKSPACE}/lambda_youtube_dl/upload.zip
 
       - name: Lambda Deploy Status
-        if: steps.apply.outcome == 'failure'
+        if: steps.upload.outcome == 'failure'
         run: exit 1
+
+      - uses: actions/github-script@0.9.0
+        env:
+          APPLY: ${{ steps.upload.outputs.stdout }}
+          APPLY_ERROR: ${{ steps.upload.outputs.stderr }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const commitHash = `${{ fromJSON(steps.get-pr2nd.outputs.result).head.sha }}`;
+            const substrCommitHash = commitHash.substr(0,7);
+            const output = `#### .deplam の結果を表示する。 ${substrCommitHash}
+            #### Deploy Lambda 📖\`${{ steps.upload.outcome }}\`
+
+            <details><summary>Show Apply Result</summary>
+
+            \`\`\`terraform
+            ${process.env.APPLY}
+            \`\`\`
+
+            </details>
+            
+            ${ process.env.APPLY_ERROR &&
+              `<details><summary>Error</summary>
+
+              \`\`\`terraform
+              ${process.env.APPLY_ERROR}
+              \`\`\`
+
+              </details>
+            `}`;
+
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
