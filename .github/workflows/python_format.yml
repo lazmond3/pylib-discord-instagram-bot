@@ -32,11 +32,13 @@ jobs:
         id: flake8
         run: |
           flake8 instagram_to_discord/
+          flake8 lambda_youtube_dl/lambda_function.py
  
       - name: black
         id: black
         run: |
           black instagram_to_discord/
+          black lambda_youtube_dl/lambda_function.py
  
       - uses: actions/github-script@0.9.0
         env:
