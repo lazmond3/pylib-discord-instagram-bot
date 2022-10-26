@@ -34,19 +34,18 @@ class DiscordMessageListener(discord.Client):
     is_twitter_last = True
 
     def __init__(self):
-        super().__init__()
+        # FIXME: `intents`` must be considered more carefully to retrieve message.content.
+        super().__init__(intents=discord.Intents.default())
 
     async def on_ready(self):
         logger.info(f"Logged on as {self.user}!")
 
     async def on_message(self, message):
-        logger.info(
-            "Message from {0.author.display_name} in ({0.channel}): {0.content}".format(
-                message
-            )
-        )
         content: str = message.content
         channel: discord.TextChannel = message.channel
+        logger.info(
+            "Message from {0.author.display_name} in ({0.channel}): {0.content}".format(message)
+        )
 
         if IS_DEBUG and "debug" not in channel.name:
             return
