@@ -6,16 +6,15 @@ aws-lambda-typing == 1.0.3
 boto3
 youtube_dl
 ffmpeg
-# nest_asyncio
+
+beautifulsoup4
 
 black
 flake8
 autopep8
 isort
 
-Flask
 mypy
-beautifulsoup4
 pytest
 pytest-mock
 pytest-asyncio
