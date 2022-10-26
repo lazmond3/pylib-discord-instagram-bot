@@ -35,7 +35,9 @@ class DiscordMessageListener(discord.Client):
 
     def __init__(self):
         # FIXME: `intents`` must be considered more carefully to retrieve message.content.
-        super().__init__(intents=discord.Intents.default())
+        intents = discord.Intents.default()
+        intents.message_content = True
+        super().__init__(intents=intents)
 
     async def on_ready(self):
         logger.info(f"Logged on as {self.user}!")
