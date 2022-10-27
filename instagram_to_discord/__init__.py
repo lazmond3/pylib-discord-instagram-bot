@@ -17,9 +17,10 @@ def env_check():
             os.getenv("MID"),
             os.getenv("SESSIONID"),
             os.getenv("ENV"),
-            os.getenv("ES_HOST"),
-            os.getenv("ES_USER_NAME"),
-            os.getenv("ES_PASSWORD"),
+            # elasticsearch is not necessary.
+            # os.getenv("ES_HOST"),
+            # os.getenv("ES_USER_NAME"),
+            # os.getenv("ES_PASSWORD"),
         ]
     ):
         logger.info("all environment variables are set.")
