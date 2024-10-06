@@ -1,3 +1,12 @@
+# What this is
+
+This is a Discord bot that retrieves images from Twitter and Instagram URLs and reposts them.
+
+| what | architecture |
+| --- | --- |
+|  <img src="https://github.com/user-attachments/assets/cd33ee0f-1351-4f8d-9b95-61fc7c0dfa8e" width=500> |  <img src="https://github.com/user-attachments/assets/5268c2ec-9631-4af1-a262-b907a0b66587" width=500> |
+
+
 # 使い方 (how to use)
 
 ```bash
