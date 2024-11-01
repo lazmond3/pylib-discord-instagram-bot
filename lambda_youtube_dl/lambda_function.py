@@ -47,14 +47,13 @@ def lambda_handler(event, context):
 
     uploaded_url = upload_video_file(fname)
 
-
-    headers = {'content-type': 'application/json'}
-    payload = {'content': f'[FINISHED] {url} {info_dict["title"]} {uploaded_url}'}
+    headers = {"content-type": "application/json"}
+    payload = {"content": f'[FINISHED] {url} {info_dict["title"]} {uploaded_url}'}
 
     requests.post(WEBHOOK_URL, data=json.dumps(payload), headers=headers)
 
     return {
-        'statusCode': 200,
-        'myStatusCode': res.status_code,
-        'body': json.dumps('Hello from Lambda!')
+        "statusCode": 200,
+        "myStatusCode": res.status_code,
+        "body": json.dumps("Hello from Lambda!"),
     }
